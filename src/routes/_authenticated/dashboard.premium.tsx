@@ -35,7 +35,7 @@ const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "decorations", label: "Decoraciones", icon: Sparkles },
 ];
 
-function Price({ price, premium }: { price: number; premium?: boolean }) {
+function Price({ price, premium }: { price: number; premium?: boolean | undefined }) {
   return (
     <span
       className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${
