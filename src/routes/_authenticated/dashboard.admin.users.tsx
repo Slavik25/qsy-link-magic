@@ -27,7 +27,21 @@ function AdminUsers() {
     await qc.invalidateQueries({ queryKey: ["admin-overview"] });
   }
 
+  async function setRank(p: AdminProfile, rank: QsyRank) {
+    const patch: { rank: QsyRank; domain?: string } = { rank };
+    if (rank !== "seraph") patch.domain = "qsy.rip";
+    const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
+    if (error) {
+      toast.error("No se pudo cambiar el rango", { description: error.message });
+      return;
+    }
+    await logAdminAction(`rank:${rank}`, p.username);
+    toast.success(`@${p.username} ahora es ${RANK_LABEL[rank]}`);
+    void refresh();
+  }
+
   async function toggleFlag(p: AdminProfile, field: "verified" | "featured") {
+
     const value = !p[field];
     const patch = field === "verified" ? { verified: value } : { featured: value };
     const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
