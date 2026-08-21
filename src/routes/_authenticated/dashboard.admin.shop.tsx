@@ -77,7 +77,7 @@ function AdminShop() {
   async function grant(key: string) {
     if (!userId) return;
     const { error } = await supabase.from("user_unlocks").insert({ user_id: userId, item_key: key });
-    if (error) return toast.error("No se pudo otorgar", { description: error.message });
+    if (error) { toast.error("No se pudo otorgar", { description: error.message }); return; }
     await logAdminAction("shop:grant", selected?.username, { item: key });
     toast.success(`Otorgado: ${key}`);
     void qc.invalidateQueries({ queryKey: ["admin-unlocks", userId] });
@@ -90,7 +90,7 @@ function AdminShop() {
       .delete()
       .eq("user_id", userId)
       .eq("item_key", key);
-    if (error) return toast.error("No se pudo quitar", { description: error.message });
+    if (error) { toast.error("No se pudo quitar", { description: error.message }); return; }
     await logAdminAction("shop:revoke", selected?.username, { item: key });
     toast.success(`Quitado: ${key}`);
     void qc.invalidateQueries({ queryKey: ["admin-unlocks", userId] });
@@ -99,7 +99,7 @@ function AdminShop() {
   async function giveCoins() {
     if (!userId) return;
     const { error } = await supabase.rpc("admin_grant_coins", { _user_id: userId, _amount: coins });
-    if (error) return toast.error("No se pudo dar coins", { description: error.message });
+    if (error) { toast.error("No se pudo dar coins", { description: error.message }); return; }
     await logAdminAction("coins:grant", selected?.username, { coins });
     toast.success(`${coins > 0 ? "+" : ""}${coins} QSY Coins`);
     void qc.invalidateQueries({ queryKey: ["admin-wallet", userId] });
@@ -110,7 +110,7 @@ function AdminShop() {
     const { error } = await supabase
       .from("boosts")
       .insert({ profile_id: selected.id, kind, amount });
-    if (error) return toast.error("No se pudo aplicar", { description: error.message });
+    if (error) { toast.error("No se pudo aplicar", { description: error.message }); return; }
     await logAdminAction(`boost:${kind}`, selected.id, { amount });
     toast.success(`+${amount} ${kind === "views" ? "visitas" : "likes"} para @${selected.username}`);
     void qc.invalidateQueries({ queryKey: ["admin-users"] });
