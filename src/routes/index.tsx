@@ -630,14 +630,35 @@ const connections = [
   "Behance", "Dribbble", "LinkedIn", "Threads", "Snapchat",
 ];
 
-function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
+type ShowcaseProfile = {
+  username: string;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  banner_url?: string | null;
+  verified?: boolean | null;
+  view_count?: number | null;
+  bio?: string | null;
+};
+
+function compact(n: number) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
+  return String(n);
+}
+
+function ProfileCard({ p }: { p: ShowcaseProfile }) {
+  const name = p.display_name || p.username;
   return (
-    <div className="group overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]">
+    <Link
+      to="/$username"
+      params={{ username: p.username }}
+      className="group block overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]"
+    >
       <div className="relative h-24 overflow-hidden">
-        {p.image ? (
+        {p.banner_url ? (
           <img
-            src={p.image}
-            alt={`Perfil QSY de ${p.name}`}
+            src={p.banner_url}
+            alt={`Perfil QSY de ${name}`}
             loading="lazy"
             className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -648,24 +669,36 @@ function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
       </div>
 
       <div className="-mt-7 px-4 pb-4 text-left">
-        <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
-          {p.user.slice(0, 2).toUpperCase()}
-        </span>
-        <div className="mt-3 flex items-center gap-1.5">
-          <p className="truncate text-sm font-semibold">{p.name}</p>
-          <BadgeCheck className="size-3.5 shrink-0 text-primary" />
-        </div>
-        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.rip/{p.user}</p>
-        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
-          <span className="rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-            {p.tag}
+        {p.avatar_url ? (
+          <img
+            src={p.avatar_url}
+            alt={`Avatar de ${name}`}
+            loading="lazy"
+            className="size-12 rounded-2xl border border-border/70 object-cover"
+          />
+        ) : (
+          <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
+            {p.username.slice(0, 2).toUpperCase()}
           </span>
-          <span className="text-xs font-semibold text-primary">{p.views}</span>
+        )}
+        <div className="mt-3 flex items-center gap-1.5">
+          <p className="truncate text-sm font-semibold">{name}</p>
+          {p.verified ? <BadgeCheck className="size-3.5 shrink-0 text-primary" /> : null}
+        </div>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.rip/{p.username}</p>
+        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+          <span className="truncate rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            {p.bio ? p.bio.slice(0, 18) : "QSY"}
+          </span>
+          <span className="text-xs font-semibold text-primary">
+            {compact(p.view_count ?? 0)}
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
+
 
 
 function Landing() {
