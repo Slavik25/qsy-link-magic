@@ -674,33 +674,35 @@ function Landing() {
           Cada característica diseñada para que tu perfil destaque entre millones.
         </p>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] border border-border/70 bg-border/60 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f, i) => (
-            <div
-              key={f.title}
-              className="group relative overflow-hidden bg-card/60 p-7 backdrop-blur-xl transition-colors duration-500 hover:bg-card"
+        <div className="mt-12 grid gap-4 text-left sm:grid-cols-6">
+          {specs.map((s, i) => (
+            <article
+              key={s.title}
+              className={`group relative overflow-hidden rounded-[26px] border border-border/70 bg-card/50 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)] ${s.span}`}
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
               />
-              <div className="flex items-center justify-between">
-                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                  <f.icon className="size-5" />
+              <div className="relative flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
+                  <s.icon className="size-5" />
                 </span>
                 <span className="font-mono text-[11px] text-muted-foreground/60">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h3 className="mt-5 text-lg font-semibold">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
-              <span
-                aria-hidden
-                className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-500 group-hover:w-full"
-              />
-            </div>
+
+              <h3 className="relative mt-5 text-lg font-semibold">{s.title}</h3>
+              <p className="relative mt-1.5 text-sm text-muted-foreground">{s.desc}</p>
+
+              <div className="relative mt-6">
+                <SpecVisual kind={s.visual} />
+              </div>
+            </article>
           ))}
         </div>
+
       </section>
 
 
