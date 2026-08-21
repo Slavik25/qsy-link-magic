@@ -1,19 +1,24 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
-  ChevronDown,
-  ExternalLink,
+  BadgeCheck,
+  Bell,
+  ChevronRight,
   Gem,
-  HelpCircle,
+  Gift,
+  Image as ImageIcon,
+  LayoutGrid,
   Link2,
   LogOut,
+  type LucideIcon,
+  Menu,
   Music4,
   Palette,
-  Search,
   Settings,
   Share2,
   Sparkles,
+  TrendingUp,
   UserRound,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -26,39 +31,34 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
 });
 
-const accountNav = [
-  { to: "/dashboard", label: "Overview", exact: true },
-  { to: "/dashboard/analytics", label: "Analytics" },
-  { to: "/dashboard/badges", label: "Badges" },
-  { to: "/dashboard/profile", label: "Perfil" },
-  { to: "/dashboard/settings", label: "Settings" },
-] as const;
+type NavItem = { to: string; label: string; icon: LucideIcon; exact?: boolean; tag?: string };
 
-const mainNav = [
-  { to: "/dashboard/appearance", label: "Customize", icon: Palette },
-  { to: "/dashboard/links", label: "Links", icon: Link2 },
+const NAV: NavItem[] = [
+  { to: "/dashboard", label: "Resumen", icon: LayoutGrid, exact: true },
+  { to: "/dashboard/profile", label: "Perfil", icon: UserRound },
+  { to: "/dashboard/links", label: "Conexiones", icon: Link2 },
   { to: "/dashboard/socials", label: "Socials", icon: Share2 },
-  { to: "/dashboard/music", label: "Music", icon: Music4 },
-  { to: "/dashboard/premium", label: "Premium", icon: Gem },
-  { to: "/templates", label: "Templates", icon: Sparkles },
-] as const;
+  { to: "/dashboard/badges", label: "Insignias", icon: BadgeCheck },
+  { to: "/dashboard/appearance", label: "Personalizar", icon: Palette },
+  { to: "/dashboard/music", label: "Música", icon: Music4 },
+  { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
+  { to: "/dashboard/premium", label: "Tienda", icon: Gem, tag: "PRO" },
+  { to: "/templates", label: "Plantillas", icon: ImageIcon },
+  { to: "/explore", label: "Explorar", icon: Sparkles },
+  { to: "/dashboard/settings", label: "Configuración", icon: Settings },
+];
+
+function useCrumb() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  return NAV.find((n) => (n.exact ? pathname === n.to : pathname.startsWith(n.to)))?.label ?? "Resumen";
+}
 
 function DashboardLayout() {
   const { data: profile } = useMyProfile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [query, setQuery] = useState("");
-  const [accountOpen, setAccountOpen] = useState(true);
-
-  const q = query.trim().toLowerCase();
-  const filteredAccount = useMemo(
-    () => accountNav.filter((i) => !q || i.label.toLowerCase().includes(q)),
-    [q],
-  );
-  const filteredMain = useMemo(
-    () => mainNav.filter((i) => !q || i.label.toLowerCase().includes(q)),
-    [q],
-  );
+  const crumb = useCrumb();
+  const [open, setOpen] = useState(false);
 
   const uid = profile ? parseInt(profile.id.replace(/\D/g, "").slice(0, 7) || "0", 10) : 0;
 
@@ -80,98 +80,65 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[264px_1fr]">
-      <aside className="flex flex-col gap-6 border-b border-border/60 bg-card/40 p-4 backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[252px_1fr]">
+      {/* Sidebar */}
+      <aside
+        className={`z-40 flex-col border-border/60 bg-card/40 backdrop-blur-xl lg:sticky lg:top-0 lg:flex lg:h-screen lg:border-r ${
+          open ? "fixed inset-0 flex" : "hidden"
+        }`}
+      >
+        <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-border/60 px-5">
+          <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
             <QsyLogo />
           </Link>
-          {profile && (
-            <Button asChild size="icon" variant="ghost" aria-label="Ver mi página">
-              <Link to="/$username" params={{ username: profile.username }}>
-                <ExternalLink className="size-4" />
-              </Link>
-            </Button>
-          )}
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="Cerrar menú"
+            className="text-muted-foreground lg:hidden"
+          >
+            <ChevronRight className="size-5" />
+          </button>
         </div>
 
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar funciones..."
-            className="h-10 w-full rounded-xl border border-border/60 bg-background/60 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/60"
-          />
-        </div>
-
-        <nav className="flex-1 space-y-1 overflow-y-auto">
-          {filteredAccount.length > 0 && (
-            <>
-              <button
-                onClick={() => setAccountOpen((v) => !v)}
-                className="flex w-full items-center gap-2 rounded-xl bg-primary/12 px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-primary/20"
-              >
-                <UserRound className="size-4 text-primary" />
-                Account
-                <ChevronDown
-                  className={`ml-auto size-4 transition-transform ${accountOpen ? "" : "-rotate-90"}`}
-                />
-              </button>
-              {accountOpen && (
-                <div className="mt-1 space-y-0.5 pl-9">
-                  {filteredAccount.map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      activeOptions={{ exact: "exact" in item ? item.exact : false }}
-                      activeProps={{ className: "text-foreground" }}
-                      className="block rounded-lg py-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              onClick={() => setOpen(false)}
+              activeOptions={{ exact: !!item.exact }}
+              activeProps={{
+                className: "border-border bg-surface-strong text-foreground shadow-[0_0_28px_-14px_var(--primary)]",
+              }}
+              className="group flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-all duration-200 hover:border-border/60 hover:bg-surface-strong/50 hover:text-foreground"
+            >
+              <item.icon className="size-[18px] shrink-0" />
+              <span className="min-w-0 flex-1 truncate">{item.label}</span>
+              {item.tag && (
+                <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-primary">
+                  {item.tag}
+                </span>
               )}
-            </>
-          )}
-
-          <div className="pt-2">
-            {filteredMain.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeProps={{ className: "bg-surface-strong text-foreground" }}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-surface-strong/60 hover:text-foreground"
-              >
-                <item.icon className="size-4" />
-                {item.label}
-              </Link>
-            ))}
-          </div>
+            </Link>
+          ))}
         </nav>
 
-        <div className="space-y-3">
-          <div className="rounded-2xl border border-border/60 bg-background/50 p-3">
-            <p className="text-[13px] font-medium leading-snug">
-              ¿Tienes dudas o necesitas ayuda?
-            </p>
-            <Button asChild size="sm" variant="secondary" className="mt-2 w-full rounded-xl">
-              <a href="mailto:soporte@qsy.rip">
-                <HelpCircle className="size-4" /> Centro de ayuda
-              </a>
-            </Button>
-            <p className="mt-3 text-xs text-muted-foreground">Mira tu página</p>
-            {profile && (
-              <Button asChild size="sm" className="mt-2 w-full rounded-xl">
-                <Link to="/$username" params={{ username: profile.username }}>
-                  <ExternalLink className="size-4" /> Mi página
-                </Link>
-              </Button>
-            )}
-          </div>
+        <div className="space-y-3 border-t border-border/60 p-3">
+          <Link
+            to="/dashboard/premium"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/50 p-3 transition-colors hover:border-primary/50"
+          >
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
+              <Gift className="size-4" />
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-medium">Regalar Premium</span>
+              <span className="block truncate text-xs text-muted-foreground">Regálalo a un amigo</span>
+            </span>
+          </Link>
 
-          <Button onClick={share} variant="secondary" className="w-full rounded-xl">
+          <Button onClick={share} className="w-full rounded-2xl">
             <Share2 className="size-4" /> Compartir mi perfil
           </Button>
 
@@ -180,23 +147,21 @@ function DashboardLayout() {
               <img
                 src={profile.avatar_url}
                 alt={`Avatar de ${profile.username}`}
-                className="size-9 rounded-full object-cover"
+                className="size-9 shrink-0 rounded-full object-cover"
               />
             ) : (
-              <span className="grid size-9 place-items-center rounded-full bg-surface-strong font-mono text-[11px] font-bold text-primary">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-strong font-mono text-[11px] font-bold text-primary">
                 {(profile?.username ?? "qs").slice(0, 2).toUpperCase()}
               </span>
             )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{profile?.username ?? "…"}</p>
-              <p className="truncate text-[10px] text-muted-foreground">
-                UID {uid.toLocaleString("es-ES")}
-              </p>
+              <p className="truncate text-sm font-medium">Cerrar sesión</p>
+              <p className="truncate text-[11px] text-muted-foreground">/{profile?.username ?? "…"}</p>
             </div>
             <button
               onClick={signOut}
               aria-label="Cerrar sesión"
-              className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+              className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive"
             >
               <LogOut className="size-4" />
             </button>
@@ -204,9 +169,63 @@ function DashboardLayout() {
         </div>
       </aside>
 
-      <main className="min-w-0 px-4 py-8 sm:px-8">
-        <Outlet />
-      </main>
+      {/* Main column */}
+      <div className="flex min-w-0 flex-col">
+        <header className="sticky top-0 z-30 flex h-[68px] items-center gap-4 border-b border-border/60 bg-background/80 px-4 backdrop-blur-xl sm:px-6">
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Abrir menú"
+            className="text-muted-foreground lg:hidden"
+          >
+            <Menu className="size-5" />
+          </button>
+
+          <div className="flex min-w-0 items-center gap-2 text-xs">
+            <span className="hidden truncate uppercase tracking-[0.18em] text-muted-foreground sm:inline">
+              qsy.rip
+            </span>
+            <span className="hidden text-muted-foreground/50 sm:inline">/</span>
+            <span className="truncate font-medium">{crumb}</span>
+          </div>
+
+          <nav className="ml-auto hidden items-center gap-6 text-sm text-muted-foreground md:flex">
+            <Link to="/" className="transition-colors hover:text-foreground">
+              Home
+            </Link>
+            <Link to="/explore" className="transition-colors hover:text-foreground">
+              Explorar
+            </Link>
+            <Link to="/templates" className="transition-colors hover:text-foreground">
+              Plantillas
+            </Link>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2 md:ml-4">
+            {profile && (
+              <Button asChild size="sm" className="rounded-full">
+                <Link to="/$username" params={{ username: profile.username }}>
+                  Mi página <ChevronRight className="size-4" />
+                </Link>
+              </Button>
+            )}
+            <span
+              aria-hidden
+              className="grid size-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground"
+            >
+              <Bell className="size-4" />
+            </span>
+          </div>
+        </header>
+
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-8 sm:py-8">
+          <Outlet />
+        </main>
+
+        <footer className="border-t border-border/60 px-4 py-6 text-center text-xs text-muted-foreground sm:px-8">
+          © {new Date().getFullYear()} qsy.rip · UID {uid.toLocaleString("es-ES")} · Todos los derechos
+          reservados.
+        </footer>
+      </div>
     </div>
   );
 }
