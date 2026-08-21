@@ -100,15 +100,23 @@ function ProfileEditor() {
           <Input id="location" maxLength={80} placeholder="19 · Argentina · Multimedia" {...field("location")} />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="avatar">Avatar URL</Label>
-            <Input id="avatar" maxLength={500} {...field("avatar_url")} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="banner">Banner URL</Label>
-            <Input id="banner" maxLength={500} {...field("banner_url")} />
-          </div>
+          <AssetUploader
+            label="Foto de perfil"
+            hint="PNG, JPG o GIF · máx. 8MB"
+            accept="image/*"
+            value={form.avatar_url}
+            onChange={(url) => setForm((f) => ({ ...f, avatar_url: url }))}
+          />
+          <AssetUploader
+            label="Banner"
+            hint="Imagen ancha · máx. 10MB"
+            accept="image/*"
+            maxMb={10}
+            value={form.banner_url}
+            onChange={(url) => setForm((f) => ({ ...f, banner_url: url }))}
+          />
         </div>
+
         <Button onClick={save} disabled={saving || !profile}>
           {saving ? "Guardando…" : "Guardar cambios"}
         </Button>
