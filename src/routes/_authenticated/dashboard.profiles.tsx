@@ -10,6 +10,7 @@ import { DashBanner } from "@/components/qsy/dash-banner";
 import { supabase } from "@/integrations/supabase/client";
 import { setActiveProfileId, useActiveProfileId, useMyProfiles } from "@/lib/qsy-data";
 import type { Profile } from "@/lib/qsy";
+import { RankBadge, RankName, RANK_PROFILE_LIMIT, normalizeRank } from "@/components/qsy/rank-badge";
 import profilesArt from "@/assets/card-32.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
@@ -25,8 +26,6 @@ export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
   }),
 });
 
-const FREE_LIMIT = 2;
-
 function ProfilesPage() {
   const { data: profiles = [] } = useMyProfiles();
   const activeId = useActiveProfileId();
@@ -36,6 +35,12 @@ function ProfilesPage() {
   const [username, setUsername] = useState("");
 
   const active = profiles.find((p) => p.id === activeId) ?? profiles[0] ?? null;
+  const rank = normalizeRank(
+    profiles.find((p) => p.rank === "seraph")?.rank ??
+      profiles.find((p) => p.rank === "obsidian")?.rank ??
+      active?.rank,
+  );
+  const FREE_LIMIT = RANK_PROFILE_LIMIT[rank];
   const used = profiles.length;
   const full = used >= FREE_LIMIT;
 
@@ -98,19 +103,29 @@ function ProfilesPage() {
   return (
     <div className="space-y-6">
       <DashBanner
-        eyebrow="Profiles · Plan Free"
+        eyebrow={`Profiles · Plan ${rank === "seraph" ? "Seraph" : rank === "obsidian" ? "Obsidian" : "Free"}`}
+        tone={rank === "seraph" ? "gold" : "violet"}
         title="Crea y gestiona tus perfiles"
         description="Cada perfil es un biolink independiente, con su propia URL, enlaces, insignias y diseño. Nada se comparte entre ellos."
         image={profilesArt.url}
       />
 
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <RankBadge rank={rank} prefix="Plan" size="sm" />
           <div className="flex shrink-0 gap-1">
             {Array.from({ length: FREE_LIMIT }).map((_, i) => (
               <span
                 key={i}
-                className={`h-1.5 w-7 rounded-full ${i < used ? "bg-primary" : "bg-surface-strong"}`}
+                className={`h-1.5 w-7 rounded-full ${
+                  i < used
+                    ? rank === "seraph"
+                      ? "bg-amber-300"
+                      : rank === "obsidian"
+                        ? "bg-violet-400"
+                        : "bg-primary"
+                    : "bg-surface-strong"
+                }`}
               />
             ))}
           </div>
@@ -123,16 +138,20 @@ function ProfilesPage() {
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-2">
-          <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
-            <Link to="/dashboard/premium">
-              <Crown className="size-3.5" /> Obtener V.I.P · 3 perfiles
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
-            <Link to="/dashboard/premium">
-              <Crown className="size-3.5" /> Obtener Premium · 5 perfiles
-            </Link>
-          </Button>
+          {rank === "free" && (
+            <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
+              <Link to="/dashboard/rank">
+                <Crown className="size-3.5" /> Obsidian · 3 perfiles
+              </Link>
+            </Button>
+          )}
+          {rank !== "seraph" && (
+            <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
+              <Link to="/dashboard/rank">
+                <Crown className="size-3.5" /> Seraph · 5 perfiles
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -279,8 +298,8 @@ function ProfilesPage() {
             Cada perfil es <strong className="text-foreground">totalmente independiente</strong>: su
             propia URL, avatar, banner, enlaces, insignias, muro y diseño. Pulsa{" "}
             <strong className="text-foreground">Gestionar</strong> para elegir cuál editas en el
-            dashboard. Plan <span className="text-primary">Free</span> · {FREE_LIMIT} perfiles · V.I.P
-            3 · Premium 5.
+            dashboard. Plan <RankName rank={rank} /> · {FREE_LIMIT} perfiles · Free 2 · Obsidian 3 ·
+            Seraph 5.
           </p>
         </div>
       </section>
