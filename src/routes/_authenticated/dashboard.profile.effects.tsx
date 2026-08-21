@@ -5,9 +5,11 @@ import {
   Panel,
   Pills,
   SaveBar,
+  ShopEquipGrid,
   ToggleRow,
   useProfileDraft,
 } from "@/components/qsy/profile-editor-ui";
+import { SHOP_DECORATIONS, SHOP_PLAYERS, type DecorationDef, type PlayerDef } from "@/lib/shop";
 import type { ThemeConfig } from "@/lib/qsy";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/effects")({
@@ -33,14 +35,72 @@ const VFX: { key: keyof ThemeConfig; title: string; description: string }[] = [
 ];
 
 function EffectsSection() {
-  const { draft, setTheme, save, saving } = useProfileDraft();
+  const { draft, setTheme, setThemeMany, save, saving } = useProfileDraft();
   const t = draft.theme;
+
+  function equipPlayer(key: string) {
+    const p = SHOP_PLAYERS.find((x) => x.key === key);
+    if (!p) return;
+    setThemeMany({
+      player_key: p.key,
+      player_type: p.player_type,
+      player_bg: p.player_bg,
+      ...(p.player_position ? { player_position: p.player_position } : {}),
+    });
+  }
 
   return (
     <Panel
       title="Effects & Media"
       description="Personaliza el Music Player, decoraciones de borde y animaciones interactivas."
     >
+      <Group label="Reproductores de la tienda">
+        <ShopEquipGrid
+          items={SHOP_PLAYERS}
+          activeKey={t.player_key ?? "player-default"}
+          onEquip={equipPlayer}
+          renderPreview={(item) => (
+            <div
+              className="flex h-24 w-full items-center gap-2 p-4"
+              style={{ background: (item as PlayerDef).preview }}
+            >
+              <span className="size-8 rounded-lg bg-white/15" />
+              <span className="h-1.5 flex-1 rounded-full bg-white/20" />
+            </div>
+          )}
+        />
+      </Group>
+
+      <Group label="Decoraciones de avatar">
+        <ShopEquipGrid
+          items={SHOP_DECORATIONS}
+          activeKey={t.avatar_decoration ?? "none"}
+          onEquip={(key) => setTheme("avatar_decoration", key)}
+          renderPreview={(item) => {
+            const image = (item as DecorationDef).image;
+            return (
+              <div className="relative grid h-24 w-full place-items-center bg-surface-strong/40">
+                <span className="grid size-12 place-items-center overflow-hidden rounded-full bg-surface-strong">
+                  {draft.avatar_url ? (
+                    <img src={draft.avatar_url} alt="" className="size-full object-cover" />
+                  ) : (
+                    <span className="font-mono text-[10px] text-primary">QSY</span>
+                  )}
+                </span>
+                {image && (
+                  <img
+                    src={image}
+                    alt=""
+                    loading="lazy"
+                    className="pointer-events-none absolute left-1/2 top-1/2 w-[72px] max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
+                  />
+                )}
+              </div>
+            );
+          }}
+        />
+      </Group>
+
       <Group label="Music player type">
         <OptionGrid
           value={t.player_type ?? "default"}

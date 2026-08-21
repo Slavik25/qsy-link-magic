@@ -43,7 +43,9 @@ export type ThemeConfig = {
   color_icon?: string;
   color_border?: string;
   /* Effects & media */
-  player_type?: "default" | "minimal" | "structured" | "text";
+  player_type?: string;
+  layout_key?: string;
+  player_key?: string;
   player_position?: string;
   player_bg?: "solid" | "glass" | "transparent";
   border_decoration?: "none" | "scifi" | "cyberpunk";
@@ -104,6 +106,8 @@ export const defaultTheme: ThemeConfig = {
   color_icon: "#ffffff",
   color_border: "#ffffff",
   player_type: "default",
+  layout_key: "layout-glass",
+  player_key: "player-default",
   player_position: "bottom-center",
   player_bg: "glass",
   border_decoration: "none",

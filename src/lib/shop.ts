@@ -6,8 +6,15 @@ export type ShopItem = {
   premium?: boolean;
 };
 
+export type PlayerDef = ShopItem & {
+  player_type: string;
+  player_bg: "solid" | "glass" | "transparent";
+  player_position?: string;
+  preview: string;
+};
+
 /** Reproductores de música (theme.player_type + theme.player_bg) */
-export const SHOP_PLAYERS: (ShopItem & { player_type: string; player_bg: string })[] = [
+export const SHOP_PLAYERS: PlayerDef[] = [
   {
     key: "player-default",
     name: "Classic",
@@ -15,6 +22,7 @@ export const SHOP_PLAYERS: (ShopItem & { player_type: string; player_bg: string 
     price: 0,
     player_type: "default",
     player_bg: "glass",
+    preview: "linear-gradient(140deg,#2b1d4d,#0b0b12)",
   },
   {
     key: "player-minimal",
@@ -23,6 +31,7 @@ export const SHOP_PLAYERS: (ShopItem & { player_type: string; player_bg: string 
     price: 0,
     player_type: "minimal",
     player_bg: "transparent",
+    preview: "linear-gradient(140deg,#1a1a24,#0b0b12)",
   },
   {
     key: "player-structured",
@@ -32,6 +41,7 @@ export const SHOP_PLAYERS: (ShopItem & { player_type: string; player_bg: string 
     premium: true,
     player_type: "structured",
     player_bg: "solid",
+    preview: "linear-gradient(140deg,#3a1d4d,#0b0b12)",
   },
   {
     key: "player-text",
@@ -41,16 +51,81 @@ export const SHOP_PLAYERS: (ShopItem & { player_type: string; player_bg: string 
     premium: true,
     player_type: "text",
     player_bg: "transparent",
+    preview: "linear-gradient(140deg,#123,#0b0b12)",
+  },
+  {
+    key: "player-vinyl",
+    name: "Vinyl",
+    description: "Carátula circular giratoria estilo tocadiscos.",
+    price: 300,
+    premium: true,
+    player_type: "vinyl",
+    player_bg: "glass",
+    preview: "linear-gradient(140deg,#4d2b1d,#0b0b12)",
+  },
+  {
+    key: "player-wave",
+    name: "Waveform",
+    description: "Barras de espectro animadas al ritmo de la canción.",
+    price: 350,
+    premium: true,
+    player_type: "wave",
+    player_bg: "transparent",
+    preview: "linear-gradient(140deg,#1d4d47,#0b0b12)",
+  },
+  {
+    key: "player-cassette",
+    name: "Cassette",
+    description: "Estética retro de cinta con bobinas en movimiento.",
+    price: 400,
+    premium: true,
+    player_type: "cassette",
+    player_bg: "solid",
+    preview: "linear-gradient(140deg,#4d3d1d,#0b0b12)",
+  },
+  {
+    key: "player-dock",
+    name: "Floating Dock",
+    description: "Barra flotante inferior con controles completos.",
+    price: 200,
+    player_type: "dock",
+    player_bg: "glass",
+    player_position: "bottom-center",
+    preview: "linear-gradient(140deg,#1d2b4d,#0b0b12)",
+  },
+  {
+    key: "player-corner",
+    name: "Corner Pill",
+    description: "Píldora compacta anclada arriba a la derecha.",
+    price: 150,
+    player_type: "minimal",
+    player_bg: "glass",
+    player_position: "top-right",
+    preview: "linear-gradient(140deg,#2b4d1d,#0b0b12)",
+  },
+  {
+    key: "player-neon",
+    name: "Neon Deck",
+    description: "Panel con glow de neón y progreso luminoso.",
+    price: 450,
+    premium: true,
+    player_type: "structured",
+    player_bg: "glass",
+    preview: "linear-gradient(140deg,#4d1d5e,#0b0b12)",
   },
 ];
 
-/** Layouts personalizados (theme.template + ajustes) */
-export const SHOP_LAYOUTS: (ShopItem & {
+export type LayoutDef = ShopItem & {
   template: string;
   profile_width: "compact" | "normal" | "wide";
   avatar_shape: "circle" | "rounded" | "square" | "hexagon";
+  card_bg_type?: "solid" | "gradient" | "image" | "video" | "transparent";
+  show_card?: boolean;
   preview: string;
-})[] = [
+};
+
+/** Layouts personalizados (theme.template + ajustes) */
+export const SHOP_LAYOUTS: LayoutDef[] = [
   {
     key: "layout-glass",
     name: "Glass",
@@ -59,6 +134,8 @@ export const SHOP_LAYOUTS: (ShopItem & {
     template: "glass",
     profile_width: "normal",
     avatar_shape: "circle",
+    card_bg_type: "solid",
+    show_card: true,
     preview: "linear-gradient(140deg,#2b1d4d,#0b0b12)",
   },
   {
@@ -69,6 +146,8 @@ export const SHOP_LAYOUTS: (ShopItem & {
     template: "glass",
     profile_width: "compact",
     avatar_shape: "rounded",
+    card_bg_type: "solid",
+    show_card: true,
     preview: "linear-gradient(140deg,#123,#0b0b12)",
   },
   {
@@ -80,6 +159,8 @@ export const SHOP_LAYOUTS: (ShopItem & {
     template: "glass",
     profile_width: "wide",
     avatar_shape: "square",
+    card_bg_type: "solid",
+    show_card: true,
     preview: "linear-gradient(140deg,#4d1d3a,#0b0b12)",
   },
   {
@@ -91,9 +172,112 @@ export const SHOP_LAYOUTS: (ShopItem & {
     template: "neon",
     profile_width: "normal",
     avatar_shape: "hexagon",
+    card_bg_type: "solid",
+    show_card: true,
     preview: "linear-gradient(140deg,#0f4d4d,#0b0b12)",
   },
+  {
+    key: "layout-floating",
+    name: "Floating",
+    description: "Sin recuadro: el contenido flota sobre el fondo.",
+    price: 0,
+    template: "glass",
+    profile_width: "normal",
+    avatar_shape: "circle",
+    card_bg_type: "transparent",
+    show_card: false,
+    preview: "linear-gradient(140deg,#101018,#0b0b12)",
+  },
+  {
+    key: "layout-aurora",
+    name: "Aurora",
+    description: "Fondo de tarjeta en degradado violeta luminoso.",
+    price: 250,
+    template: "aurora",
+    profile_width: "normal",
+    avatar_shape: "circle",
+    card_bg_type: "gradient",
+    show_card: true,
+    preview: "linear-gradient(140deg,#6d28d9,#1e1b4b,#0b0b12)",
+  },
+  {
+    key: "layout-terminal",
+    name: "Terminal",
+    description: "Estilo consola: bordes duros y tipografía mono.",
+    price: 300,
+    template: "terminal",
+    profile_width: "compact",
+    avatar_shape: "square",
+    card_bg_type: "solid",
+    show_card: true,
+    preview: "linear-gradient(140deg,#0f2417,#0b0b12)",
+  },
+  {
+    key: "layout-cinema",
+    name: "Cinema",
+    description: "Tarjeta ancha pensada para fondos de video.",
+    price: 450,
+    premium: true,
+    template: "cinema",
+    profile_width: "wide",
+    avatar_shape: "rounded",
+    card_bg_type: "video",
+    show_card: true,
+    preview: "linear-gradient(140deg,#1b1b2f,#3a0d3a,#0b0b12)",
+  },
+  {
+    key: "layout-sakura",
+    name: "Sakura",
+    description: "Rosado suave con bordes redondeados y glow cálido.",
+    price: 350,
+    template: "sakura",
+    profile_width: "normal",
+    avatar_shape: "circle",
+    card_bg_type: "gradient",
+    show_card: true,
+    preview: "linear-gradient(140deg,#f472b6,#4c1d95,#0b0b12)",
+  },
+  {
+    key: "layout-brutal",
+    name: "Brutalist",
+    description: "Bloques sólidos, cero blur y contraste extremo.",
+    price: 300,
+    template: "brutal",
+    profile_width: "compact",
+    avatar_shape: "square",
+    card_bg_type: "solid",
+    show_card: true,
+    preview: "linear-gradient(140deg,#2b2b2b,#0b0b12)",
+  },
+  {
+    key: "layout-holo",
+    name: "Holographic",
+    description: "Reflejos iridiscentes y borde cromado animado.",
+    price: 500,
+    premium: true,
+    template: "holo",
+    profile_width: "normal",
+    avatar_shape: "hexagon",
+    card_bg_type: "gradient",
+    show_card: true,
+    preview: "linear-gradient(140deg,#22d3ee,#a855f7,#0b0b12)",
+  },
+  {
+    key: "layout-poster",
+    name: "Poster",
+    description: "Banner gigante arriba con avatar superpuesto XL.",
+    price: 400,
+    premium: true,
+    template: "poster",
+    profile_width: "wide",
+    avatar_shape: "rounded",
+    card_bg_type: "image",
+    show_card: true,
+    preview: "linear-gradient(140deg,#4d1d1d,#0b0b12)",
+  },
 ];
+
+
 
 /** Decoraciones de avatar estilo Discord (theme.avatar_decoration) */
 export type DecorationDef = ShopItem & { image: string | null };
@@ -256,4 +440,19 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
 
 export function decorationByKey(key?: string) {
   return SHOP_DECORATIONS.find((d) => d.key === key);
+}
+
+export function layoutByKey(key?: string) {
+  return SHOP_LAYOUTS.find((l) => l.key === key);
+}
+
+export function playerByKey(key?: string) {
+  return SHOP_PLAYERS.find((p) => p.key === key);
+}
+
+/** Un item es usable si es gratis o si el usuario lo desbloqueó. */
+export function isOwned(item: ShopItem, unlocks: Iterable<string>) {
+  if (item.price === 0) return true;
+  for (const k of unlocks) if (k === item.key) return true;
+  return false;
 }
