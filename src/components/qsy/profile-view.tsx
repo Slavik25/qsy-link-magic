@@ -94,6 +94,29 @@ export function ProfileView({
         </div>
         <p className="text-sm text-muted-foreground">@{profile.username}</p>
 
+        {badges.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+            {badges.map((key) => {
+              const b = badgeByKey(key);
+              if (!b) return null;
+              return (
+                <span
+                  key={key}
+                  title={b.name}
+                  aria-label={b.name}
+                  className="grid size-7 place-items-center rounded-lg border border-white/10 bg-white/5 transition-transform hover:-translate-y-0.5"
+                >
+                  {b.img ? (
+                    <img src={b.img} alt={b.name} className="size-5" loading="lazy" />
+                  ) : b.icon ? (
+                    <b.icon className="size-4" style={{ color: b.color ?? t.accent }} />
+                  ) : null}
+                </span>
+              );
+            })}
+          </div>
+        )}
+
         {profile.location && (
           <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="size-3" />
