@@ -111,12 +111,21 @@ function ProfilesPage() {
       />
 
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <RankBadge rank={rank} prefix="Plan" size="sm" />
           <div className="flex shrink-0 gap-1">
             {Array.from({ length: FREE_LIMIT }).map((_, i) => (
               <span
                 key={i}
-                className={`h-1.5 w-7 rounded-full ${i < used ? "bg-primary" : "bg-surface-strong"}`}
+                className={`h-1.5 w-7 rounded-full ${
+                  i < used
+                    ? rank === "seraph"
+                      ? "bg-amber-300"
+                      : rank === "obsidian"
+                        ? "bg-violet-400"
+                        : "bg-primary"
+                    : "bg-surface-strong"
+                }`}
               />
             ))}
           </div>
@@ -129,16 +138,20 @@ function ProfilesPage() {
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-2">
-          <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
-            <Link to="/dashboard/premium">
-              <Crown className="size-3.5" /> Obtener V.I.P · 3 perfiles
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
-            <Link to="/dashboard/premium">
-              <Crown className="size-3.5" /> Obtener Premium · 5 perfiles
-            </Link>
-          </Button>
+          {rank === "free" && (
+            <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
+              <Link to="/dashboard/rank">
+                <Crown className="size-3.5" /> Obsidian · 3 perfiles
+              </Link>
+            </Button>
+          )}
+          {rank !== "seraph" && (
+            <Button asChild size="sm" variant="secondary" className="rounded-xl text-xs">
+              <Link to="/dashboard/rank">
+                <Crown className="size-3.5" /> Seraph · 5 perfiles
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
