@@ -771,74 +771,8 @@ function Landing() {
 
 
       {/* Módulos e integraciones */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="text-center">
-          <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            <Sparkles className="size-3.5 text-primary" /> Módulos potentes
-          </span>
-          <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-            Módulos e <span className="text-gradient-violet">integraciones.</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-            Conecta tus plataformas favoritas y muéstralas en vivo dentro de tu perfil.
-          </p>
-        </div>
+      <ModulesShowcase />
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
-          {modules.map((m, i) => (
-            <article
-              key={m.title}
-              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
-              style={{ animationDelay: `${i * 90}ms` }}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -left-24 -bottom-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              />
-
-              <div className="relative m-3 overflow-hidden rounded-3xl border border-border/60">
-                {m.image ? (
-                  <img
-                    src={m.image}
-                    alt={`${m.title} en QSY`}
-                    loading="lazy"
-                    className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="relative h-52 w-full aurora">
-                    <div aria-hidden className="absolute inset-0 starfield twinkle opacity-40" />
-                    <div className="relative h-full transition-transform duration-700 group-hover:scale-[1.02]">
-                      <ModulePreview kind={m.kind} />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="relative px-7 pb-7 pt-2">
-                <div className="flex items-start justify-between">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                    <m.icon className="size-5" />
-                  </span>
-                  <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-                    {m.tag}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
-                <span
-                  aria-hidden
-                  className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-700 group-hover:w-full"
-                />
-              </div>
-            </article>
-          ))}
-        </div>
-
-      </section>
 
 
       {/* Dominios premium */}
