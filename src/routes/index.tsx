@@ -853,18 +853,37 @@ function Landing() {
             </Button>
           </div>
 
-          <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
-            <div className="marquee-y flex flex-col gap-4">
-              {colA.map((p, i) => (
-                <ProfileCard key={`a-${p.username}-${i}`} p={p} />
-              ))}
+          {cards.length ? (
+            <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
+              <div className="marquee-y flex flex-col gap-4">
+                {colA.map((p, i) => (
+                  <ProfileCard key={`a-${p.username}-${i}`} p={p} />
+                ))}
+              </div>
+              <div className="marquee-y-slow flex flex-col gap-4">
+                {colB.map((p, i) => (
+                  <ProfileCard key={`b-${p.username}-${i}`} p={p} />
+                ))}
+              </div>
             </div>
-            <div className="marquee-y-slow flex flex-col gap-4">
-              {colB.map((p, i) => (
-                <ProfileCard key={`b-${p.username}-${i}`} p={p} />
-              ))}
+          ) : (
+            <div className="grid h-[360px] place-items-center rounded-3xl border border-dashed border-border/60 bg-card/30 px-8 text-center backdrop-blur-xl">
+              <div>
+                <span className="mx-auto grid size-14 place-items-center rounded-2xl border border-border/60 bg-background/70 font-mono text-sm font-bold text-primary">
+                  QSY
+                </span>
+                <p className="mt-5 text-lg font-semibold">Aún no hay perfiles públicos</p>
+                <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+                  Sé la primera persona de la red. Los perfiles que se creen aparecerán aquí
+                  automáticamente.
+                </p>
+                <Button asChild variant="outline" className="mt-6 rounded-full px-6">
+                  <Link to="/register">Reservar mi username</Link>
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
+
 
         </div>
       </section>

@@ -164,13 +164,17 @@ export function usePlatformStats() {
     queryKey: ["platform-stats"],
     queryFn: async () => {
       const [profiles, links, verified, views] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase
+          .from("profiles")
+          .select("id", { count: "exact", head: true })
+          .not("user_id", "is", null),
         supabase.from("links").select("id", { count: "exact", head: true }),
         supabase
           .from("profiles")
           .select("id", { count: "exact", head: true })
+          .not("user_id", "is", null)
           .eq("verified", true),
-        supabase.from("profiles").select("view_count"),
+        supabase.from("profiles").select("view_count").not("user_id", "is", null),
       ]);
       const totalViews = (views.data ?? []).reduce(
         (sum, r: any) => sum + (r.view_count ?? 0),
@@ -193,6 +197,7 @@ export function useShowcaseProfiles(limit = 8) {
       const { data, error } = await supabase
         .from("profiles")
         .select("username, display_name, avatar_url, banner_url, verified, view_count, bio")
+        .not("user_id", "is", null)
         .order("view_count", { ascending: false })
         .limit(limit);
       if (error) throw error;
