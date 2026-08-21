@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { QsyLogo } from "@/components/qsy/logo";
+import { LangSwitcher } from "@/components/qsy/lang-switcher";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
@@ -221,6 +222,7 @@ function DashboardLayout() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 md:ml-4">
+            <LangSwitcher />
             {profile && (
               <Button asChild size="sm" className="rounded-full">
                 <Link to="/$username" params={{ username: profile.username }}>
