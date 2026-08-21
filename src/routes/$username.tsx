@@ -71,7 +71,7 @@ function PublicProfile() {
   const music = profile.music as { title?: string; artist?: string };
 
   return (
-    <ProfileStage theme={profile.theme}>
+    <ProfileStage theme={profile.theme} music={music}>
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
       <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-10">
 

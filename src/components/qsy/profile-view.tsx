@@ -1,4 +1,5 @@
 import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
+import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -223,7 +224,13 @@ export function ProfileView({
           })}
         </div>
 
-        {music?.title && (
+        {t.audio_url && !isFloatingPlayer(t) && (
+          <div className="mt-6 flex w-full justify-center">
+            <ProfilePlayer theme={t} music={music} />
+          </div>
+        )}
+
+        {!t.audio_url && music?.title && (
           <div
             className="mt-6 flex w-full max-w-md items-center gap-3 border px-4 py-3 text-left"
             style={{
