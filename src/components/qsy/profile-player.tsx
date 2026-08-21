@@ -45,6 +45,11 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
       .play()
       .then(() => setPlaying(true))
       .catch(() => setPlaying(false));
+    const resume = () => {
+      void el.play().then(() => setPlaying(true)).catch(() => undefined);
+    };
+    window.addEventListener("pointerdown", resume, { once: true });
+    return () => window.removeEventListener("pointerdown", resume);
   }, [theme.audio_url]);
 
   const toggle = () => {
