@@ -877,16 +877,17 @@ function Landing() {
 
           <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
             <div className="marquee-y flex flex-col gap-4">
-              {[...liveProfiles, ...liveProfiles].map((p, i) => (
-                <ProfileCard key={`a-${p.user}-${i}`} p={p} />
+              {colA.map((p, i) => (
+                <ProfileCard key={`a-${p.username}-${i}`} p={p} />
               ))}
             </div>
             <div className="marquee-y-slow flex flex-col gap-4">
-              {[...liveProfiles.slice().reverse(), ...liveProfiles.slice().reverse()].map((p, i) => (
-                <ProfileCard key={`b-${p.user}-${i}`} p={p} />
+              {colB.map((p, i) => (
+                <ProfileCard key={`b-${p.username}-${i}`} p={p} />
               ))}
             </div>
           </div>
+
         </div>
       </section>
 
