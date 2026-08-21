@@ -40,10 +40,10 @@ export function SiteFooter() {
             <p className="font-medium">Demo</p>
             <Link
               to="/$username"
-              params={{ username: "brayan" }}
+              params={{ username: "qsy" }}
               className="block text-muted-foreground hover:text-foreground"
             >
-              qsy.rip/brayan
+              qsy.rip/qsy
             </Link>
             <Link
               to="/$username"

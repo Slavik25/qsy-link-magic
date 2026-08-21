@@ -25,6 +25,7 @@ import {
 import { SiteNav } from "@/components/qsy/site-nav";
 import { SiteFooter } from "@/components/qsy/site-footer";
 import { Button } from "@/components/ui/button";
+import { usePlatformStats, useShowcaseProfiles } from "@/lib/qsy-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,30 +64,7 @@ const chips = [
   { icon: BarChart3, label: "Analytics en vivo" },
 ];
 
-const heroStats = [
-  { label: "Visitas totales", value: "14,203,982" },
-  { label: "Creadores activos", value: "14,204" },
-  { label: "Links servidos", value: "94,392" },
-  { label: "Badges verificados", value: "1,280" },
-];
-
 const bars = [28, 44, 36, 62, 48, 74, 58, 88, 66, 94, 72, 100];
-
-// image: coloca aquí la ruta de la captura cuando la tengas (import desde src/assets)
-const liveProfiles: {
-  user: string;
-  name: string;
-  tag: string;
-  views: string;
-  image?: string;
-}[] = [
-  { user: "brayan", name: "Brayan Bicet", tag: "Creator", views: "84.2k" },
-  { user: "nova", name: "Nova", tag: "Music", views: "62.9k" },
-  { user: "kaito", name: "Kaito", tag: "Gaming", views: "51.4k" },
-  { user: "lumen", name: "Lumen", tag: "Design", views: "43.7k" },
-  { user: "sora", name: "Sora", tag: "Dev", views: "38.1k" },
-  { user: "vega", name: "Vega", tag: "Streamer", views: "29.6k" },
-];
 
 const modules: {
   icon: typeof MessageCircle;
@@ -180,9 +158,9 @@ function DiscordPreview() {
             </span>
           </div>
           <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold">
-            brayan <BadgeCheck className="size-3.5 text-primary" />
+            qsy <BadgeCheck className="size-3.5 text-primary" />
           </p>
-          <p className="text-[11px] text-muted-foreground">@brayan · miembro desde 2021</p>
+          <p className="text-[11px] text-muted-foreground">@qsy · miembro desde 2021</p>
           <div className="mt-3 flex gap-1.5">
             {["Early", "Nitro", "Boost", "HypeSquad"].map((b) => (
               <span
@@ -318,7 +296,7 @@ function QrPreview() {
           ))}
         </div>
         <span className="absolute inset-x-4 top-1/2 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
-        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/brayan</p>
+        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/qsy</p>
       </div>
       <div className="space-y-2.5 text-left">
         {["PNG · SVG · PDF", "Color de acento", "Logo centrado", "Escaneo ilimitado"].map((r) => (
@@ -440,7 +418,7 @@ function ModulesShowcase() {
               className="pointer-events-none absolute -inset-6 rounded-[40px] bg-primary/10 blur-3xl"
             />
             <div key={m.kind} className="relative h-[460px] rise">
-              <PreviewFrame title={`qsy.rip/brayan · ${m.tag}`}>
+              <PreviewFrame title={`qsy.rip/qsy · ${m.tag}`}>
                 {m.image ? (
                   <img
                     src={m.image}
@@ -553,9 +531,9 @@ function SpecVisual({ kind }: { kind: (typeof specs)[number]["visual"] }) {
           </span>
           <div className="min-w-0">
             <p className="flex items-center gap-1 text-xs font-semibold">
-              Brayan <BadgeCheck className="size-3.5 text-primary" />
+              QSY <BadgeCheck className="size-3.5 text-primary" />
             </p>
-            <p className="text-[10px] text-muted-foreground">qsy.rip/brayan</p>
+            <p className="text-[10px] text-muted-foreground">qsy.rip/qsy</p>
           </div>
         </div>
         <div className="mt-3 space-y-1.5">
