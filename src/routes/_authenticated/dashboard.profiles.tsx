@@ -1,13 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Crown, Pencil, Plus, Sparkles, Trash2, Upload } from "lucide-react";
+import { Check, Crown, ExternalLink, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DashBanner } from "@/components/qsy/dash-banner";
 import { supabase } from "@/integrations/supabase/client";
-import { useMyProfile } from "@/lib/qsy-data";
+import { setActiveProfileId, useActiveProfileId, useMyProfiles } from "@/lib/qsy-data";
+import type { Profile } from "@/lib/qsy";
 import profilesArt from "@/assets/card-32.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
       { title: "Perfiles · Dashboard QSY" },
       {
         name: "description",
-        content: "Guarda distintas versiones de tu perfil QSY y cámbialas con un clic.",
+        content: "Gestiona varios biolinks QSY totalmente independientes desde una sola cuenta.",
       },
     ],
   }),
@@ -25,119 +26,80 @@ export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
 
 const FREE_LIMIT = 2;
 
-type Preset = {
-  id: string;
-  name: string;
-  display_name: string;
-  bio: string;
-  location: string;
-  avatar_url: string | null;
-  banner_url: string | null;
-  theme: Record<string, unknown>;
-};
-
-function usePresets() {
-  return useQuery({
-    queryKey: ["profile-presets"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profile_presets")
-        .select("*")
-        .order("created_at");
-      if (error) throw error;
-      return (data ?? []) as Preset[];
-    },
-  });
-}
-
 function ProfilesPage() {
-  const { data: profile } = useMyProfile();
-  const { data: presets = [] } = usePresets();
+  const { data: profiles = [] } = useMyProfiles();
+  const activeId = useActiveProfileId();
   const queryClient = useQueryClient();
-  const [renaming, setRenaming] = useState<string | null>(null);
-  const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const [creating, setCreating] = useState(false);
+  const [username, setUsername] = useState("");
 
-  // The live profile counts as one of the slots.
-  const used = 1 + presets.length;
+  const active = profiles.find((p) => p.id === activeId) ?? profiles[0] ?? null;
+  const used = profiles.length;
   const full = used >= FREE_LIMIT;
 
   const create = useMutation({
     mutationFn: async () => {
+      const clean = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+      if (clean.length < 3) throw new Error("El usuario necesita al menos 3 caracteres (a-z, 0-9, _).");
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user || !profile) throw new Error("Sesión no disponible");
-      const { error } = await supabase.from("profile_presets").insert({
-        user_id: auth.user.id,
-        name: `Perfil ${used + 1}`,
-        display_name: profile.display_name ?? "",
-        bio: profile.bio ?? "",
-        location: profile.location ?? "",
-        avatar_url: profile.avatar_url,
-        banner_url: profile.banner_url,
-        theme: profile.theme as never,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Perfil guardado", { description: "Se creó a partir de tu configuración actual." });
-      queryClient.invalidateQueries({ queryKey: ["profile-presets"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const load = useMutation({
-    mutationFn: async (preset: Preset) => {
-      if (!profile) throw new Error("Sesión no disponible");
-      const { error } = await supabase
+      if (!auth.user) throw new Error("Sesión no disponible");
+      const { data, error } = await supabase
         .from("profiles")
-        .update({
-          display_name: preset.display_name,
-          bio: preset.bio,
-          location: preset.location,
-          avatar_url: preset.avatar_url,
-          banner_url: preset.banner_url,
-          theme: preset.theme as never,
-        })
-        .eq("id", profile.id);
-      if (error) throw error;
+        .insert({ user_id: auth.user.id, username: clean, display_name: clean })
+        .select("id")
+        .single();
+      if (error) {
+        throw new Error(
+          error.code === "23505" ? "Ese usuario ya está en uso." : error.message,
+        );
+      }
+      return data.id as string;
     },
-    onSuccess: () => {
-      toast.success("Perfil activado");
-      queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+    onSuccess: (id) => {
+      setCreating(false);
+      setUsername("");
+      setActiveProfileId(id);
+      toast.success("Perfil creado", {
+        description: "Es un biolink independiente: sus enlaces y diseño son propios.",
+      });
+      void queryClient.invalidateQueries({ queryKey: ["my-profile"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("profile_presets").delete().eq("id", id);
+      const { error } = await supabase.from("profiles").delete().eq("id", id);
       if (error) throw error;
+      return id;
     },
-    onSuccess: () => {
+    onSuccess: (id) => {
+      if (activeId === id) setActiveProfileId(null);
       toast.success("Perfil eliminado");
-      queryClient.invalidateQueries({ queryKey: ["profile-presets"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-profile"] });
     },
+    onError: (e: Error) => toast.error(e.message),
   });
 
-  const rename = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("profile_presets")
-        .update({ name: name.trim() || "Perfil" })
-        .eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      setRenaming(null);
-      queryClient.invalidateQueries({ queryKey: ["profile-presets"] });
-    },
-  });
+  function edit(p: Profile) {
+    setActiveProfileId(p.id);
+    void queryClient.invalidateQueries();
+    void navigate({ to: "/dashboard/profile" });
+  }
+
+  function activate(p: Profile) {
+    setActiveProfileId(p.id);
+    void queryClient.invalidateQueries();
+    toast.success(`Gestionando @${p.username}`);
+  }
 
   return (
     <div className="space-y-6">
       <DashBanner
         eyebrow="Profiles · Plan Free"
         title="Crea y gestiona tus perfiles"
-        description="Guarda distintas versiones de tu perfil y cámbialas con un clic. Tu nombre, bio, avatar y tema se aplican al instante."
+        description="Cada perfil es un biolink independiente, con su propia URL, enlaces, insignias y diseño. Nada se comparte entre ellos."
         image={profilesArt.url}
       />
 
@@ -174,94 +136,77 @@ function ProfilesPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {/* Live profile */}
-        <article className="relative rounded-2xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl">
-          <span className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
-            <span className="size-1.5 rounded-full bg-emerald-400" /> Activo
-          </span>
-          {profile?.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt={`Avatar de ${profile.username}`}
-              className="mx-auto size-16 rounded-full object-cover ring-2 ring-primary/30"
-            />
-          ) : (
-            <span className="mx-auto grid size-16 place-items-center rounded-full bg-surface-strong font-mono text-lg font-bold text-primary ring-2 ring-primary/30">
-              {(profile?.username ?? "qs").slice(0, 2).toUpperCase()}
-            </span>
-          )}
-          <p className="mt-3 truncate text-sm font-semibold">
-            {profile?.display_name || profile?.username}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">@{profile?.username}</p>
-          <Button asChild className="mt-5 w-full rounded-xl">
-            <Link to="/dashboard/profile">
-              <Pencil className="size-4" /> Editar perfil
-            </Link>
-          </Button>
-        </article>
-
-        {/* Saved presets */}
-        {presets.map((p) => (
-          <article
-            key={p.id}
-            className="relative rounded-2xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl"
-          >
-            <button
-              onClick={() => remove.mutate(p.id)}
-              aria-label={`Eliminar ${p.name}`}
-              className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive"
+        {profiles.map((p) => {
+          const isActive = active?.id === p.id;
+          return (
+            <article
+              key={p.id}
+              className={`qsy-pop relative rounded-2xl border p-6 text-center backdrop-blur-xl transition-colors ${
+                isActive ? "border-primary/60 bg-primary/5" : "border-border/60 bg-card/40"
+              }`}
             >
-              <Trash2 className="size-4" />
-            </button>
-            {p.avatar_url ? (
-              <img src={p.avatar_url} alt="" className="mx-auto size-16 rounded-full object-cover" />
-            ) : (
-              <span className="mx-auto grid size-16 place-items-center rounded-full bg-surface-strong font-mono text-lg font-bold text-muted-foreground">
-                {p.name.slice(0, 2).toUpperCase()}
-              </span>
-            )}
+              {isActive ? (
+                <span className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                  <Check className="size-3" /> Gestionando
+                </span>
+              ) : null}
+              {profiles.length > 1 && (
+                <button
+                  onClick={() => remove.mutate(p.id)}
+                  aria-label={`Eliminar @${p.username}`}
+                  className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              )}
 
-            {renaming === p.id ? (
-              <Input
-                autoFocus
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onBlur={() => rename.mutate(p.id)}
-                onKeyDown={(e) => e.key === "Enter" && rename.mutate(p.id)}
-                className="mt-3 h-8 text-center text-sm"
-              />
-            ) : (
-              <button
-                onClick={() => {
-                  setRenaming(p.id);
-                  setName(p.name);
-                }}
-                className="mt-3 block w-full truncate text-sm font-semibold hover:text-primary"
-              >
-                {p.name}
-              </button>
-            )}
-            <p className="truncate text-xs text-muted-foreground">
-              {p.display_name || "Sin nombre visible"}
-            </p>
+              {p.avatar_url ? (
+                <img
+                  src={p.avatar_url}
+                  alt={`Avatar de ${p.username}`}
+                  className="mx-auto mt-4 size-16 rounded-full object-cover ring-2 ring-primary/30"
+                />
+              ) : (
+                <span className="mx-auto mt-4 grid size-16 place-items-center rounded-full bg-surface-strong font-mono text-lg font-bold text-primary ring-2 ring-primary/30">
+                  {p.username.slice(0, 2).toUpperCase()}
+                </span>
+              )}
 
-            <Button
-              onClick={() => load.mutate(p)}
-              disabled={load.isPending}
-              variant="secondary"
-              className="mt-5 w-full rounded-xl"
-            >
-              <Upload className="size-4" /> Cargar perfil
-            </Button>
-          </article>
-        ))}
+              <p className="mt-3 truncate text-sm font-semibold">{p.display_name || p.username}</p>
+              <p className="truncate text-xs text-muted-foreground">qsy.rip/{p.username}</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {p.view_count?.toLocaleString("es-ES") ?? 0} visitas
+              </p>
 
-        {/* New slot */}
+              <div className="mt-5 space-y-2">
+                <Button onClick={() => edit(p)} className="w-full rounded-xl">
+                  <Pencil className="size-4" /> Editar perfil
+                </Button>
+                <div className="flex gap-2">
+                  {!isActive && (
+                    <Button
+                      onClick={() => activate(p)}
+                      variant="secondary"
+                      className="flex-1 rounded-xl text-xs"
+                    >
+                      Gestionar
+                    </Button>
+                  )}
+                  <Button asChild variant="secondary" className="flex-1 rounded-xl text-xs">
+                    <Link to="/$username" params={{ username: p.username }}>
+                      <ExternalLink className="size-3.5" /> Ver
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+
         {full ? (
           <Link
             to="/dashboard/premium"
-            className="grid min-h-[236px] place-items-center rounded-2xl border border-dashed border-border/60 bg-card/20 p-6 text-center transition-colors hover:border-primary/50"
+            className="grid min-h-[280px] place-items-center rounded-2xl border border-dashed border-border/60 bg-card/20 p-6 text-center transition-colors hover:border-primary/50"
           >
             <div>
               <span className="mx-auto grid size-12 place-items-center rounded-full bg-surface-strong text-primary">
@@ -273,18 +218,53 @@ function ProfilesPage() {
               </p>
             </div>
           </Link>
+        ) : creating ? (
+          <div className="grid min-h-[280px] place-items-center rounded-2xl border border-primary/50 bg-card/40 p-6 text-center backdrop-blur-xl">
+            <div className="w-full">
+              <p className="text-sm font-semibold">Nuevo perfil independiente</p>
+              <p className="mt-1 text-xs text-muted-foreground">Elige su URL propia</p>
+              <div className="mt-4 flex items-center gap-1 rounded-xl border border-border/60 bg-surface px-3 py-2">
+                <span className="text-xs text-muted-foreground">qsy.rip/</span>
+                <input
+                  autoFocus
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && create.mutate()}
+                  placeholder="usuario"
+                  className="w-full bg-transparent text-sm outline-none"
+                />
+              </div>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  onClick={() => create.mutate()}
+                  disabled={create.isPending}
+                  className="flex-1 rounded-xl"
+                >
+                  Crear
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => setCreating(false)}
+                  className="rounded-xl"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
         ) : (
           <button
-            onClick={() => create.mutate()}
-            disabled={create.isPending || !profile}
-            className="grid min-h-[236px] place-items-center rounded-2xl border border-dashed border-border/60 bg-card/20 p-6 text-center transition-colors hover:border-primary/50 disabled:opacity-60"
+            onClick={() => setCreating(true)}
+            className="grid min-h-[280px] place-items-center rounded-2xl border border-dashed border-border/60 bg-card/20 p-6 text-center transition-colors hover:border-primary/50"
           >
             <div>
               <span className="mx-auto grid size-12 place-items-center rounded-full bg-surface-strong text-foreground">
                 <Plus className="size-5" />
               </span>
               <p className="mt-3 text-sm font-medium">Nuevo perfil</p>
-              <p className="mt-1 text-xs text-muted-foreground">Guarda tu configuración actual</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Empieza desde cero, sin copiar nada
+              </p>
             </div>
           </button>
         )}
@@ -295,11 +275,11 @@ function ProfilesPage() {
         <div className="min-w-0">
           <h2 className="text-sm font-semibold">¿Cómo funcionan los perfiles?</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Pulsa <strong className="text-foreground">Nuevo perfil</strong> para guardar tu configuración
-            actual (nombre, bio, avatar y tema) como un perfil reutilizable. Luego usa{" "}
-            <strong className="text-foreground">Cargar perfil</strong> en cualquier tarjeta para activarlo
-            al instante. Plan <span className="text-primary">Free</span> · {FREE_LIMIT} perfiles · V.I.P 3 ·
-            Premium 5.
+            Cada perfil es <strong className="text-foreground">totalmente independiente</strong>: su
+            propia URL, avatar, banner, enlaces, insignias, muro y diseño. Pulsa{" "}
+            <strong className="text-foreground">Gestionar</strong> para elegir cuál editas en el
+            dashboard. Plan <span className="text-primary">Free</span> · {FREE_LIMIT} perfiles · V.I.P
+            3 · Premium 5.
           </p>
         </div>
       </section>
