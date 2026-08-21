@@ -29,6 +29,13 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardSocialsRouteImport } from './routes/_authenticated/dashboard.socials'
+import { Route as AuthenticatedDashboardProfileIndexRouteImport } from './routes/_authenticated/dashboard.profile.index'
+import { Route as AuthenticatedDashboardProfileAdvancedRouteImport } from './routes/_authenticated/dashboard.profile.advanced'
+import { Route as AuthenticatedDashboardProfileConnectionsRouteImport } from './routes/_authenticated/dashboard.profile.connections'
+import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from './routes/_authenticated/dashboard.profile.customization'
+import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
+import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
+import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -140,6 +147,48 @@ const AuthenticatedDashboardSocialsRoute =
     path: '/socials',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardProfileIndexRoute =
+  AuthenticatedDashboardProfileIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileAdvancedRoute =
+  AuthenticatedDashboardProfileAdvancedRouteImport.update({
+    id: '/advanced',
+    path: '/advanced',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileConnectionsRoute =
+  AuthenticatedDashboardProfileConnectionsRouteImport.update({
+    id: '/connections',
+    path: '/connections',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileCustomizationRoute =
+  AuthenticatedDashboardProfileCustomizationRouteImport.update({
+    id: '/customization',
+    path: '/customization',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileEffectsRoute =
+  AuthenticatedDashboardProfileEffectsRouteImport.update({
+    id: '/effects',
+    path: '/effects',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileModulesRoute =
+  AuthenticatedDashboardProfileModulesRouteImport.update({
+    id: '/modules',
+    path: '/modules',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
+const AuthenticatedDashboardProfileShareRoute =
+  AuthenticatedDashboardProfileShareRouteImport.update({
+    id: '/share',
+    path: '/share',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -156,11 +205,18 @@ export interface FileRoutesByFullPath {
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
+  '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
+  '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
+  '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -176,11 +232,17 @@ export interface FileRoutesByTo {
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
+  '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
+  '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
+  '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -199,11 +261,18 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
+  '/_authenticated/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
+  '/_authenticated/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
+  '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -227,6 +296,13 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/socials'
     | '/dashboard/'
+    | '/dashboard/profile/advanced'
+    | '/dashboard/profile/connections'
+    | '/dashboard/profile/customization'
+    | '/dashboard/profile/effects'
+    | '/dashboard/profile/modules'
+    | '/dashboard/profile/share'
+    | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -242,11 +318,17 @@ export interface FileRouteTypes {
     | '/dashboard/links'
     | '/dashboard/music'
     | '/dashboard/premium'
-    | '/dashboard/profile'
     | '/dashboard/profiles'
     | '/dashboard/settings'
     | '/dashboard/socials'
     | '/dashboard'
+    | '/dashboard/profile/advanced'
+    | '/dashboard/profile/connections'
+    | '/dashboard/profile/customization'
+    | '/dashboard/profile/effects'
+    | '/dashboard/profile/modules'
+    | '/dashboard/profile/share'
+    | '/dashboard/profile'
   id:
     | '__root__'
     | '/'
@@ -269,6 +351,13 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/socials'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/profile/advanced'
+    | '/_authenticated/dashboard/profile/connections'
+    | '/_authenticated/dashboard/profile/customization'
+    | '/_authenticated/dashboard/profile/effects'
+    | '/_authenticated/dashboard/profile/modules'
+    | '/_authenticated/dashboard/profile/share'
+    | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -424,8 +513,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSocialsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/profile/': {
+      id: '/_authenticated/dashboard/profile/'
+      path: '/'
+      fullPath: '/dashboard/profile/'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/advanced': {
+      id: '/_authenticated/dashboard/profile/advanced'
+      path: '/advanced'
+      fullPath: '/dashboard/profile/advanced'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileAdvancedRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/connections': {
+      id: '/_authenticated/dashboard/profile/connections'
+      path: '/connections'
+      fullPath: '/dashboard/profile/connections'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileConnectionsRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/customization': {
+      id: '/_authenticated/dashboard/profile/customization'
+      path: '/customization'
+      fullPath: '/dashboard/profile/customization'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileCustomizationRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/effects': {
+      id: '/_authenticated/dashboard/profile/effects'
+      path: '/effects'
+      fullPath: '/dashboard/profile/effects'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileEffectsRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/modules': {
+      id: '/_authenticated/dashboard/profile/modules'
+      path: '/modules'
+      fullPath: '/dashboard/profile/modules'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileModulesRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
+    '/_authenticated/dashboard/profile/share': {
+      id: '/_authenticated/dashboard/profile/share'
+      path: '/share'
+      fullPath: '/dashboard/profile/share'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileShareRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
   }
 }
+
+interface AuthenticatedDashboardProfileRouteChildren {
+  AuthenticatedDashboardProfileAdvancedRoute: typeof AuthenticatedDashboardProfileAdvancedRoute
+  AuthenticatedDashboardProfileConnectionsRoute: typeof AuthenticatedDashboardProfileConnectionsRoute
+  AuthenticatedDashboardProfileCustomizationRoute: typeof AuthenticatedDashboardProfileCustomizationRoute
+  AuthenticatedDashboardProfileEffectsRoute: typeof AuthenticatedDashboardProfileEffectsRoute
+  AuthenticatedDashboardProfileModulesRoute: typeof AuthenticatedDashboardProfileModulesRoute
+  AuthenticatedDashboardProfileShareRoute: typeof AuthenticatedDashboardProfileShareRoute
+  AuthenticatedDashboardProfileIndexRoute: typeof AuthenticatedDashboardProfileIndexRoute
+}
+
+const AuthenticatedDashboardProfileRouteChildren: AuthenticatedDashboardProfileRouteChildren =
+  {
+    AuthenticatedDashboardProfileAdvancedRoute:
+      AuthenticatedDashboardProfileAdvancedRoute,
+    AuthenticatedDashboardProfileConnectionsRoute:
+      AuthenticatedDashboardProfileConnectionsRoute,
+    AuthenticatedDashboardProfileCustomizationRoute:
+      AuthenticatedDashboardProfileCustomizationRoute,
+    AuthenticatedDashboardProfileEffectsRoute:
+      AuthenticatedDashboardProfileEffectsRoute,
+    AuthenticatedDashboardProfileModulesRoute:
+      AuthenticatedDashboardProfileModulesRoute,
+    AuthenticatedDashboardProfileShareRoute:
+      AuthenticatedDashboardProfileShareRoute,
+    AuthenticatedDashboardProfileIndexRoute:
+      AuthenticatedDashboardProfileIndexRoute,
+  }
+
+const AuthenticatedDashboardProfileRouteWithChildren =
+  AuthenticatedDashboardProfileRoute._addFileChildren(
+    AuthenticatedDashboardProfileRouteChildren,
+  )
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
@@ -434,7 +605,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMusicRoute: typeof AuthenticatedDashboardMusicRoute
   AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
-  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRouteWithChildren
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardSocialsRoute: typeof AuthenticatedDashboardSocialsRoute
@@ -450,7 +621,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMusicRoute: AuthenticatedDashboardMusicRoute,
     AuthenticatedDashboardPremiumRoute: AuthenticatedDashboardPremiumRoute,
-    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+    AuthenticatedDashboardProfileRoute:
+      AuthenticatedDashboardProfileRouteWithChildren,
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardSocialsRoute: AuthenticatedDashboardSocialsRoute,
