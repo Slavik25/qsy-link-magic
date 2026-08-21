@@ -33,7 +33,13 @@ function Flag({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-type Profile = { username: string; display_name: string | null; avatar_url: string | null };
+type Profile = {
+  username: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  rank?: string | null;
+  domain?: string | null;
+};
 
 function useTheme() {
   const [dark, setDark] = useState(true);
@@ -75,7 +81,7 @@ export function SiteNav() {
       }
       const { data } = await supabase
         .from("profiles")
-        .select("username, display_name, avatar_url")
+        .select("username, display_name, avatar_url, rank, domain")
         .eq("user_id", userId)
         .maybeSingle();
       setProfile(data ?? null);
