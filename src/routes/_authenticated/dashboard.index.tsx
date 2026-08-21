@@ -81,7 +81,7 @@ function Overview() {
   const tasks = [
     { label: "Sube un avatar", done: !!profile?.avatar_url, to: "/dashboard/profile", icon: UserRound },
     { label: "Añade una descripción", done: !!profile?.bio, to: "/dashboard/profile", icon: TypeIcon },
-    { label: "Personaliza el fondo", done: !!profile?.theme.background, to: "/dashboard/appearance", icon: ImageIcon },
+    { label: "Personaliza el fondo", done: !!profile?.theme.background, to: "/dashboard/profiles", icon: ImageIcon },
     { label: "Añade tus redes", done: links.length > 0, to: "/dashboard/links", icon: AtSign },
     { label: "Crea tu primer link", done: links.length > 0, to: "/dashboard/links", icon: Link2 },
     { label: "Llega a 10 visitas", done: (profile?.view_count ?? 0) >= 10, to: "/dashboard/analytics", icon: Eye },
