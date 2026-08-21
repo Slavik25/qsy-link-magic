@@ -32,16 +32,20 @@ export function ProfileView({
     "--p-glow": `${t.glow / 100}`,
   } as React.CSSProperties;
 
+  const showCard = t.show_card !== false;
+
   return (
     <div
       style={style}
-      className={`relative w-full overflow-hidden rounded-2xl border border-border bg-background/60 ${
-        compact ? "p-5" : "p-6 sm:p-10"
+      className={`relative w-full overflow-hidden ${
+        showCard
+          ? `rounded-2xl border border-border bg-background/60 ${compact ? "p-5" : "p-6 sm:p-10"}`
+          : "border-0 bg-transparent p-0"
       }`}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className={`pointer-events-none absolute inset-0 ${showCard ? "" : "hidden"}`}
         style={{
           background: `radial-gradient(70% 45% at 50% -5%, color-mix(in oklab, ${t.accent} calc(var(--p-glow) * 40%), transparent), transparent 70%)`,
         }}

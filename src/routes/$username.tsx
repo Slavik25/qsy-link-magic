@@ -70,7 +70,7 @@ function PublicProfile() {
 
   return (
     <ProfileStage theme={profile.theme}>
-      <main className="mx-auto max-w-xl px-4 py-10">
+      <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-10">
         <ProfileView
           profile={profile}
           links={links}

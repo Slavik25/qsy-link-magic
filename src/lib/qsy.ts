@@ -37,6 +37,7 @@ export type ThemeConfig = {
   avatar_shape?: "circle" | "rounded" | "square" | "hexagon";
   profile_width?: "compact" | "normal" | "wide";
   card_bg_type?: "solid" | "gradient" | "image" | "video" | "transparent";
+  show_card?: boolean;
   color_text?: string;
   color_icon?: string;
   color_border?: string;
@@ -96,6 +97,7 @@ export const defaultTheme: ThemeConfig = {
   avatar_shape: "circle",
   profile_width: "normal",
   card_bg_type: "solid",
+  show_card: true,
   color_text: "#ffffff",
   color_icon: "#ffffff",
   color_border: "#ffffff",
