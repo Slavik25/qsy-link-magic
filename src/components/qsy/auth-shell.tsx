@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, Check } from "lucide-react";
-import { QsyLogo } from "@/components/qsy/logo";
 
 const perks = [
   "Perfiles con música de fondo",
@@ -35,10 +34,14 @@ export function AuthShell({
         }`}
       >
         <section className="rise text-center lg:text-left">
-          <div className="inline-flex items-center">
-            <QsyLogo />
-            <span className="text-lg font-semibold tracking-tight text-primary">.to</span>
-          </div>
+          <Link to="/" className="inline-flex items-center gap-2">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary font-black tracking-tighter text-primary-foreground">
+              Q
+            </span>
+            <span className="text-lg font-semibold tracking-tight">
+              QSY<span className="text-primary">.to</span>
+            </span>
+          </Link>
 
           <h2 className="mt-8 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
             Tu perfil premium en{" "}
