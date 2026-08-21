@@ -810,7 +810,7 @@ function Landing() {
         <div className="relative mx-auto max-w-5xl px-4 pb-24 pt-10 sm:px-6">
           <div className="rounded-3xl border border-border/70 bg-card/40 p-8 text-center backdrop-blur-xl">
             <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-              Más de 90,000 visitas al mes confirman la red
+              {(stats?.views ?? 0).toLocaleString("es-ES")} visitas registradas en la red QSY
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {heroStats.map((s) => (
