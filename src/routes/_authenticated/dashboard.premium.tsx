@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Gem, LayoutTemplate, Music4, Sparkles } from "lucide-react";
+import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
 import { SHOP_DECORATIONS, SHOP_LAYOUTS, SHOP_PLAYERS } from "@/lib/shop";
+import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   component: ShopPage,
@@ -50,8 +52,26 @@ function Price({ price, premium }: { price: number; premium?: boolean | undefine
 function ShopPage() {
   const [tab, setTab] = useState<Tab>("players");
   const { data: profile } = useMyProfile();
+  const { data: coins } = useWallet();
+  const { data: unlocks } = useUnlocks();
   const qc = useQueryClient();
   const theme = profile?.theme;
+  const owned = new Set(unlocks ?? []);
+
+  async function buy(key: string, price: number, name: string) {
+    try {
+      const balance = await purchaseItem(key);
+      toast.success(`${name} comprado`, { description: `Saldo restante: ${balance} QSY Coins` });
+      await qc.invalidateQueries({ queryKey: ["wallet"] });
+      await qc.invalidateQueries({ queryKey: ["unlocks"] });
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(
+        msg.includes("not enough") ? "No tienes suficientes QSY Coins" : "No se pudo comprar",
+        { description: msg.includes("not enough") ? `Necesitas ${price} coins. Completa misiones para ganarlos.` : msg },
+      );
+    }
+  }
 
   async function apply(patch: Partial<ThemeConfig>, label: string) {
     if (!profile) {
@@ -81,6 +101,19 @@ function ShopPage() {
           Reproductores de música, layouts personalizados y decoraciones de avatar estilo Discord.
         </p>
       </header>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-primary/10 px-5 py-4">
+        <div className="flex items-center gap-3">
+          <Coins className="size-5 text-primary" />
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Tus QSY Coins</p>
+            <p className="text-xl font-bold text-primary">{(coins ?? 0).toLocaleString("es-ES")}</p>
+          </div>
+        </div>
+        <Button asChild variant="secondary" size="sm" className="rounded-xl">
+          <Link to="/dashboard/missions">Conseguir más en Misiones</Link>
+        </Button>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         {TABS.map((t) => (
@@ -123,21 +156,31 @@ function ShopPage() {
                     </div>
                   </div>
                 </div>
-                <Button
-                  className="mt-4 w-full rounded-xl"
-                  variant={active ? "secondary" : "default"}
-                  onClick={() =>
-                    apply({ player_type: p.player_type as never, player_bg: p.player_bg as never }, p.name)
-                  }
-                >
-                  {active ? (
-                    <>
-                      <Check className="size-4" /> Equipado
-                    </>
-                  ) : (
-                    "Equipar"
-                  )}
-                </Button>
+                {p.price > 0 && !owned.has(p.key) ? (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant="secondary"
+                    onClick={() => buy(p.key, p.price, p.name)}
+                  >
+                    <Lock className="size-4" /> Comprar · {p.price} QSY
+                  </Button>
+                ) : (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant={active ? "secondary" : "default"}
+                    onClick={() =>
+                      apply({ player_type: p.player_type as never, player_bg: p.player_bg as never }, p.name)
+                    }
+                  >
+                    {active ? (
+                      <>
+                        <Check className="size-4" /> Equipado
+                      </>
+                    ) : (
+                      "Equipar"
+                    )}
+                  </Button>
+                )}
               </article>
             );
           })}
@@ -160,28 +203,38 @@ function ShopPage() {
                     <Price price={l.price} premium={l.premium} />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{l.description}</p>
-                  <Button
-                    className="mt-4 w-full rounded-xl"
-                    variant={active ? "secondary" : "default"}
-                    onClick={() =>
-                      apply(
-                        {
-                          template: l.template,
-                          profile_width: l.profile_width,
-                          avatar_shape: l.avatar_shape,
-                        },
-                        l.name,
-                      )
-                    }
-                  >
-                    {active ? (
-                      <>
-                        <Check className="size-4" /> Equipado
-                      </>
-                    ) : (
-                      "Equipar"
-                    )}
-                  </Button>
+                  {l.price > 0 && !owned.has(l.key) ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(l.key, l.price, l.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {l.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() =>
+                        apply(
+                          {
+                            template: l.template,
+                            profile_width: l.profile_width,
+                            avatar_shape: l.avatar_shape,
+                          },
+                          l.name,
+                        )
+                      }
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
                 </div>
               </article>
             );
@@ -213,19 +266,29 @@ function ShopPage() {
                   <Price price={d.price} premium={d.premium} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{d.description}</p>
-                <Button
-                  className="mt-4 w-full rounded-xl"
-                  variant={active ? "secondary" : "default"}
-                  onClick={() => apply({ avatar_decoration: d.key }, d.name)}
-                >
-                  {active ? (
-                    <>
-                      <Check className="size-4" /> Equipado
-                    </>
-                  ) : (
-                    "Equipar"
-                  )}
-                </Button>
+                {d.price > 0 && !owned.has(d.key) ? (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant="secondary"
+                    onClick={() => buy(d.key, d.price, d.name)}
+                  >
+                    <Lock className="size-4" /> Comprar · {d.price} QSY
+                  </Button>
+                ) : (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant={active ? "secondary" : "default"}
+                    onClick={() => apply({ avatar_decoration: d.key }, d.name)}
+                  >
+                    {active ? (
+                      <>
+                        <Check className="size-4" /> Equipado
+                      </>
+                    ) : (
+                      "Equipar"
+                    )}
+                  </Button>
+                )}
               </article>
             );
           })}
