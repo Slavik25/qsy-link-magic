@@ -9,6 +9,7 @@ import { useMyProfile } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
 import { SHOP_DECORATIONS, SHOP_LAYOUTS, SHOP_PLAYERS } from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
+import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/dashboard/premium")({
@@ -145,19 +146,8 @@ function ShopPage() {
                   <Price price={p.price} premium={p.premium} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
-                <div
-                  className="mt-4 flex items-center gap-3 rounded-2xl border border-border/60 p-3"
-                  style={{ background: p.preview }}
-                >
-                  <span className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary">
-                    <Music4 className="size-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-medium">QSY Radio</p>
-                    <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface-strong">
-                      <div className="h-full w-1/3 rounded-full bg-primary" />
-                    </div>
-                  </div>
+                <div className="mt-4">
+                  <PlayerPreview player={p} />
                 </div>
                 {p.price > 0 && !owned.has(p.key) ? (
                   <Button
@@ -207,7 +197,7 @@ function ShopPage() {
                 key={l.key}
                 className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
               >
-                <div className="h-28" style={{ background: l.preview }} />
+                <LayoutPreview layout={l} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-2">
                     <h2 className="text-sm font-semibold">{l.name}</h2>
@@ -320,16 +310,16 @@ function ShopPage() {
         </section>
       )}
 
-      <section className="rounded-3xl border border-primary/30 bg-primary/10 p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">QSY Premium</p>
-        <p className="mt-3 text-4xl font-extrabold">
-          4,99 € <span className="text-base font-normal text-muted-foreground">/ mes</span>
-        </p>
-        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-          Desbloquea todos los artículos marcados como premium, perfiles ilimitados, dominios qsy.rip / qsy.es
-          / qsy.bio y analíticas avanzadas.
-        </p>
-        <Button className="mt-6 rounded-xl px-8">Mejorar ahora</Button>
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-primary/30 bg-primary/10 p-6">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Rangos QSY</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Desbloquea todo el catálogo, perfiles ilimitados y dominios exclusivos con Obsidian o Seraph.
+          </p>
+        </div>
+        <Button asChild className="rounded-xl px-6">
+          <Link to="/dashboard/rank">Subir de rango</Link>
+        </Button>
       </section>
     </div>
   );

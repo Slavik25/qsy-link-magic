@@ -402,3 +402,17 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes qsy-eq {
+  from { transform: scaleY(0.35); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes qsy-marquee-text {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.qsy-marquee-text {
+  animation: qsy-marquee-text 9s linear infinite;
+}

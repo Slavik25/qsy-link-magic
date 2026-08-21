@@ -5,6 +5,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronRight,
+  Crown,
   Gem,
   Gift,
   Image as ImageIcon,
@@ -42,7 +43,8 @@ const NAV: NavItem[] = [
   
   { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
   { to: "/dashboard/missions", label: "Misiones", icon: Target },
-  { to: "/dashboard/premium", label: "Tienda", icon: Gem, tag: "PRO" },
+  { to: "/dashboard/premium", label: "Tienda", icon: Gem },
+  { to: "/dashboard/rank", label: "Subir de rango", icon: Crown },
   { to: "/templates", label: "Plantillas", icon: ImageIcon },
   { to: "/explore", label: "Explorar", icon: Sparkles },
   { to: "/dashboard/settings", label: "Configuración", icon: Settings },
