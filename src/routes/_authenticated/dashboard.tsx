@@ -37,7 +37,7 @@ const NAV: NavItem[] = [
   { to: "/dashboard/profiles", label: "Perfiles", icon: UserRound },
   { to: "/dashboard/links", label: "Conexiones", icon: Link2 },
   { to: "/dashboard/badges", label: "Insignias", icon: BadgeCheck },
-  { to: "/dashboard/appearance", label: "Personalizar", icon: Palette },
+  
   { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
   { to: "/dashboard/premium", label: "Tienda", icon: Gem, tag: "PRO" },
   { to: "/templates", label: "Plantillas", icon: ImageIcon },
