@@ -277,7 +277,7 @@ export const SHOP_LAYOUTS: LayoutDef[] = [
   },
 ];
 
-];
+
 
 /** Decoraciones de avatar estilo Discord (theme.avatar_decoration) */
 export type DecorationDef = ShopItem & { image: string | null };
