@@ -70,7 +70,9 @@ function PublicProfile() {
 
   return (
     <ProfileStage theme={profile.theme}>
+      <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
       <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-10">
+
         <ProfileView
           profile={profile}
           links={links}
