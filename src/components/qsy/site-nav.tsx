@@ -23,9 +23,9 @@ export function SiteNav() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-8">
+    <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-5">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 rounded-2xl border border-border/70 bg-background/70 px-4 shadow-[0_20px_60px_-30px_oklch(0_0_0/0.9)] backdrop-blur-xl sm:px-5">
+        <div className="flex min-w-0 items-center gap-8">
           <QsyLogo />
           <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
             {items.map((i) => (
@@ -75,7 +75,7 @@ export function SiteNav() {
       </div>
 
       {open && (
-        <div className="border-t border-border/60 bg-background/95 px-4 py-4 md:hidden">
+        <div className="mx-auto mt-2 max-w-5xl rounded-2xl border border-border/70 bg-background/95 px-4 py-4 backdrop-blur-xl md:hidden">
           <nav className="flex flex-col gap-3 text-sm">
             {items.map((i) => (
               <Link key={i.to} to={i.to} onClick={() => setOpen(false)}>
