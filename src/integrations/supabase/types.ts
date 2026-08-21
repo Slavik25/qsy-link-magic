@@ -230,6 +230,7 @@ export type Database = {
           location: string
           music: Json
           theme: Json
+          uid: number
           updated_at: string
           user_id: string | null
           username: string
@@ -247,6 +248,7 @@ export type Database = {
           location?: string
           music?: Json
           theme?: Json
+          uid?: number
           updated_at?: string
           user_id?: string | null
           username: string
@@ -264,6 +266,7 @@ export type Database = {
           location?: string
           music?: Json
           theme?: Json
+          uid?: number
           updated_at?: string
           user_id?: string | null
           username?: string
