@@ -82,7 +82,8 @@ export function ProfileView({
             profile.banner_url ? (compact ? "-mt-8" : "-mt-12") : ""
           }`}
           style={{
-            background: `linear-gradient(140deg, ${t.accent}, transparent)`,
+            background: deco?.ring && deco.key !== "none" ? deco.ring : `linear-gradient(140deg, ${t.accent}, transparent)`,
+            animation: deco?.animation,
             boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
           }}
         >
