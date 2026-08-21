@@ -158,10 +158,10 @@ function AdminContent() {
             >
               <div
                 className="h-20 rounded-xl border border-border/50"
-                style={{ background: t.preview ?? "linear-gradient(135deg,#1a1030,#0a0713)" }}
+                style={{ background: `linear-gradient(135deg, ${t.accent}55, #0a0713)` }}
               />
               <p className="mt-3 text-xs font-semibold">{t.name}</p>
-              <p className="text-[11px] text-muted-foreground">{t.description}</p>
+              <p className="text-[11px] text-muted-foreground">{t.desc}</p>
             </div>
           ))}
         </div>
