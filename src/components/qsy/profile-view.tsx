@@ -40,12 +40,18 @@ export function ProfileView({
   } as React.CSSProperties;
 
   const showCard = t.show_card !== false;
+  const template = t.template || "glass";
+  const shape = t.avatar_shape ?? "circle";
+  const shapeClass = `qsy-shape-${shape}`;
+  const cardBg = t.card_bg_type ?? "solid";
 
   return (
     <div
       style={style}
       className={`relative w-full overflow-hidden ${
-        showCard ? "rounded-2xl border border-border bg-background/60" : "border-0 bg-transparent"
+        showCard
+          ? `qsy-tpl qsy-tpl-${template} ${cardBg === "transparent" ? "!bg-transparent" : ""}`
+          : "border-0 bg-transparent"
       }`}
     >
       <div
@@ -55,6 +61,7 @@ export function ProfileView({
           background: `radial-gradient(70% 45% at 50% -5%, color-mix(in oklab, ${t.accent} calc(var(--p-glow) * 40%), transparent), transparent 70%)`,
         }}
       />
+
 
       {profile.banner_url && (
         <div className={`relative w-full overflow-hidden ${compact ? "h-24" : "h-36 sm:h-40"}`}>
