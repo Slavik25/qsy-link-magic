@@ -24,35 +24,32 @@ type BadgeDef = {
 
 const BADGES: BadgeDef[] = [
   { key: "staff", name: "Staff", description: "Formas parte del equipo de QSY.", img: "/badges/staff.svg" },
-  { key: "moderator", name: "Moderador", description: "Moderas la comunidad de QSY.", img: "/badges/moderator.svg" },
-  { key: "helper", name: "Helper", description: "Ayudas activamente a la comunidad.", img: "/badges/helper.svg", action: "Unirme" },
-  { key: "premium", name: "Premium", description: "Consigue el paquete premium.", img: "/badges/premium.svg", action: "Obtener" },
+  { key: "moderator", name: "Moderador", description: "Moderas la comunidad de QSY.", img: "/badges/moderador.svg" },
+  { key: "partner", name: "Partner", description: "Colaborador oficial de QSY.", img: "/badges/partner.svg", action: "Solicitar" },
+  { key: "vip", name: "V.I.P", description: "Miembro V.I.P de QSY.", img: "/badges/vip.svg", action: "Obtener" },
+  { key: "king", name: "King", description: "Top 1 del ranking mensual.", img: "/badges/king.svg" },
   {
     key: "verified",
-    name: "Verified",
+    name: "Verificado",
     description: "Creador verificado en QSY.",
-    img: "/badges/verified.svg",
+    img: "/badges/verifiedusergreen.svg",
     action: "Solicitar",
     unlocked: (v) => v.verified,
   },
-  { key: "donor", name: "Donor", description: "Apoya el proyecto con una donación.", img: "/badges/donor.svg", action: "Donar" },
-  { key: "gifter", name: "Gifter", description: "Regala QSY Premium a alguien.", img: "/badges/gifter.svg", action: "Regalar" },
-  { key: "host", name: "Image Host", description: "Acceso al hosting de imágenes.", img: "/badges/imagehost.svg", action: "Obtener" },
-  { key: "domain", name: "Domain Legend", description: "Añade un dominio propio a QSY.", img: "/badges/domain.svg", action: "Añadir" },
-  { key: "og", name: "OG", description: "Estuviste desde el principio.", img: "/badges/og.svg" },
-  { key: "king", name: "King", description: "Top 1 del ranking mensual.", img: "/badges/king.svg" },
+  { key: "donor", name: "Donator", description: "Apoya el proyecto con una donación.", img: "/badges/donator.png", action: "Donar" },
   { key: "booster", name: "Server Booster", description: "Boostea el servidor de Discord.", img: "/badges/booster.svg", action: "Boost" },
-  { key: "bug", name: "Bug Hunter", description: "Reporta un bug al equipo.", img: "/badges/bughunter.svg", action: "Reportar" },
-  { key: "dev", name: "Developer", description: "Colaboras en el desarrollo de QSY.", img: "/badges/developer.svg" },
+  { key: "early", name: "Early Supporter", description: "Estuviste desde el principio.", img: "/badges/earlysupporter.svg" },
+  { key: "dev", name: "Developer Activo", description: "Colaboras en el desarrollo de QSY.", img: "/badges/developeractivo.svg" },
+  { key: "discorddev", name: "Discord Developer", description: "Desarrollas bots e integraciones.", img: "/badges/bluediscorddeveloper.svg" },
+  { key: "bug", name: "Bug Hunter", description: "Reporta un bug al equipo.", img: "/badges/discordbughuntergreen.svg", action: "Reportar" },
   {
-    key: "views100",
-    name: "100 visitas",
-    description: "Alcanza 100 visitas en tu perfil.",
-    img: "/badges/winner.svg",
-    unlocked: (v) => v.views >= 100,
+    key: "buggold",
+    name: "Bug Hunter Gold",
+    description: "Reporta bugs críticos de forma recurrente.",
+    img: "/badges/discordbughuntergold.svg",
   },
-  { key: "winter", name: "Winter 2026", description: "Badge exclusivo de la temporada de invierno.", img: "/badges/winter.svg" },
 ];
+
 
 
 function BadgesPage() {
