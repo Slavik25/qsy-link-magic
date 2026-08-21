@@ -17,6 +17,7 @@ import {
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { DashBanner } from "@/components/qsy/dash-banner";
+import dashBanner from "@/assets/dash-banner.png.asset.json";
 import {
   useAnalytics,
   useLinks,
@@ -117,6 +118,7 @@ function Overview() {
           eyebrow="Resumen"
           title={`¡Hola, ${profile?.display_name || profile?.username || "qsy"}!`}
           description="Esta es una vista general de tu cuenta: estadísticas, progreso y accesos rápidos."
+          image={dashBanner.url}
         />
 
         <aside className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl">
