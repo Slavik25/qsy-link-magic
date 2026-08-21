@@ -1,7 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Check, Lock, Save } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { useUnlocks } from "@/lib/economy";
+import { isOwned, type ShopItem } from "@/lib/shop";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -230,6 +233,72 @@ export function SaveBar({ onSave, saving }: { onSave: () => void; saving: boolea
       <Button onClick={onSave} disabled={saving} className="rounded-xl">
         <Save className="size-4" /> {saving ? "Guardando…" : "Guardar cambios"}
       </Button>
+    </div>
+  );
+}
+
+/** Grid para equipar items comprados (layouts, players, decoraciones) desde el editor. */
+export function ShopEquipGrid({
+  items,
+  activeKey,
+  onEquip,
+  renderPreview,
+}: {
+  items: ShopItem[];
+  activeKey?: string | undefined;
+  onEquip: (key: string) => void;
+  renderPreview: (item: ShopItem) => ReactNode;
+}) {
+  const { data: unlocks } = useUnlocks();
+  const owned = new Set(unlocks ?? []);
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((item) => {
+        const unlocked = isOwned(item, owned);
+        const active = activeKey === item.key;
+        return (
+          <div
+            key={item.key}
+            className={`overflow-hidden rounded-2xl border transition-colors ${
+              active ? "border-primary/60 bg-primary/10" : "border-border/60 bg-surface-strong/30"
+            }`}
+          >
+            {renderPreview(item)}
+            <div className="space-y-2 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="truncate text-sm font-semibold">{item.name}</p>
+                <span className="shrink-0 text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {item.price === 0 ? "Gratis" : `${item.price} QSY`}
+                </span>
+              </div>
+              <p className="line-clamp-2 text-xs text-muted-foreground">{item.description}</p>
+              {unlocked ? (
+                <Button
+                  size="sm"
+                  variant={active ? "secondary" : "default"}
+                  className="w-full rounded-lg"
+                  onClick={() => onEquip(item.key)}
+                >
+                  {active ? (
+                    <>
+                      <Check className="size-3.5" /> Equipado
+                    </>
+                  ) : (
+                    "Equipar"
+                  )}
+                </Button>
+              ) : (
+                <Button asChild size="sm" variant="secondary" className="w-full rounded-lg">
+                  <Link to="/dashboard/premium">
+                    <Lock className="size-3.5" /> Comprar en la tienda
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
