@@ -31,6 +31,7 @@ import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardSocialsRouteImport } from './routes/_authenticated/dashboard.socials'
 import { Route as AuthenticatedDashboardProfileIndexRouteImport } from './routes/_authenticated/dashboard.profile.index'
 import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from './routes/_authenticated/dashboard.profile.customization'
+import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -154,6 +155,12 @@ const AuthenticatedDashboardProfileCustomizationRoute =
     path: '/customization',
     getParentRoute: () => AuthenticatedDashboardProfileRoute,
   } as any)
+const AuthenticatedDashboardProfileEffectsRoute =
+  AuthenticatedDashboardProfileEffectsRouteImport.update({
+    id: '/effects',
+    path: '/effects',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -197,6 +205,7 @@ export interface FileRoutesByTo {
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -222,6 +231,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
+  '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/dashboard/socials'
     | '/dashboard/'
     | '/dashboard/profile/customization'
+    | '/dashboard/profile/effects'
     | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/dashboard/socials'
     | '/dashboard'
     | '/dashboard/profile/customization'
+    | '/dashboard/profile/effects'
     | '/dashboard/profile'
   id:
     | '__root__'
@@ -292,6 +304,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/socials'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/profile/customization'
+    | '/_authenticated/dashboard/profile/effects'
     | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -462,11 +475,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileCustomizationRouteImport
       parentRoute: typeof AuthenticatedDashboardProfileRoute
     }
+    '/_authenticated/dashboard/profile/effects': {
+      id: '/_authenticated/dashboard/profile/effects'
+      path: '/effects'
+      fullPath: '/dashboard/profile/effects'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileEffectsRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardProfileRouteChildren {
   AuthenticatedDashboardProfileCustomizationRoute: typeof AuthenticatedDashboardProfileCustomizationRoute
+  AuthenticatedDashboardProfileEffectsRoute: typeof AuthenticatedDashboardProfileEffectsRoute
   AuthenticatedDashboardProfileIndexRoute: typeof AuthenticatedDashboardProfileIndexRoute
 }
 
@@ -474,6 +495,8 @@ const AuthenticatedDashboardProfileRouteChildren: AuthenticatedDashboardProfileR
   {
     AuthenticatedDashboardProfileCustomizationRoute:
       AuthenticatedDashboardProfileCustomizationRoute,
+    AuthenticatedDashboardProfileEffectsRoute:
+      AuthenticatedDashboardProfileEffectsRoute,
     AuthenticatedDashboardProfileIndexRoute:
       AuthenticatedDashboardProfileIndexRoute,
   }
