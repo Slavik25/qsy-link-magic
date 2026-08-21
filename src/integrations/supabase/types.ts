@@ -160,6 +160,7 @@ export type Database = {
           user_id: string | null
           username: string
           verified: boolean
+          view_count: number
         }
         Insert: {
           avatar_url?: string | null
@@ -176,6 +177,7 @@ export type Database = {
           user_id?: string | null
           username: string
           verified?: boolean
+          view_count?: number
         }
         Update: {
           avatar_url?: string | null
@@ -192,6 +194,7 @@ export type Database = {
           user_id?: string | null
           username?: string
           verified?: boolean
+          view_count?: number
         }
         Relationships: []
       }
