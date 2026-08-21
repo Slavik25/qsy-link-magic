@@ -158,3 +158,45 @@ export function useAnalytics(profileId: string | undefined, days: number) {
     },
   });
 }
+
+export function usePlatformStats() {
+  return useQuery({
+    queryKey: ["platform-stats"],
+    queryFn: async () => {
+      const [profiles, links, verified, views] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("links").select("id", { count: "exact", head: true }),
+        supabase
+          .from("profiles")
+          .select("id", { count: "exact", head: true })
+          .eq("verified", true),
+        supabase.from("profiles").select("view_count"),
+      ]);
+      const totalViews = (views.data ?? []).reduce(
+        (sum, r: any) => sum + (r.view_count ?? 0),
+        0,
+      );
+      return {
+        views: totalViews,
+        creators: profiles.count ?? 0,
+        links: links.count ?? 0,
+        verified: verified.count ?? 0,
+      };
+    },
+  });
+}
+
+export function useShowcaseProfiles(limit = 8) {
+  return useQuery({
+    queryKey: ["showcase-profiles", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username, display_name, avatar_url, banner_url, verified, view_count, bio")
+        .order("view_count", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
