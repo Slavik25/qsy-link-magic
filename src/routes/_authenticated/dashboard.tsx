@@ -15,6 +15,7 @@ import {
   Menu,
   Settings,
   Share2,
+  ShieldAlert,
   Sparkles,
   TrendingUp,
   UserRound,
