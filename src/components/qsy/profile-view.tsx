@@ -2,6 +2,7 @@ import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
+import { decorationByKey } from "@/lib/shop";
 
 type Props = {
   profile: Pick<
@@ -28,6 +29,7 @@ export function ProfileView({
   onLinkClick,
 }: Props) {
   const t = profile.theme;
+  const deco = decorationByKey(t.avatar_decoration);
   const style = {
     "--p-accent": t.accent,
     "--p-radius": `${t.radius}px`,
