@@ -17,6 +17,7 @@ import {
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { DashBanner } from "@/components/qsy/dash-banner";
+import { GlobalChat } from "@/components/qsy/global-chat";
 import dashBanner from "@/assets/dash-banner.png.asset.json";
 import cardProfile from "@/assets/card-32.png.asset.json";
 import cardTemplates from "@/assets/card-33.png.asset.json";
@@ -356,6 +357,10 @@ function Overview() {
             </Link>
           </Button>
         </div>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[1fr_340px]">
+        <GlobalChat />
       </section>
     </div>
   );
