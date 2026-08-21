@@ -260,8 +260,8 @@ export function SiteNav() {
                     l.code === lang ? "border-primary/60 text-foreground" : "border-border/70 text-muted-foreground"
                   }`}
                 >
-                  <span>{l.flag}</span>
-                  {l.label}
+                  <Flag src={l.flag} alt={l.label} />
+                  {l.short}
                 </button>
               ))}
             </div>
