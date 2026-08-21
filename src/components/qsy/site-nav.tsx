@@ -20,10 +20,21 @@ const items = [
 ];
 
 const LANGS = [
-  { code: "es", label: "ES", flag: "🇪🇸" },
-  { code: "en", label: "EN", flag: "🇺🇸" },
-  { code: "pt", label: "PT", flag: "🇧🇷" },
+  { code: "es", label: "Español", short: "ES", flag: "https://flagcdn.com/w40/es.png" },
+  { code: "pt", label: "Português", short: "PT", flag: "https://flagcdn.com/w40/br.png" },
+  { code: "en", label: "English", short: "EN", flag: "https://flagcdn.com/w40/gb.png" },
 ] as const;
+
+function Flag({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="h-3.5 w-5 rounded-[3px] object-cover ring-1 ring-border/70"
+    />
+  );
+}
 
 type Profile = { username: string; display_name: string | null; avatar_url: string | null };
 
@@ -118,15 +129,15 @@ export function SiteNav() {
           type="button"
           className="flex h-9 items-center gap-2 rounded-xl border border-border/70 bg-secondary/40 px-3 text-xs font-semibold transition-colors hover:bg-secondary"
         >
-          <span className="text-sm leading-none">{activeLang.flag}</span>
-          {activeLang.label}
+          <Flag src={activeLang.flag} alt={activeLang.label} />
+          {activeLang.short}
           <ChevronDown className="size-3 text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-36">
+      <DropdownMenuContent align="end" className="min-w-40">
         {LANGS.map((l) => (
           <DropdownMenuItem key={l.code} onClick={() => change(l.code)} className="gap-2 text-xs">
-            <span>{l.flag}</span>
+            <Flag src={l.flag} alt={l.label} />
             {l.label}
           </DropdownMenuItem>
         ))}
@@ -249,8 +260,8 @@ export function SiteNav() {
                     l.code === lang ? "border-primary/60 text-foreground" : "border-border/70 text-muted-foreground"
                   }`}
                 >
-                  <span>{l.flag}</span>
-                  {l.label}
+                  <Flag src={l.flag} alt={l.label} />
+                  {l.short}
                 </button>
               ))}
             </div>
