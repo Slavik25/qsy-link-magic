@@ -205,3 +205,19 @@ export function useShowcaseProfiles(limit = 8) {
     },
   });
 }
+
+export function useProfileBadges(profileId?: string) {
+  return useQuery({
+    queryKey: ["profile-badges", profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_badges")
+        .select("badge_key,position")
+        .eq("profile_id", profileId!)
+        .order("position");
+      if (error) throw error;
+      return (data ?? []).map((r: { badge_key: string }) => r.badge_key);
+    },
+  });
+}
