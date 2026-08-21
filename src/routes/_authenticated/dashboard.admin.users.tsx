@@ -184,30 +184,170 @@ function AdminUsers() {
         )}
       </AdminCard>
 
-      {selected && (
-        <AdminCard
-          title={`@${selected.username}`}
-          desc="Otorgar insignias a este usuario"
-          action={
-            <Button variant="secondary" size="sm" onClick={() => setSelected(null)}>
-              Cerrar
-            </Button>
-          }
-        >
-          <div className="flex flex-wrap gap-2">
+      {selected && <BadgeManager profile={selected} onClose={() => setSelected(null)} />}
+    </div>
+  );
+}
+
+function BadgeManager({ profile, onClose }: { profile: AdminProfile; onClose: () => void }) {
+  const qc = useQueryClient();
+  const [query, setQuery] = useState("");
+  const [pick, setPick] = useState<string>(BADGES[0]?.key ?? "");
+
+  const { data: owned } = useQuery({
+    queryKey: ["admin-profile-badges", profile.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_badges")
+        .select("id, badge_key, position")
+        .eq("profile_id", profile.id)
+        .order("position", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const ownedKeys = new Set((owned ?? []).map((b) => b.badge_key));
+  const list = BADGES.filter(
+    (b) =>
+      !query.trim() ||
+      b.name.toLowerCase().includes(query.trim().toLowerCase()) ||
+      b.key.includes(query.trim().toLowerCase()),
+  );
+
+  async function grant(key: string) {
+    if (ownedKeys.has(key)) {
+      toast.info("El usuario ya tiene esa insignia");
+      return;
+    }
+    const { error } = await supabase
+      .from("profile_badges")
+      .insert({ profile_id: profile.id, badge_key: key, position: owned?.length ?? 0 });
+    if (error) {
+      toast.error("No se pudo asignar", { description: error.message });
+      return;
+    }
+    await logAdminAction("badge:grant", profile.username, { badge: key });
+    toast.success(`Insignia otorgada a @${profile.username}`);
+    void qc.invalidateQueries({ queryKey: ["admin-profile-badges", profile.id] });
+  }
+
+  async function revoke(id: string, key: string) {
+    const { error } = await supabase.from("profile_badges").delete().eq("id", id);
+    if (error) {
+      toast.error("No se pudo quitar", { description: error.message });
+      return;
+    }
+    await logAdminAction("badge:revoke", profile.username, { badge: key });
+    toast.success("Insignia retirada");
+    void qc.invalidateQueries({ queryKey: ["admin-profile-badges", profile.id] });
+  }
+
+  return (
+    <AdminCard
+      title={`Insignias de @${profile.username}`}
+      desc="Selecciona la insignia que quieres otorgar o retira las actuales"
+      action={
+        <Button variant="secondary" size="sm" onClick={onClose}>
+          Cerrar
+        </Button>
+      }
+    >
+      <div className="space-y-5">
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={pick}
+            onChange={(e) => setPick(e.target.value)}
+            className="h-9 rounded-xl border border-border/60 bg-surface px-3 text-xs outline-none focus:border-primary/50"
+          >
             {BADGES.map((b) => (
+              <option key={b.key} value={b.key}>
+                {b.name}
+                {ownedKeys.has(b.key) ? " · ya asignada" : ""}
+              </option>
+            ))}
+          </select>
+          <Button size="sm" className="rounded-xl" onClick={() => grant(pick)}>
+            Otorgar insignia
+          </Button>
+          <div className="relative ml-auto">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filtrar insignias…"
+              className="h-9 w-52 rounded-xl pl-8 text-xs"
+            />
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            Asignadas ({owned?.length ?? 0})
+          </p>
+          {owned?.length ? (
+            <div className="flex flex-wrap gap-2">
+              {owned.map((b) => {
+                const def = BADGES.find((x) => x.key === b.badge_key);
+                return (
+                  <span
+                    key={b.id}
+                    className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-xs"
+                  >
+                    {def?.img ? (
+                      <img src={def.img} alt="" className="size-4" />
+                    ) : def?.icon ? (
+                      <def.icon className="size-4" style={{ color: def.color ?? undefined }} />
+                    ) : null}
+                    {def?.name ?? b.badge_key}
+                    <button
+                      onClick={() => revoke(b.id, b.badge_key)}
+                      title="Quitar"
+                      className="text-muted-foreground hover:text-destructive"
+                    >
+                      <X className="size-3.5" />
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
+          ) : (
+            <Empty text="Este usuario no tiene insignias todavía." />
+          )}
+        </div>
+
+        <div>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Catálogo</p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {list.map((b) => (
               <button
                 key={b.key}
-                onClick={() => giveBadge(selected, b.key)}
-                className="inline-flex items-center gap-2 rounded-xl border border-border/60 bg-surface px-3 py-2 text-xs transition-colors hover:border-primary/50 hover:text-primary"
+                onClick={() => grant(b.key)}
+                className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs transition-colors ${
+                  ownedKeys.has(b.key)
+                    ? "border-primary/40 bg-primary/10"
+                    : "border-border/60 bg-surface hover:border-primary/50 hover:text-primary"
+                }`}
               >
-                {b.img && <img src={b.img} alt="" className="size-4" />}
-                {b.name}
+                {b.img ? (
+                  <img src={b.img} alt="" className="size-5" />
+                ) : b.icon ? (
+                  <b.icon className="size-5" style={{ color: b.color ?? undefined }} />
+                ) : null}
+                <span className="min-w-0 flex-1">
+                  <span className="block font-medium">{b.name}</span>
+                  <span className="block truncate text-[10px] text-muted-foreground">{b.description}</span>
+                </span>
+                {ownedKeys.has(b.key) ? (
+                  <Check className="size-4 shrink-0 text-primary" />
+                ) : (
+                  <Plus className="size-4 shrink-0 opacity-60" />
+                )}
               </button>
             ))}
           </div>
-        </AdminCard>
-      )}
-    </div>
+        </div>
+      </div>
+    </AdminCard>
   );
 }
