@@ -342,6 +342,125 @@ function ModulePreview({ kind }: { kind: (typeof modules)[number]["kind"] }) {
 }
 
 
+function ModulesShowcase() {
+  const [active, setActive] = useState(0);
+  const m = modules[active]!;
+
+  return (
+    <section className="relative overflow-hidden py-28">
+      <div aria-hidden className="pointer-events-none absolute inset-0 aurora opacity-50" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+      />
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <Sparkles className="size-3.5 text-primary" /> Módulos potentes
+          </span>
+          <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
+            Módulos que se
+            <br />
+            <span className="text-gradient-violet">sienten vivos.</span>
+          </h2>
+          <p className="mt-4 max-w-lg text-muted-foreground">
+            Cada módulo se actualiza en tiempo real dentro de tu perfil. Sin código, sin
+            configuración: conecta y listo.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
+          <div className="flex flex-col gap-2.5">
+            {modules.map((mod, i) => {
+              const on = i === active;
+              return (
+                <button
+                  key={mod.title}
+                  type="button"
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => setActive(i)}
+                  aria-pressed={on}
+                  className={`group relative overflow-hidden rounded-3xl border p-5 text-left transition-all duration-500 ${
+                    on
+                      ? "border-primary/50 bg-card/70 shadow-[0_40px_100px_-60px_var(--primary)]"
+                      : "border-border/60 bg-card/30 hover:border-border"
+                  } backdrop-blur-xl`}
+                >
+                  <span
+                    aria-hidden
+                    className={`absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-primary to-accent transition-transform duration-500 ${
+                      on ? "scale-y-100" : "scale-y-0"
+                    }`}
+                  />
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`grid size-11 shrink-0 place-items-center rounded-2xl transition-all duration-500 ${
+                        on ? "bg-primary/25 text-primary scale-105" : "bg-muted/40 text-muted-foreground"
+                      }`}
+                    >
+                      <mod.icon className="size-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="truncate text-sm font-semibold">{mod.title}</h3>
+                        <span className="shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary">
+                          {mod.tag}
+                        </span>
+                      </div>
+                      <p
+                        className={`mt-1 text-[11px] leading-relaxed text-muted-foreground transition-all duration-500 ${
+                          on ? "max-h-16 opacity-100" : "max-h-0 overflow-hidden opacity-0 lg:max-h-16 lg:opacity-60"
+                        }`}
+                      >
+                        {mod.desc}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            <div className="mt-2 flex items-center justify-between rounded-3xl border border-dashed border-border/60 px-5 py-4">
+              <p className="text-[11px] text-muted-foreground">
+                +60 conexiones disponibles
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary"
+              >
+                Probar ahora <ArrowRight className="size-3" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative min-h-[460px]">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 rounded-[40px] bg-primary/10 blur-3xl"
+            />
+            <div key={m.kind} className="relative h-[460px] rise">
+              <PreviewFrame title={`qsy.rip/brayan · ${m.tag}`}>
+                {m.image ? (
+                  <img
+                    src={m.image}
+                    alt={`${m.title} en QSY`}
+                    loading="lazy"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <ModulePreview kind={m.kind} />
+                )}
+              </PreviewFrame>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
 const specs: {
   icon: typeof UserRound;
   title: string;
