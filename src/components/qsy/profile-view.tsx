@@ -55,7 +55,28 @@ export function ProfileView({
         }}
       />
       <div className="relative flex flex-col items-center text-center">
+        {profile.banner_url && (
+          <div
+            className={`relative w-full overflow-hidden ${compact ? "mb-4 h-24" : "mb-6 h-36 sm:h-44"}`}
+            style={{ borderRadius: "var(--p-radius)" }}
+          >
+            <img
+              src={profile.banner_url}
+              alt={`Banner de ${profile.display_name || profile.username}`}
+              loading="lazy"
+              className="size-full object-cover"
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `linear-gradient(180deg, transparent 40%, color-mix(in oklab, ${t.accent} 12%, transparent))`,
+              }}
+            />
+          </div>
+        )}
         <div
+
           className="relative rounded-full p-[2px]"
           style={{ background: `linear-gradient(140deg, ${t.accent}, transparent)` }}
         >
