@@ -25,6 +25,7 @@ import {
 import { SiteNav } from "@/components/qsy/site-nav";
 import { SiteFooter } from "@/components/qsy/site-footer";
 import { Button } from "@/components/ui/button";
+import { usePlatformStats, useShowcaseProfiles } from "@/lib/qsy-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,30 +64,7 @@ const chips = [
   { icon: BarChart3, label: "Analytics en vivo" },
 ];
 
-const heroStats = [
-  { label: "Visitas totales", value: "14,203,982" },
-  { label: "Creadores activos", value: "14,204" },
-  { label: "Links servidos", value: "94,392" },
-  { label: "Badges verificados", value: "1,280" },
-];
-
 const bars = [28, 44, 36, 62, 48, 74, 58, 88, 66, 94, 72, 100];
-
-// image: coloca aquí la ruta de la captura cuando la tengas (import desde src/assets)
-const liveProfiles: {
-  user: string;
-  name: string;
-  tag: string;
-  views: string;
-  image?: string;
-}[] = [
-  { user: "brayan", name: "Brayan Bicet", tag: "Creator", views: "84.2k" },
-  { user: "nova", name: "Nova", tag: "Music", views: "62.9k" },
-  { user: "kaito", name: "Kaito", tag: "Gaming", views: "51.4k" },
-  { user: "lumen", name: "Lumen", tag: "Design", views: "43.7k" },
-  { user: "sora", name: "Sora", tag: "Dev", views: "38.1k" },
-  { user: "vega", name: "Vega", tag: "Streamer", views: "29.6k" },
-];
 
 const modules: {
   icon: typeof MessageCircle;
@@ -180,9 +158,9 @@ function DiscordPreview() {
             </span>
           </div>
           <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold">
-            brayan <BadgeCheck className="size-3.5 text-primary" />
+            qsy <BadgeCheck className="size-3.5 text-primary" />
           </p>
-          <p className="text-[11px] text-muted-foreground">@brayan · miembro desde 2021</p>
+          <p className="text-[11px] text-muted-foreground">@qsy · miembro desde 2021</p>
           <div className="mt-3 flex gap-1.5">
             {["Early", "Nitro", "Boost", "HypeSquad"].map((b) => (
               <span
@@ -318,7 +296,7 @@ function QrPreview() {
           ))}
         </div>
         <span className="absolute inset-x-4 top-1/2 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
-        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/brayan</p>
+        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/qsy</p>
       </div>
       <div className="space-y-2.5 text-left">
         {["PNG · SVG · PDF", "Color de acento", "Logo centrado", "Escaneo ilimitado"].map((r) => (
@@ -440,7 +418,7 @@ function ModulesShowcase() {
               className="pointer-events-none absolute -inset-6 rounded-[40px] bg-primary/10 blur-3xl"
             />
             <div key={m.kind} className="relative h-[460px] rise">
-              <PreviewFrame title={`qsy.rip/brayan · ${m.tag}`}>
+              <PreviewFrame title={`qsy.rip/qsy · ${m.tag}`}>
                 {m.image ? (
                   <img
                     src={m.image}
@@ -553,9 +531,9 @@ function SpecVisual({ kind }: { kind: (typeof specs)[number]["visual"] }) {
           </span>
           <div className="min-w-0">
             <p className="flex items-center gap-1 text-xs font-semibold">
-              Brayan <BadgeCheck className="size-3.5 text-primary" />
+              QSY <BadgeCheck className="size-3.5 text-primary" />
             </p>
-            <p className="text-[10px] text-muted-foreground">qsy.rip/brayan</p>
+            <p className="text-[10px] text-muted-foreground">qsy.rip/qsy</p>
           </div>
         </div>
         <div className="mt-3 space-y-1.5">
@@ -630,14 +608,35 @@ const connections = [
   "Behance", "Dribbble", "LinkedIn", "Threads", "Snapchat",
 ];
 
-function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
+type ShowcaseProfile = {
+  username: string;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  banner_url?: string | null;
+  verified?: boolean | null;
+  view_count?: number | null;
+  bio?: string | null;
+};
+
+function compact(n: number) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
+  return String(n);
+}
+
+function ProfileCard({ p }: { p: ShowcaseProfile }) {
+  const name = p.display_name || p.username;
   return (
-    <div className="group overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]">
+    <Link
+      to="/$username"
+      params={{ username: p.username }}
+      className="group block overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]"
+    >
       <div className="relative h-24 overflow-hidden">
-        {p.image ? (
+        {p.banner_url ? (
           <img
-            src={p.image}
-            alt={`Perfil QSY de ${p.name}`}
+            src={p.banner_url}
+            alt={`Perfil QSY de ${name}`}
             loading="lazy"
             className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
@@ -648,28 +647,54 @@ function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
       </div>
 
       <div className="-mt-7 px-4 pb-4 text-left">
-        <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
-          {p.user.slice(0, 2).toUpperCase()}
-        </span>
-        <div className="mt-3 flex items-center gap-1.5">
-          <p className="truncate text-sm font-semibold">{p.name}</p>
-          <BadgeCheck className="size-3.5 shrink-0 text-primary" />
-        </div>
-        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.rip/{p.user}</p>
-        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
-          <span className="rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-            {p.tag}
+        {p.avatar_url ? (
+          <img
+            src={p.avatar_url}
+            alt={`Avatar de ${name}`}
+            loading="lazy"
+            className="size-12 rounded-2xl border border-border/70 object-cover"
+          />
+        ) : (
+          <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
+            {p.username.slice(0, 2).toUpperCase()}
           </span>
-          <span className="text-xs font-semibold text-primary">{p.views}</span>
+        )}
+        <div className="mt-3 flex items-center gap-1.5">
+          <p className="truncate text-sm font-semibold">{name}</p>
+          {p.verified ? <BadgeCheck className="size-3.5 shrink-0 text-primary" /> : null}
+        </div>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.rip/{p.username}</p>
+        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+          <span className="truncate rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            {p.bio ? p.bio.slice(0, 18) : "QSY"}
+          </span>
+          <span className="text-xs font-semibold text-primary">
+            {compact(p.view_count ?? 0)}
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
 
+
 function Landing() {
   const [handle, setHandle] = useState("");
+  const { data: stats } = usePlatformStats();
+  const { data: showcase } = useShowcaseProfiles(8);
+
+  const heroStats = [
+    { label: "Visitas totales", value: (stats?.views ?? 0).toLocaleString("es-ES") },
+    { label: "Creadores activos", value: (stats?.creators ?? 0).toLocaleString("es-ES") },
+    { label: "Links servidos", value: (stats?.links ?? 0).toLocaleString("es-ES") },
+    { label: "Badges verificados", value: (stats?.verified ?? 0).toLocaleString("es-ES") },
+  ];
+
+  const cards: ShowcaseProfile[] = showcase?.length ? showcase : [];
+  const colA = cards.length ? [...cards, ...cards] : [];
+  const colB = cards.length ? [...cards].reverse().concat([...cards].reverse()) : [];
+
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -785,7 +810,7 @@ function Landing() {
         <div className="relative mx-auto max-w-5xl px-4 pb-24 pt-10 sm:px-6">
           <div className="rounded-3xl border border-border/70 bg-card/40 p-8 text-center backdrop-blur-xl">
             <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
-              Más de 90,000 visitas al mes confirman la red
+              {(stats?.views ?? 0).toLocaleString("es-ES")} visitas registradas en la red QSY
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {heroStats.map((s) => (
@@ -830,16 +855,17 @@ function Landing() {
 
           <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
             <div className="marquee-y flex flex-col gap-4">
-              {[...liveProfiles, ...liveProfiles].map((p, i) => (
-                <ProfileCard key={`a-${p.user}-${i}`} p={p} />
+              {colA.map((p, i) => (
+                <ProfileCard key={`a-${p.username}-${i}`} p={p} />
               ))}
             </div>
             <div className="marquee-y-slow flex flex-col gap-4">
-              {[...liveProfiles.slice().reverse(), ...liveProfiles.slice().reverse()].map((p, i) => (
-                <ProfileCard key={`b-${p.user}-${i}`} p={p} />
+              {colB.map((p, i) => (
+                <ProfileCard key={`b-${p.username}-${i}`} p={p} />
               ))}
             </div>
           </div>
+
         </div>
       </section>
 
