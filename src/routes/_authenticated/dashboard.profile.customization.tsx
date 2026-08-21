@@ -13,7 +13,16 @@ import {
   ToggleRow,
   useProfileDraft,
 } from "@/components/qsy/profile-editor-ui";
-import { SHOP_LAYOUTS, type LayoutDef } from "@/lib/shop";
+import {
+  SHOP_BG_EFFECTS,
+  SHOP_LAYOUTS,
+  SHOP_NAME_STYLES,
+  bgEffectByEffect,
+  nameStyleByEffect,
+  type BgEffectDef,
+  type LayoutDef,
+  type NameStyleDef,
+} from "@/lib/shop";
 import type { ThemeConfig } from "@/lib/qsy";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/customization")({
@@ -92,6 +101,58 @@ function CustomizationSection() {
           onEquip={equipLayout}
           renderPreview={(item) => (
             <div className="h-24 w-full" style={{ background: (item as LayoutDef).preview }} />
+          )}
+        />
+      </Group>
+
+      <Group label="Estilo del nombre de usuario">
+        <ShopEquipGrid
+          items={SHOP_NAME_STYLES}
+          activeKey={nameStyleByEffect(t.username_effect)?.key ?? "name-none"}
+          onEquip={(key) => {
+            const s = SHOP_NAME_STYLES.find((x) => x.key === key);
+            if (s) setTheme("username_effect", s.effect);
+          }}
+          renderPreview={(item) => (
+            <div
+              className="grid h-24 w-full place-items-center bg-black/40"
+              style={{ ["--p-accent" as string]: t.accent }}
+            >
+              <span
+                className={`text-xl font-bold ${
+                  (item as NameStyleDef).effect === "none"
+                    ? ""
+                    : `qsy-name-${(item as NameStyleDef).effect}`
+                }`}
+              >
+                {draft.display_name || "qsy"}
+              </span>
+            </div>
+          )}
+        />
+      </Group>
+
+      <Group label="Efecto de fondo">
+        <ShopEquipGrid
+          items={SHOP_BG_EFFECTS}
+          activeKey={bgEffectByEffect(t.bg_effect)?.key ?? "bg-none"}
+          onEquip={(key) => {
+            const b = SHOP_BG_EFFECTS.find((x) => x.key === key);
+            if (b) setTheme("bg_effect", b.effect);
+          }}
+          renderPreview={(item) => (
+            <div
+              className="relative h-24 w-full overflow-hidden"
+              style={{ background: (item as BgEffectDef).preview }}
+            >
+              {(item as BgEffectDef).effect !== "none" && (
+                <span
+                  aria-hidden
+                  className={`absolute inset-0 qsy-bg-${(item as BgEffectDef).effect}`}
+                  style={{ position: "absolute" }}
+                />
+              )}
+            </div>
           )}
         />
       </Group>
