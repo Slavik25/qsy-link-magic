@@ -26,8 +26,6 @@ export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
   }),
 });
 
-const FREE_LIMIT = 2;
-
 function ProfilesPage() {
   const { data: profiles = [] } = useMyProfiles();
   const activeId = useActiveProfileId();
