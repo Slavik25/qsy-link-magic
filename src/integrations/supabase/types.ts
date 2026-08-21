@@ -331,6 +331,54 @@ export type Database = {
         }
         Relationships: []
       }
+      wall_posts: {
+        Row: {
+          author_avatar: string | null
+          author_id: string | null
+          author_name: string
+          author_profile_id: string | null
+          created_at: string
+          id: string
+          message: string
+          profile_id: string
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_id?: string | null
+          author_name?: string
+          author_profile_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          profile_id: string
+        }
+        Update: {
+          author_avatar?: string | null
+          author_id?: string | null
+          author_name?: string
+          author_profile_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wall_posts_author_profile_id_fkey"
+            columns: ["author_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wall_posts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

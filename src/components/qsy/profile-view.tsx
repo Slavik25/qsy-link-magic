@@ -42,9 +42,7 @@ export function ProfileView({
     <div
       style={style}
       className={`relative w-full overflow-hidden ${
-        showCard
-          ? `rounded-2xl border border-border bg-background/60 ${compact ? "p-5" : "p-6 sm:p-10"}`
-          : "border-0 bg-transparent p-0"
+        showCard ? "rounded-2xl border border-border bg-background/60" : "border-0 bg-transparent"
       }`}
     >
       <div
@@ -54,31 +52,39 @@ export function ProfileView({
           background: `radial-gradient(70% 45% at 50% -5%, color-mix(in oklab, ${t.accent} calc(var(--p-glow) * 40%), transparent), transparent 70%)`,
         }}
       />
-      <div className="relative flex flex-col items-center text-center">
-        {profile.banner_url && (
-          <div
-            className={`relative w-full overflow-hidden ${compact ? "mb-4 h-24" : "mb-6 h-36 sm:h-44"}`}
-            style={{ borderRadius: "var(--p-radius)" }}
-          >
-            <img
-              src={profile.banner_url}
-              alt={`Banner de ${profile.display_name || profile.username}`}
-              loading="lazy"
-              className="size-full object-cover"
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background: `linear-gradient(180deg, transparent 40%, color-mix(in oklab, ${t.accent} 12%, transparent))`,
-              }}
-            />
-          </div>
-        )}
-        <div
 
-          className="relative rounded-full p-[2px]"
-          style={{ background: `linear-gradient(140deg, ${t.accent}, transparent)` }}
+      {profile.banner_url && (
+        <div className={`relative w-full overflow-hidden ${compact ? "h-24" : "h-36 sm:h-40"}`}>
+          <img
+            src={profile.banner_url}
+            alt={`Banner de ${profile.display_name || profile.username}`}
+            loading="lazy"
+            className="size-full object-cover"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `linear-gradient(180deg, transparent 30%, color-mix(in oklab, var(--background) 85%, transparent))`,
+            }}
+          />
+        </div>
+      )}
+
+      <div
+        className={`relative ${
+          showCard ? (compact ? "px-5 pb-5" : "px-6 pb-8 sm:px-10 sm:pb-10") : "px-0 pb-0"
+        } ${profile.banner_url ? "pt-0" : showCard ? (compact ? "pt-5" : "pt-6 sm:pt-10") : "pt-0"}`}
+      >
+      <div className="relative flex flex-col items-center text-center">
+        <div
+          className={`relative rounded-full p-[3px] ${
+            profile.banner_url ? (compact ? "-mt-8" : "-mt-12") : ""
+          }`}
+          style={{
+            background: `linear-gradient(140deg, ${t.accent}, transparent)`,
+            boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
+          }}
         >
           {profile.avatar_url ? (
             <img
@@ -100,6 +106,7 @@ export function ProfileView({
             </span>
           )}
         </div>
+
 
         <div className="mt-4 flex items-center gap-1.5">
           <h1
@@ -160,15 +167,22 @@ export function ProfileView({
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label={labelFor(s.platform)}
-                  className="grid size-10 place-items-center rounded-xl glass lift hover:bg-surface-strong"
-                  style={{ borderRadius: "var(--p-radius)" }}
+                  className="inline-flex items-center gap-2 border px-3.5 py-2 text-xs font-medium lift"
+                  style={{
+                    borderRadius: "999px",
+                    background: "var(--p-surface)",
+                    backdropFilter: `blur(var(--p-blur))`,
+                    borderColor: `color-mix(in oklab, ${t.accent} 25%, transparent)`,
+                  }}
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-3.5" style={{ color: t.accent }} />
+                  {labelFor(s.platform)}
                 </a>
               );
             })}
           </div>
         )}
+
 
         <div className="mt-6 w-full max-w-md space-y-3">
           {links.map((l) => {
@@ -225,6 +239,9 @@ export function ProfileView({
           {views.toLocaleString()} visitas
         </p>
       </div>
+      </div>
     </div>
   );
+
+
 }
