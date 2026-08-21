@@ -137,11 +137,24 @@ function AdminUsers() {
                       </span>
                     </td>
                     <td className="py-2.5 pr-3">
-                      <div className="flex gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <select
+                          value={(p as { rank?: string }).rank ?? "free"}
+                          onChange={(e) => setRank(p, e.target.value as QsyRank)}
+                          className="rounded-lg border border-border/60 bg-card/50 px-2 py-1 text-[11px] outline-none focus:border-primary/60"
+                          title="Rango"
+                        >
+                          {RANKS.map((r) => (
+                            <option key={r} value={r}>
+                              {RANK_LABEL[r]}
+                            </option>
+                          ))}
+                        </select>
                         {p.verified && <Pill tone="ok">Verificado</Pill>}
                         {p.featured && <Pill>Destacado</Pill>}
                       </div>
                     </td>
+
                     <td className="py-2.5">
                       <div className="flex justify-end gap-1.5">
                         <button
