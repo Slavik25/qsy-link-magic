@@ -64,7 +64,7 @@ export function SiteNav() {
   const [signedIn, setSignedIn] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const { dark, toggle } = useTheme();
-  const { lang, change } = useLang();
+  const { lang, change } = useLangSelector();
 
   useEffect(() => {
     async function load(userId: string | undefined) {
