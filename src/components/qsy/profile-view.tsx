@@ -167,15 +167,22 @@ export function ProfileView({
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label={labelFor(s.platform)}
-                  className="grid size-10 place-items-center rounded-xl glass lift hover:bg-surface-strong"
-                  style={{ borderRadius: "var(--p-radius)" }}
+                  className="inline-flex items-center gap-2 border px-3.5 py-2 text-xs font-medium lift"
+                  style={{
+                    borderRadius: "999px",
+                    background: "var(--p-surface)",
+                    backdropFilter: `blur(var(--p-blur))`,
+                    borderColor: `color-mix(in oklab, ${t.accent} 25%, transparent)`,
+                  }}
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-3.5" style={{ color: t.accent }} />
+                  {labelFor(s.platform)}
                 </a>
               );
             })}
           </div>
         )}
+
 
         <div className="mt-6 w-full max-w-md space-y-3">
           {links.map((l) => {
