@@ -39,7 +39,6 @@ import {
   SiReddit,
   SiRoblox,
   SiSignal,
-  SiSlack,
   SiSnapchat,
   SiSolana,
   SiSoundcloud,
@@ -60,7 +59,7 @@ import {
   SiYoutube,
   SiZoom,
 } from "react-icons/si";
-import { FaLinkedinIn, FaXbox, FaGlobe, FaEnvelope } from "react-icons/fa6";
+import { FaLinkedinIn, FaXbox, FaGlobe, FaEnvelope, FaSlack } from "react-icons/fa6";
 
 export type LinkCategory =
   | "social"
@@ -174,7 +173,7 @@ export const LINK_PLATFORMS: LinkPlatform[] = [
   { id: "figma", name: "Figma", color: "#f24e1e", Icon: SiFigma, category: "professional", base: "https://figma.com/@", placeholder: "usuario", kind: "handle" },
   { id: "medium", name: "Medium", color: "#e7e7e7", Icon: SiMedium, category: "professional", base: "https://medium.com/@", placeholder: "usuario", kind: "handle" },
   { id: "notion", name: "Notion", color: "#e7e7e7", Icon: SiNotion, category: "professional", placeholder: "https://notion.site/…" },
-  { id: "slack", name: "Slack", color: "#e01e5a", Icon: SiSlack, category: "professional", placeholder: "https://slack.com/…" },
+  { id: "slack", name: "Slack", color: "#e01e5a", Icon: FaSlack, category: "professional", placeholder: "https://slack.com/…" },
   { id: "zoom", name: "Zoom", color: "#2d8cff", Icon: SiZoom, category: "professional", placeholder: "https://zoom.us/j/…" },
 
   // Otras
