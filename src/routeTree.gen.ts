@@ -21,6 +21,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardAppearanceRouteImport } from './routes/_authenticated/dashboard.appearance'
+import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_authenticated/dashboard.badges'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardMusicRouteImport } from './routes/_authenticated/dashboard.music'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
@@ -89,6 +90,12 @@ const AuthenticatedDashboardAppearanceRoute =
     path: '/appearance',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardBadgesRoute =
+  AuthenticatedDashboardBadgesRouteImport.update({
+    id: '/badges',
+    path: '/badges',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardLinksRoute =
   AuthenticatedDashboardLinksRouteImport.update({
     id: '/links',
@@ -131,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
+  '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -148,6 +156,7 @@ export interface FileRoutesByTo {
   '/templates': typeof TemplatesRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
+  '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -168,6 +177,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
+  '/_authenticated/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/analytics'
     | '/dashboard/appearance'
+    | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/music'
     | '/dashboard/profile'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/dashboard/analytics'
     | '/dashboard/appearance'
+    | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/music'
     | '/dashboard/profile'
@@ -224,6 +236,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/appearance'
+    | '/_authenticated/dashboard/badges'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/music'
     | '/_authenticated/dashboard/profile'
@@ -329,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAppearanceRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/badges': {
+      id: '/_authenticated/dashboard/badges'
+      path: '/badges'
+      fullPath: '/dashboard/badges'
+      preLoaderRoute: typeof AuthenticatedDashboardBadgesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/links': {
       id: '/_authenticated/dashboard/links'
       path: '/links'
@@ -370,6 +390,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardAppearanceRoute: typeof AuthenticatedDashboardAppearanceRoute
+  AuthenticatedDashboardBadgesRoute: typeof AuthenticatedDashboardBadgesRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMusicRoute: typeof AuthenticatedDashboardMusicRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
@@ -383,6 +404,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
     AuthenticatedDashboardAppearanceRoute:
       AuthenticatedDashboardAppearanceRoute,
+    AuthenticatedDashboardBadgesRoute: AuthenticatedDashboardBadgesRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMusicRoute: AuthenticatedDashboardMusicRoute,
     AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
