@@ -52,17 +52,7 @@ const BADGES: BadgeDef[] = [
   { key: "year10", name: "Immortal (10 años)", description: "Lleva más de 10 años en QSY.", icon: Infinity },
 ];
 
-  { key: "early", name: "Early Supporter", description: "Estuviste desde el principio.", img: "/badges/earlysupporter.svg" },
-  { key: "dev", name: "Developer Activo", description: "Colaboras en el desarrollo de QSY.", img: "/badges/developeractivo.svg" },
-  { key: "discorddev", name: "Discord Developer", description: "Desarrollas bots e integraciones.", img: "/badges/bluediscorddeveloper.svg" },
-  { key: "bug", name: "Bug Hunter", description: "Reporta un bug al equipo.", img: "/badges/discordbughuntergreen.svg", action: "Reportar" },
-  {
-    key: "buggold",
-    name: "Bug Hunter Gold",
-    description: "Reporta bugs críticos de forma recurrente.",
-    img: "/badges/discordbughuntergold.svg",
-  },
-];
+
 
 
 
