@@ -20,10 +20,21 @@ const items = [
 ];
 
 const LANGS = [
-  { code: "es", label: "ES", flag: "🇪🇸" },
-  { code: "en", label: "EN", flag: "🇺🇸" },
-  { code: "pt", label: "PT", flag: "🇧🇷" },
+  { code: "es", label: "Español", short: "ES", flag: "https://flagcdn.com/w40/es.png" },
+  { code: "pt", label: "Português", short: "PT", flag: "https://flagcdn.com/w40/br.png" },
+  { code: "en", label: "English", short: "EN", flag: "https://flagcdn.com/w40/gb.png" },
 ] as const;
+
+function Flag({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="h-3.5 w-5 rounded-[3px] object-cover ring-1 ring-border/70"
+    />
+  );
+}
 
 type Profile = { username: string; display_name: string | null; avatar_url: string | null };
 
