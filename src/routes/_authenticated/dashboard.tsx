@@ -50,6 +50,7 @@ const NAV: NavItem[] = [
 
 function useCrumb() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (pathname === "/dashboard/profile") return "Editar perfil";
   return NAV.find((n) => (n.exact ? pathname === n.to : pathname.startsWith(n.to)))?.label ?? "Resumen";
 }
 
