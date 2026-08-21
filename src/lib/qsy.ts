@@ -51,6 +51,7 @@ export type Profile = {
   featured: boolean;
   theme: ThemeConfig;
   music: Record<string, unknown>;
+  view_count: number;
   created_at: string;
 };
 

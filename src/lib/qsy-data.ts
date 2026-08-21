@@ -50,10 +50,7 @@ export function useProfileByUsername(username: string) {
           .eq("active", true)
           .order("position"),
         supabase.from("socials").select("*").eq("profile_id", profile.id).order("position"),
-        supabase
-          .from("profile_views")
-          .select("id", { count: "exact", head: true })
-          .eq("profile_id", profile.id),
+        Promise.resolve({ count: (data as any).view_count ?? 0 }),
       ]);
       return {
         profile,
