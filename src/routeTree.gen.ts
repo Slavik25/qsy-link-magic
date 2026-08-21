@@ -19,6 +19,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardAppearanceRouteImport } from './routes/_authenticated/dashboard.appearance'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardSocialsRouteImport } from './routes/_authenticated/dashboard.socials'
@@ -73,6 +74,12 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAppearanceRoute =
+  AuthenticatedDashboardAppearanceRouteImport.update({
+    id: '/appearance',
+    path: '/appearance',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardLinksRoute =
   AuthenticatedDashboardLinksRouteImport.update({
     id: '/links',
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
+  '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -130,6 +139,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/_authenticated/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/templates'
     | '/dashboard'
+    | '/dashboard/appearance'
     | '/dashboard/links'
     | '/dashboard/profile'
     | '/dashboard/socials'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/templates'
+    | '/dashboard/appearance'
     | '/dashboard/links'
     | '/dashboard/profile'
     | '/dashboard/socials'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/templates'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/appearance'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/socials'
@@ -263,6 +276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/appearance': {
+      id: '/_authenticated/dashboard/appearance'
+      path: '/appearance'
+      fullPath: '/dashboard/appearance'
+      preLoaderRoute: typeof AuthenticatedDashboardAppearanceRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/links': {
       id: '/_authenticated/dashboard/links'
       path: '/links'
@@ -288,6 +308,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAppearanceRoute: typeof AuthenticatedDashboardAppearanceRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardSocialsRoute: typeof AuthenticatedDashboardSocialsRoute
@@ -296,6 +317,8 @@ interface AuthenticatedDashboardRouteChildren {
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardAppearanceRoute:
+      AuthenticatedDashboardAppearanceRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardSocialsRoute: AuthenticatedDashboardSocialsRoute,
