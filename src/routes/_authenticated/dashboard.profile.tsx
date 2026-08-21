@@ -1,128 +1,80 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { AssetUploader } from "@/components/qsy/asset-uploader";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+  ArrowLeft,
+  Cog,
+  Link2,
+  LayoutGrid,
+  Palette,
+  Share2,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 import { useMyProfile } from "@/lib/qsy-data";
 
-
-
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
-  component: ProfileEditor,
+  component: ProfileEditorLayout,
 });
 
-const schema = z.object({
-  username: z.string().trim().min(3).max(24).regex(/^[a-z0-9_]+$/, "Solo minúsculas, números y _"),
-  display_name: z.string().trim().min(1, "Nombre requerido").max(60),
-  bio: z.string().trim().max(200),
-  location: z.string().trim().max(80),
-  avatar_url: z.string().trim().max(500),
-  banner_url: z.string().trim().max(500),
-});
+const SECTIONS = [
+  { to: "/dashboard/profile", label: "Assets", icon: Upload, exact: true },
+  { to: "/dashboard/profile/customization", label: "Customization", icon: Palette },
+  { to: "/dashboard/profile/effects", label: "Effects", icon: Sparkles },
+  { to: "/dashboard/profile/connections", label: "Connections", icon: Link2 },
+  { to: "/dashboard/profile/modules", label: "Modules", icon: LayoutGrid },
+  { to: "/dashboard/profile/share", label: "Compartir", icon: Share2 },
+  { to: "/dashboard/profile/advanced", label: "Advanced", icon: Cog },
+] as const;
 
-function ProfileEditor() {
+function ProfileEditorLayout() {
   const { data: profile } = useMyProfile();
-  const queryClient = useQueryClient();
-  const [form, setForm] = useState({
-    username: "",
-    display_name: "",
-    bio: "",
-    location: "",
-    avatar_url: "",
-    banner_url: "",
-  });
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!profile) return;
-    setForm({
-      username: profile.username,
-      display_name: profile.display_name ?? "",
-      bio: profile.bio ?? "",
-      location: profile.location ?? "",
-      avatar_url: profile.avatar_url ?? "",
-      banner_url: profile.banner_url ?? "",
-    });
-  }, [profile]);
-
-  async function save() {
-    const parsed = schema.safeParse(form);
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0]!.message);
-      return;
-    }
-    setSaving(true);
-    const { error } = await supabase.from("profiles").update(parsed.data).eq("id", profile!.id);
-    setSaving(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    toast.success("Perfil actualizado");
-    void queryClient.invalidateQueries({ queryKey: ["my-profile"] });
-  }
-
-  const field = (key: keyof typeof form) => ({
-    value: form[key],
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((f) => ({ ...f, [key]: e.target.value })),
-  });
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
-
-      <div className="space-y-4 rounded-2xl glass p-6">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              maxLength={24}
-              value={form.username}
-              onChange={(e) => setForm((f) => ({ ...f, username: e.target.value.toLowerCase() }))}
+    <div className="grid gap-6 lg:grid-cols-[248px_1fr]">
+      <aside className="h-fit rounded-2xl border border-border/60 bg-card/40 p-4 backdrop-blur-xl lg:sticky lg:top-6">
+        <div className="flex items-center gap-3 border-b border-border/50 pb-4">
+          {profile?.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt={`Avatar de ${profile.username}`}
+              className="size-9 rounded-full object-cover"
             />
+          ) : (
+            <span className="grid size-9 place-items-center rounded-full bg-surface-strong font-mono text-xs font-bold text-primary">
+              {(profile?.username ?? "qs").slice(0, 2).toUpperCase()}
+            </span>
+          )}
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold">@{profile?.username ?? "qsy"}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-primary">Activo</p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="display">Display name</Label>
-            <Input id="display" maxLength={60} {...field("display_name")} />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="bio">Bio</Label>
-          <Textarea id="bio" maxLength={200} rows={3} {...field("bio")} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="location">Location</Label>
-          <Input id="location" maxLength={80} placeholder="19 · Argentina · Multimedia" {...field("location")} />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <AssetUploader
-            label="Foto de perfil"
-            hint="PNG, JPG o GIF · máx. 8MB"
-            accept="image/*"
-            value={form.avatar_url}
-            onChange={(url) => setForm((f) => ({ ...f, avatar_url: url }))}
-          />
-          <AssetUploader
-            label="Banner"
-            hint="Imagen ancha · máx. 10MB"
-            accept="image/*"
-            maxMb={10}
-            value={form.banner_url}
-            onChange={(url) => setForm((f) => ({ ...f, banner_url: url }))}
-          />
         </div>
 
-        <Button onClick={save} disabled={saving || !profile}>
-          {saving ? "Guardando…" : "Guardar cambios"}
-        </Button>
+        <nav className="mt-4 space-y-1">
+          {SECTIONS.map((s) => (
+            <Link
+              key={s.to}
+              to={s.to}
+              activeOptions={{ exact: "exact" in s ? s.exact : false }}
+              activeProps={{ className: "border-border/70 bg-surface-strong text-foreground" }}
+              inactiveProps={{ className: "border-transparent text-muted-foreground" }}
+              className="flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm transition-colors hover:text-foreground"
+            >
+              <s.icon className="size-4" />
+              {s.label}
+            </Link>
+          ))}
+        </nav>
+
+        <Link
+          to="/dashboard/profiles"
+          className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-border/60 px-3 py-2.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="size-3.5" /> Volver a Perfiles
+        </Link>
+      </aside>
+
+      <div className="min-w-0">
+        <Outlet />
       </div>
     </div>
   );
