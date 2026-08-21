@@ -106,7 +106,7 @@ const modules: {
     title: "Módulo Discord",
     desc: "Estado en vivo, actividad y servidor conectado directamente en tu perfil.",
     tag: "En vivo",
-    rows: ["Jugando · Valorant", "Servidor · qsy.gg/community", "Estado · En línea"],
+    rows: ["Jugando · Valorant", "Servidor · qsy.rip/community", "Estado · En línea"],
   },
   {
     icon: Gamepad2,
@@ -131,7 +131,7 @@ const modules: {
   },
 ];
 
-const domains = ["qsy.to", "qsy.gg", "qsy.link", "qsy.bio", "qsy.id", "qsy.cc"];
+const domains = ["qsy.rip", "qsy.es", "qsy.bio"];
 
 const connections = [
   "Discord", "Instagram", "TikTok", "YouTube", "Twitch", "X", "GitHub", "Steam",
@@ -164,7 +164,7 @@ function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
           <p className="truncate text-sm font-semibold">{p.name}</p>
           <BadgeCheck className="size-3.5 shrink-0 text-primary" />
         </div>
-        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.to/{p.user}</p>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.rip/{p.user}</p>
         <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
           <span className="rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
             {p.tag}
@@ -216,7 +216,7 @@ function Landing() {
             className="rise mx-auto mt-10 flex max-w-xl items-center gap-2 rounded-2xl border border-primary/40 bg-background/60 p-2 pl-4 shadow-[0_0_70px_-25px_var(--primary)] backdrop-blur-xl transition-colors focus-within:border-primary"
             style={{ animationDelay: "240ms" }}
           >
-            <span className="shrink-0 font-mono text-sm text-primary">qsy.to/</span>
+            <span className="shrink-0 font-mono text-sm text-primary">qsy.rip/</span>
             <input
               value={handle}
               onChange={(e) =>

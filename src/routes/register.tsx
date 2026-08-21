@@ -94,7 +94,7 @@ function RegisterPage() {
           <div className="relative">
             <AtSign className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <span className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 font-mono text-xs text-primary">
-              qsy.to/
+              qsy.rip/
             </span>
             <Input
               id="username"

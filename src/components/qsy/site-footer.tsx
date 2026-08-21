@@ -43,14 +43,14 @@ export function SiteFooter() {
               params={{ username: "brayan" }}
               className="block text-muted-foreground hover:text-foreground"
             >
-              qsy.to/brayan
+              qsy.rip/brayan
             </Link>
             <Link
               to="/$username"
               params={{ username: "nova" }}
               className="block text-muted-foreground hover:text-foreground"
             >
-              qsy.to/nova
+              qsy.rip/nova
             </Link>
           </div>
         </div>
