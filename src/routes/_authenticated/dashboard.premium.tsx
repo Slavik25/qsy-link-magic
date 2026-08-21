@@ -251,15 +251,18 @@ function ShopPage() {
                 key={d.key}
                 className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 text-center backdrop-blur-xl transition-colors hover:border-primary/40"
               >
-                <div className="mx-auto grid size-24 place-items-center">
-                  <span
-                    className="grid size-24 place-items-center rounded-full p-[5px]"
-                    style={{ background: d.ring, animation: d.animation }}
-                  >
-                    <span className="grid size-full place-items-center rounded-full bg-background font-mono text-sm text-primary">
-                      QSY
-                    </span>
+                <div className="relative mx-auto grid size-28 place-items-center">
+                  <span className="grid size-[74px] place-items-center rounded-full bg-surface-strong font-mono text-sm text-primary">
+                    QSY
                   </span>
+                  {d.image && (
+                    <img
+                      alt={d.name}
+                      src={d.image}
+                      loading="lazy"
+                      className="pointer-events-none absolute left-1/2 top-1/2 w-28 max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
+                    />
+                  )}
                 </div>
                 <div className="mt-4 flex items-center justify-center gap-2">
                   <h2 className="text-sm font-semibold">{d.name}</h2>
