@@ -3,6 +3,7 @@ import {
   Activity,
   Gauge,
   Image as ImageIcon,
+  KeyRound,
   MessageSquareWarning,
   Rocket,
   ShieldAlert,
@@ -24,6 +25,7 @@ const TABS = [
   { to: "/dashboard/admin/content", label: "Contenido", icon: ImageIcon },
   { to: "/dashboard/admin/status", label: "Servicios", icon: Activity },
   { to: "/dashboard/admin/boosts", label: "Boosts", icon: Rocket },
+  { to: "/dashboard/admin/integrations", label: "Integraciones", icon: KeyRound },
 ] as const;
 
 function AdminLayout() {
