@@ -103,7 +103,8 @@ function ProfilesPage() {
   return (
     <div className="space-y-6">
       <DashBanner
-        eyebrow="Profiles · Plan Free"
+        eyebrow={`Profiles · Plan ${rank === "seraph" ? "Seraph" : rank === "obsidian" ? "Obsidian" : "Free"}`}
+        tone={rank === "seraph" ? "gold" : "violet"}
         title="Crea y gestiona tus perfiles"
         description="Cada perfil es un biolink independiente, con su propia URL, enlaces, insignias y diseño. Nada se comparte entre ellos."
         image={profilesArt.url}
