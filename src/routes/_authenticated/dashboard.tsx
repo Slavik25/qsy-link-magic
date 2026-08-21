@@ -14,6 +14,7 @@ import {
   type LucideIcon,
   Menu,
   Settings,
+  Target,
   Share2,
   ShieldAlert,
   Sparkles,
@@ -40,6 +41,7 @@ const NAV: NavItem[] = [
   { to: "/dashboard/badges", label: "Insignias", icon: BadgeCheck },
   
   { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
+  { to: "/dashboard/missions", label: "Misiones", icon: Target },
   { to: "/dashboard/premium", label: "Tienda", icon: Gem, tag: "PRO" },
   { to: "/templates", label: "Plantillas", icon: ImageIcon },
   { to: "/explore", label: "Explorar", icon: Sparkles },
