@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles } from "lucide-react";
+import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
-import { SHOP_DECORATIONS, SHOP_LAYOUTS, SHOP_PLAYERS } from "@/lib/shop";
+import {
+  SHOP_BG_EFFECTS,
+  SHOP_DECORATIONS,
+  SHOP_LAYOUTS,
+  SHOP_NAME_STYLES,
+  SHOP_PLAYERS,
+} from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
@@ -30,11 +36,13 @@ export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   }),
 });
 
-type Tab = "players" | "layouts" | "decorations";
+type Tab = "players" | "layouts" | "names" | "effects" | "decorations";
 
 const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "players", label: "Reproductores", icon: Music4 },
   { key: "layouts", label: "Layouts", icon: LayoutTemplate },
+  { key: "names", label: "Nombres", icon: Type },
+  { key: "effects", label: "Fondos", icon: Wand2 },
   { key: "decorations", label: "Decoraciones", icon: Sparkles },
 ];
 
@@ -229,6 +237,111 @@ function ShopPage() {
                           l.name,
                         )
                       }
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "names" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_NAME_STYLES.map((n) => {
+            const active = (theme?.username_effect ?? "none") === n.effect;
+            return (
+              <article
+                key={n.key}
+                className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div
+                  className="grid h-28 w-full place-items-center bg-black/50"
+                  style={{ ["--p-accent" as string]: theme?.accent ?? "#a78bfa" }}
+                >
+                  <span
+                    className={`text-2xl font-bold ${n.effect === "none" ? "" : `qsy-name-${n.effect}`}`}
+                  >
+                    {profile?.display_name || profile?.username || "qsy"}
+                  </span>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-sm font-semibold">{n.name}</h2>
+                    <Price price={n.price} premium={n.premium} />
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{n.description}</p>
+                  {n.price > 0 && !owned.has(n.key) ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(n.key, n.price, n.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {n.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() => apply({ username_effect: n.effect }, n.name)}
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "effects" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_BG_EFFECTS.map((b) => {
+            const active = (theme?.bg_effect ?? "none") === b.effect;
+            return (
+              <article
+                key={b.key}
+                className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div className="relative h-28 w-full overflow-hidden" style={{ background: b.preview }}>
+                  {b.effect !== "none" && (
+                    <span aria-hidden className={`absolute inset-0 qsy-bg-${b.effect}`} />
+                  )}
+                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-sm font-semibold">{b.name}</h2>
+                    <Price price={b.price} premium={b.premium} />
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{b.description}</p>
+                  {b.price > 0 && !owned.has(b.key) ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(b.key, b.price, b.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {b.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() => apply({ bg_effect: b.effect }, b.name)}
                     >
                       {active ? (
                         <>

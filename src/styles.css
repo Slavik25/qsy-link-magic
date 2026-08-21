@@ -416,3 +416,246 @@
 .qsy-marquee-text {
   animation: qsy-marquee-text 9s linear infinite;
 }
+
+/* ============ Estilos de nombre de usuario (biolink) ============ */
+.qsy-name-glow {
+  text-shadow:
+    0 0 12px var(--p-accent, currentColor),
+    0 0 36px color-mix(in oklab, var(--p-accent, currentColor) 55%, transparent);
+}
+.qsy-name-gradient {
+  background: linear-gradient(100deg, var(--p-accent, #fff), #fff 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.qsy-name-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--p-accent, currentColor);
+}
+@keyframes qsy-name-shine {
+  0% { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+.qsy-name-shine {
+  background: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--p-accent, #fff) 40%, #fff) 30%,
+    #fff 50%,
+    color-mix(in oklab, var(--p-accent, #fff) 40%, #fff) 70%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: qsy-name-shine 3.2s linear infinite;
+}
+@keyframes qsy-name-hue { to { filter: hue-rotate(360deg); } }
+.qsy-name-rainbow {
+  background: linear-gradient(90deg, #ff5f6d, #ffc371, #47e891, #43cbff, #9708cc, #ff5f6d);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: qsy-name-shine 5s linear infinite;
+}
+@keyframes qsy-name-glitch {
+  0%, 92%, 100% { text-shadow: none; transform: translate3d(0, 0, 0); }
+  93% { text-shadow: -2px 0 #ff004d, 2px 0 #00e5ff; transform: translate3d(1px, 0, 0); }
+  96% { text-shadow: 2px 0 #ff004d, -2px 0 #00e5ff; transform: translate3d(-1px, 0, 0); }
+}
+.qsy-name-glitch { animation: qsy-name-glitch 3s infinite steps(1, end); }
+@keyframes qsy-name-neon {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 1; }
+  48% { opacity: 0.45; }
+  50% { opacity: 1; }
+  72% { opacity: 0.6; }
+  74% { opacity: 1; }
+}
+.qsy-name-neon {
+  color: #fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 16px var(--p-accent, #fff),
+    0 0 34px var(--p-accent, #fff),
+    0 0 62px var(--p-accent, #fff);
+  animation: qsy-name-neon 4s infinite;
+}
+@keyframes qsy-name-caret { 50% { opacity: 0; } }
+.qsy-name-typewriter {
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+.qsy-name-typewriter::after {
+  content: "_";
+  margin-left: 2px;
+  color: var(--p-accent, currentColor);
+  animation: qsy-name-caret 1s step-end infinite;
+}
+.qsy-name-chrome {
+  background: linear-gradient(180deg, #fff 0%, #b9c2d0 38%, #5b6472 52%, #e9eef7 70%, #96a0b0 100%);
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: qsy-name-chrome 5s ease-in-out infinite alternate;
+}
+@keyframes qsy-name-chrome {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+.qsy-name-fire {
+  background: linear-gradient(0deg, #ff2d00, #ff8a00 45%, #ffd400);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgb(255 110 0 / 0.55));
+}
+.qsy-name-ice {
+  background: linear-gradient(180deg, #ffffff, #a5f3fc 55%, #38bdf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgb(56 189 248 / 0.5));
+}
+@keyframes qsy-name-sparkle {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: 120px 40px; }
+}
+.qsy-name-sparkle {
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 0.95) 1px, transparent 1.6px),
+    linear-gradient(100deg, var(--p-accent, #fff), #fff);
+  background-size: 26px 26px, 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: qsy-name-sparkle 6s ease-in-out infinite;
+}
+
+/* ============ Efectos animados de fondo (biolink) ============ */
+.qsy-bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+@keyframes qsy-bg-fall { to { background-position: 0 1200px; } }
+@keyframes qsy-bg-rise { to { background-position: 0 -1200px; } }
+@keyframes qsy-bg-shift {
+  0% { transform: translate3d(-6%, -4%, 0) scale(1.2); }
+  50% { transform: translate3d(6%, 4%, 0) scale(1.35); }
+  100% { transform: translate3d(-6%, -4%, 0) scale(1.2); }
+}
+.qsy-bg-stars {
+  background-image:
+    radial-gradient(1.4px 1.4px at 20% 30%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 70% 60%, #fff, transparent),
+    radial-gradient(1.6px 1.6px at 45% 80%, #fff, transparent),
+    radial-gradient(1px 1px at 85% 20%, #fff, transparent);
+  background-size: 260px 260px;
+  opacity: 0.55;
+  animation: qsy-bg-fall 90s linear infinite;
+}
+.qsy-bg-aurora {
+  background:
+    radial-gradient(50% 40% at 20% 20%, rgb(124 92 255 / 0.45), transparent 70%),
+    radial-gradient(45% 35% at 80% 30%, rgb(14 165 233 / 0.35), transparent 70%);
+  filter: blur(30px);
+  animation: qsy-bg-shift 18s ease-in-out infinite;
+}
+.qsy-bg-night {
+  background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgb(3 7 18 / 0.85) 100%);
+}
+.qsy-bg-rain {
+  background-image: repeating-linear-gradient(
+    100deg,
+    rgb(180 220 255 / 0.35) 0 1px,
+    transparent 1px 9px
+  );
+  background-size: 100% 120px;
+  opacity: 0.35;
+  animation: qsy-bg-fall 1.6s linear infinite;
+}
+.qsy-bg-snow {
+  background-image:
+    radial-gradient(2.4px 2.4px at 25% 15%, #fff, transparent),
+    radial-gradient(2px 2px at 60% 45%, #fff, transparent),
+    radial-gradient(3px 3px at 85% 75%, #fff, transparent);
+  background-size: 220px 220px;
+  opacity: 0.7;
+  animation: qsy-bg-fall 14s linear infinite;
+}
+.qsy-bg-bubbles {
+  background-image:
+    radial-gradient(6px 6px at 20% 90%, rgb(255 255 255 / 0.25), transparent),
+    radial-gradient(9px 9px at 65% 70%, rgb(255 255 255 / 0.18), transparent),
+    radial-gradient(4px 4px at 85% 95%, rgb(255 255 255 / 0.3), transparent);
+  background-size: 320px 320px;
+  animation: qsy-bg-rise 16s linear infinite;
+}
+.qsy-bg-confetti {
+  background-image:
+    linear-gradient(90deg, #ff5f6d 0 4px, transparent 4px 40px),
+    linear-gradient(90deg, #43cbff 0 3px, transparent 3px 55px),
+    linear-gradient(90deg, #ffd400 0 4px, transparent 4px 70px);
+  background-size: 100% 160px, 100% 200px, 100% 240px;
+  opacity: 0.5;
+  animation: qsy-bg-fall 6s linear infinite;
+}
+.qsy-bg-fireflies {
+  background-image:
+    radial-gradient(3px 3px at 30% 40%, rgb(255 220 120 / 0.9), transparent),
+    radial-gradient(2.4px 2.4px at 75% 65%, rgb(255 200 90 / 0.8), transparent);
+  background-size: 300px 300px;
+  filter: blur(0.4px) drop-shadow(0 0 8px rgb(255 200 90 / 0.7));
+  animation: qsy-bg-rise 22s linear infinite;
+}
+.qsy-bg-matrix {
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgb(0 255 130 / 0.4) 0 2px,
+    transparent 2px 16px
+  );
+  background-size: 22px 240px;
+  opacity: 0.35;
+  animation: qsy-bg-fall 2.6s linear infinite;
+}
+.qsy-bg-oldtv {
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.07) 0 1px,
+    transparent 1px 3px
+  );
+  animation: qsy-bg-fall 40s linear infinite;
+}
+.qsy-bg-grid {
+  background-image:
+    linear-gradient(rgb(168 85 247 / 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(168 85 247 / 0.35) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: linear-gradient(180deg, transparent 45%, #000 100%);
+  animation: qsy-bg-fall 8s linear infinite;
+}
+.qsy-bg-plasma {
+  background:
+    radial-gradient(40% 40% at 30% 40%, rgb(236 72 153 / 0.5), transparent 70%),
+    radial-gradient(45% 45% at 70% 60%, rgb(59 130 246 / 0.5), transparent 70%),
+    radial-gradient(35% 35% at 50% 80%, rgb(168 85 247 / 0.5), transparent 70%);
+  filter: blur(50px);
+  animation: qsy-bg-shift 12s ease-in-out infinite;
+}
+.qsy-bg-dither {
+  background-image: radial-gradient(currentColor 1px, transparent 1.2px);
+  background-size: 6px 6px;
+  color: rgb(255 255 255 / 0.18);
+  animation: qsy-bg-fall 30s linear infinite;
+}
+.qsy-bg-nebula {
+  background:
+    radial-gradient(45% 45% at 35% 35%, rgb(67 56 202 / 0.55), transparent 70%),
+    radial-gradient(40% 40% at 70% 55%, rgb(162 28 175 / 0.5), transparent 70%),
+    radial-gradient(1.4px 1.4px at 20% 60%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 80% 30%, #fff, transparent);
+  background-size: 100% 100%, 100% 100%, 240px 240px, 240px 240px;
+  animation: qsy-bg-shift 26s ease-in-out infinite;
+}

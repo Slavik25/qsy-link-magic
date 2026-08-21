@@ -124,6 +124,10 @@ export function ProfileView({
           <h1
             className={`font-semibold tracking-tight ${compact ? "text-lg" : "text-2xl sm:text-3xl"} ${
               t.font === "mono" ? "font-mono" : ""
+            } ${
+              t.username_effect && t.username_effect !== "none"
+                ? `qsy-name-${t.username_effect}`
+                : ""
             }`}
           >
             {profile.display_name}

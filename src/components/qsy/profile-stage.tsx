@@ -51,6 +51,10 @@ export function ProfileStage({ theme, music, children }: Props) {
         />
       )}
 
+      {theme.bg_effect && theme.bg_effect !== "none" && (
+        <div aria-hidden className={`qsy-bg-layer qsy-bg-${theme.bg_effect}`} />
+      )}
+
       <div
         className={`relative transition-all duration-700 ${
           entered ? "opacity-100 blur-0" : "pointer-events-none scale-[1.03] opacity-0 blur-md"
