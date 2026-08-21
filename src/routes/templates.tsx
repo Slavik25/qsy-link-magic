@@ -53,7 +53,7 @@ function TemplatesPage() {
               <h2 className="mt-4 font-medium">{t.name}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{t.desc}</p>
               <Button asChild variant="secondary" className="mt-4 w-full">
-                <Link to="/dashboard/appearance">
+                <Link to="/dashboard/profiles">
                   Usar template
                 </Link>
               </Button>

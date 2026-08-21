@@ -20,7 +20,6 @@ import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
-import { Route as AuthenticatedDashboardAppearanceRouteImport } from './routes/_authenticated/dashboard.appearance'
 import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_authenticated/dashboard.badges'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardPremiumRouteImport } from './routes/_authenticated/dashboard.premium'
@@ -89,12 +88,6 @@ const AuthenticatedDashboardAnalyticsRoute =
   AuthenticatedDashboardAnalyticsRouteImport.update({
     id: '/analytics',
     path: '/analytics',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAppearanceRoute =
-  AuthenticatedDashboardAppearanceRouteImport.update({
-    id: '/appearance',
-    path: '/appearance',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardBadgesRoute =
@@ -186,7 +179,6 @@ export interface FileRoutesByFullPath {
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
@@ -211,7 +203,6 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
@@ -238,7 +229,6 @@ export interface FileRoutesById {
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/_authenticated/dashboard/appearance': typeof AuthenticatedDashboardAppearanceRoute
   '/_authenticated/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
@@ -266,7 +256,6 @@ export interface FileRouteTypes {
     | '/templates'
     | '/dashboard'
     | '/dashboard/analytics'
-    | '/dashboard/appearance'
     | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/premium'
@@ -291,7 +280,6 @@ export interface FileRouteTypes {
     | '/register'
     | '/templates'
     | '/dashboard/analytics'
-    | '/dashboard/appearance'
     | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/premium'
@@ -317,7 +305,6 @@ export interface FileRouteTypes {
     | '/templates'
     | '/_authenticated/dashboard'
     | '/_authenticated/dashboard/analytics'
-    | '/_authenticated/dashboard/appearance'
     | '/_authenticated/dashboard/badges'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/premium'
@@ -422,13 +409,6 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/dashboard/analytics'
       preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/appearance': {
-      id: '/_authenticated/dashboard/appearance'
-      path: '/appearance'
-      fullPath: '/dashboard/appearance'
-      preLoaderRoute: typeof AuthenticatedDashboardAppearanceRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/badges': {
@@ -560,7 +540,6 @@ const AuthenticatedDashboardProfileRouteWithChildren =
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
-  AuthenticatedDashboardAppearanceRoute: typeof AuthenticatedDashboardAppearanceRoute
   AuthenticatedDashboardBadgesRoute: typeof AuthenticatedDashboardBadgesRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
@@ -573,8 +552,6 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
-    AuthenticatedDashboardAppearanceRoute:
-      AuthenticatedDashboardAppearanceRoute,
     AuthenticatedDashboardBadgesRoute: AuthenticatedDashboardBadgesRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardPremiumRoute: AuthenticatedDashboardPremiumRoute,

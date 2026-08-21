@@ -13,7 +13,6 @@ import {
   LogOut,
   type LucideIcon,
   Menu,
-  Palette,
   Settings,
   Share2,
   Sparkles,
