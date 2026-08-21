@@ -27,17 +27,27 @@ function AdminUsers() {
 
   async function toggleFlag(p: AdminProfile, field: "verified" | "featured") {
     const value = !p[field];
-    const { error } = await supabase.from("profiles").update({ [field]: value }).eq("id", p.id);
-    if (error) return toast.error("No se pudo actualizar", { description: error.message });
+    const patch = field === "verified" ? { verified: value } : { featured: value };
+    const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
+    if (error) {
+      toast.error("No se pudo actualizar", { description: error.message });
+      return;
+    }
     await logAdminAction(`${field}:${value ? "on" : "off"}`, p.username);
     toast.success(`@${p.username} actualizado`);
     void refresh();
   }
 
   async function grantAdmin(p: AdminProfile) {
-    if (!p.user_id) return toast.error("Perfil sin cuenta vinculada");
+    if (!p.user_id) {
+      toast.error("Perfil sin cuenta vinculada");
+      return;
+    }
     const { error } = await supabase.from("user_roles").insert({ user_id: p.user_id, role: "admin" });
-    if (error) return toast.error("No se pudo otorgar", { description: error.message });
+    if (error) {
+      toast.error("No se pudo otorgar", { description: error.message });
+      return;
+    }
     await logAdminAction("role:admin", p.username);
     toast.success(`@${p.username} ahora es admin`);
   }
@@ -48,7 +58,10 @@ function AdminUsers() {
     const { error } = await supabase
       .from("sanctions")
       .insert({ profile_id: p.id, user_id: p.user_id, kind: "ban", reason });
-    if (error) return toast.error("No se pudo banear", { description: error.message });
+    if (error) {
+      toast.error("No se pudo banear", { description: error.message });
+      return;
+    }
     await logAdminAction("ban", p.username, { reason });
     toast.success(`@${p.username} baneado`);
     void qc.invalidateQueries({ queryKey: ["admin-table", "sanctions"] });
@@ -56,7 +69,10 @@ function AdminUsers() {
 
   async function giveBadge(p: AdminProfile, key: string) {
     const { error } = await supabase.from("profile_badges").insert({ profile_id: p.id, badge_key: key });
-    if (error) return toast.error("No se pudo asignar", { description: error.message });
+    if (error) {
+      toast.error("No se pudo asignar", { description: error.message });
+      return;
+    }
     await logAdminAction("badge:grant", p.username, { badge: key });
     toast.success(`Insignia ${key} otorgada a @${p.username}`);
   }
