@@ -41,6 +41,8 @@ function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<"form" | "code">("form");
+  const [code, setCode] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -64,13 +66,90 @@ function RegisterPage() {
       return;
     }
     if (!data.session) {
-      toast.success("Cuenta creada", {
-        description: "Revisa tu email y confirma tu cuenta para entrar al dashboard.",
+      setStep("code");
+      toast.success("Te enviamos un código", {
+        description: "Revisa tu correo e introduce el código de 6 dígitos.",
       });
       return;
     }
     toast.success("Cuenta creada. Bienvenido a QSY.");
     await navigate({ to: "/dashboard" });
+  }
+
+  async function verify(e: React.FormEvent) {
+    e.preventDefault();
+    const token = code.trim();
+    if (token.length !== 6) {
+      toast.error("El código debe tener 6 dígitos");
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
+    setLoading(false);
+    if (error || !data.session) {
+      toast.error(error?.message ?? "Código inválido o expirado");
+      return;
+    }
+    toast.success("Cuenta verificada. Bienvenido a QSY.");
+    await navigate({ to: "/dashboard" });
+  }
+
+  async function resend() {
+    setLoading(true);
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Código reenviado");
+  }
+
+  if (step === "code") {
+    return (
+      <AuthShell
+        side="left"
+        eyebrow="Verifica tu correo"
+        title="Introduce tu código"
+        subtitle={`Enviamos un código de 6 dígitos a ${email}`}
+      >
+        <form onSubmit={verify} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="code" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              Código de verificación
+            </Label>
+            <Input
+              id="code"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              value={code}
+              maxLength={6}
+              placeholder="000000"
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              className="h-14 rounded-xl bg-background/60 text-center font-mono text-2xl tracking-[0.5em]"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
+          >
+            {loading ? "Verificando…" : "Verificar y entrar"}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <button type="button" onClick={resend} disabled={loading} className="font-semibold text-primary hover:underline">
+              Reenviar código
+            </button>
+            <button type="button" onClick={() => setStep("form")} className="hover:underline">
+              Cambiar correo
+            </button>
+          </div>
+        </form>
+      </AuthShell>
+    );
   }
 
   async function google() {
