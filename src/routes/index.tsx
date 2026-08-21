@@ -77,7 +77,14 @@ const heroStats = [
 
 const bars = [28, 44, 36, 62, 48, 74, 58, 88, 66, 94, 72, 100];
 
-const liveProfiles = [
+// image: coloca aquí la ruta de la captura cuando la tengas (import desde src/assets)
+const liveProfiles: {
+  user: string;
+  name: string;
+  tag: string;
+  views: string;
+  image?: string;
+}[] = [
   { user: "brayan", name: "Brayan Bicet", tag: "Creator", views: "84.2k" },
   { user: "nova", name: "Nova", tag: "Music", views: "62.9k" },
   { user: "kaito", name: "Kaito", tag: "Gaming", views: "51.4k" },
@@ -86,30 +93,41 @@ const liveProfiles = [
   { user: "vega", name: "Vega", tag: "Streamer", views: "29.6k" },
 ];
 
-const modules = [
+const modules: {
+  icon: typeof MessageCircle;
+  title: string;
+  desc: string;
+  tag: string;
+  image?: string;
+  rows: string[];
+}[] = [
   {
     icon: MessageCircle,
     title: "Módulo Discord",
     desc: "Estado en vivo, actividad y servidor conectado directamente en tu perfil.",
     tag: "En vivo",
+    rows: ["Jugando · Valorant", "Servidor · qsy.gg/community", "Estado · En línea"],
   },
   {
     icon: Gamepad2,
     title: "Módulo Gaming",
     desc: "Steam, Roblox y Twitch: muestra qué juegas y cuándo estás online.",
     tag: "Popular",
+    rows: ["Roblox · 1.2k visitas", "Steam · 412 horas", "Twitch · En directo"],
   },
   {
     icon: Music4,
     title: "Módulo Música",
     desc: "Spotify sincronizado con reproducción y portada animada.",
     tag: "Nuevo",
+    rows: ["Reproduciendo ahora", "Portada animada", "Preview de 30s"],
   },
   {
     icon: QrCode,
     title: "Módulo QR",
     desc: "Genera y descarga tu QR con acento personalizado en un click.",
     tag: "Pro",
+    rows: ["PNG y SVG", "Color de acento", "Logo centrado"],
   },
 ];
 
@@ -123,21 +141,41 @@ const connections = [
 
 function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface/80 p-3 backdrop-blur-xl transition-colors hover:border-primary/50">
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/15 font-mono text-xs font-bold text-primary">
-        {p.user.slice(0, 2).toUpperCase()}
-      </span>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-sm font-semibold">{p.name}</p>
-        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.to/{p.user}</p>
+    <div className="group overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]">
+      <div className="relative h-24 overflow-hidden">
+        {p.image ? (
+          <img
+            src={p.image}
+            alt={`Perfil QSY de ${p.name}`}
+            loading="lazy"
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div aria-hidden className="size-full aurora starfield opacity-90" />
+        )}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
       </div>
-      <div className="text-right">
-        <p className="text-xs font-semibold text-primary">{p.views}</p>
-        <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{p.tag}</p>
+
+      <div className="-mt-7 px-4 pb-4 text-left">
+        <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
+          {p.user.slice(0, 2).toUpperCase()}
+        </span>
+        <div className="mt-3 flex items-center gap-1.5">
+          <p className="truncate text-sm font-semibold">{p.name}</p>
+          <BadgeCheck className="size-3.5 shrink-0 text-primary" />
+        </div>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.to/{p.user}</p>
+        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+          <span className="rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            {p.tag}
+          </span>
+          <span className="text-xs font-semibold text-primary">{p.views}</span>
+        </div>
       </div>
     </div>
   );
 }
+
 
 function Landing() {
   const [handle, setHandle] = useState("");
