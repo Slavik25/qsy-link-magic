@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(url);
+
 const TEN_YEARS = 60 * 60 * 24 * 3650;
 
 type Props = {
@@ -12,7 +14,7 @@ type Props = {
   accept: string;
   value: string;
   maxMb?: number;
-  preview?: "image" | "audio" | "none";
+  preview?: "image" | "audio" | "video" | "none";
   onChange: (url: string) => void;
 };
 
@@ -81,11 +83,24 @@ export function AssetUploader({
         )}
       </div>
 
-      {value && preview === "image" && (
+      {value && preview === "image" && !isVideoUrl(value) && (
         <img
           src={value}
           alt={`Vista previa de ${label}`}
           className="mt-3 h-28 w-full rounded-xl object-cover"
+        />
+      )}
+      {value && (preview === "video" || (preview === "image" && isVideoUrl(value))) && (
+        <video
+          key={value}
+          src={value}
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls
+          aria-label={`Vista previa de ${label}`}
+          className="mt-3 h-28 w-full rounded-xl bg-black object-cover"
         />
       )}
       {value && preview === "audio" && (
