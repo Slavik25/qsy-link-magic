@@ -129,15 +129,15 @@ export function SiteNav() {
           type="button"
           className="flex h-9 items-center gap-2 rounded-xl border border-border/70 bg-secondary/40 px-3 text-xs font-semibold transition-colors hover:bg-secondary"
         >
-          <span className="text-sm leading-none">{activeLang.flag}</span>
-          {activeLang.label}
+          <Flag src={activeLang.flag} alt={activeLang.label} />
+          {activeLang.short}
           <ChevronDown className="size-3 text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-36">
+      <DropdownMenuContent align="end" className="min-w-40">
         {LANGS.map((l) => (
           <DropdownMenuItem key={l.code} onClick={() => change(l.code)} className="gap-2 text-xs">
-            <span>{l.flag}</span>
+            <Flag src={l.flag} alt={l.label} />
             {l.label}
           </DropdownMenuItem>
         ))}
