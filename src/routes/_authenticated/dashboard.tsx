@@ -2,15 +2,12 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
-  BarChart3,
   ChevronDown,
   ExternalLink,
   Gem,
   HelpCircle,
-  LayoutGrid,
   Link2,
   LogOut,
-  Medal,
   Music4,
   Palette,
   Search,
@@ -213,5 +210,3 @@ function DashboardLayout() {
     </div>
   );
 }
-
-export { LayoutGrid, BarChart3, Medal };

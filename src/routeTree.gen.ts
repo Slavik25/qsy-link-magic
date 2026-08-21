@@ -24,6 +24,7 @@ import { Route as AuthenticatedDashboardAppearanceRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_authenticated/dashboard.badges'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardMusicRouteImport } from './routes/_authenticated/dashboard.music'
+import { Route as AuthenticatedDashboardPremiumRouteImport } from './routes/_authenticated/dashboard.premium'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardSocialsRouteImport } from './routes/_authenticated/dashboard.socials'
@@ -108,6 +109,12 @@ const AuthenticatedDashboardMusicRoute =
     path: '/music',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardPremiumRoute =
+  AuthenticatedDashboardPremiumRouteImport.update({
+    id: '/premium',
+    path: '/premium',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardProfileRoute =
   AuthenticatedDashboardProfileRouteImport.update({
     id: '/profile',
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
+  '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -159,6 +167,7 @@ export interface FileRoutesByTo {
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
+  '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -180,6 +189,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/music': typeof AuthenticatedDashboardMusicRoute
+  '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/music'
+    | '/dashboard/premium'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/socials'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/dashboard/badges'
     | '/dashboard/links'
     | '/dashboard/music'
+    | '/dashboard/premium'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/socials'
@@ -239,6 +251,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/badges'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/music'
+    | '/_authenticated/dashboard/premium'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/socials'
@@ -363,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardMusicRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/premium': {
+      id: '/_authenticated/dashboard/premium'
+      path: '/premium'
+      fullPath: '/dashboard/premium'
+      preLoaderRoute: typeof AuthenticatedDashboardPremiumRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/profile': {
       id: '/_authenticated/dashboard/profile'
       path: '/profile'
@@ -393,6 +413,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardBadgesRoute: typeof AuthenticatedDashboardBadgesRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMusicRoute: typeof AuthenticatedDashboardMusicRoute
+  AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardSocialsRoute: typeof AuthenticatedDashboardSocialsRoute
@@ -407,6 +428,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardBadgesRoute: AuthenticatedDashboardBadgesRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMusicRoute: AuthenticatedDashboardMusicRoute,
+    AuthenticatedDashboardPremiumRoute: AuthenticatedDashboardPremiumRoute,
     AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardSocialsRoute: AuthenticatedDashboardSocialsRoute,
