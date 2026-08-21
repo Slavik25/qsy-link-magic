@@ -170,17 +170,13 @@ export function usePlatformStats() {
     queryKey: ["platform-stats"],
     queryFn: async () => {
       const [profiles, links, verified, views] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .not("user_id", "is", null),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("links").select("id", { count: "exact", head: true }),
         supabase
           .from("profiles")
           .select("id", { count: "exact", head: true })
-          .not("user_id", "is", null)
           .eq("verified", true),
-        supabase.from("profiles").select("view_count").not("user_id", "is", null),
+        supabase.from("profiles").select("view_count"),
       ]);
       const totalViews = (views.data ?? []).reduce(
         (sum, r: any) => sum + (r.view_count ?? 0),
