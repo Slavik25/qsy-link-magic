@@ -92,9 +92,9 @@ function Overview() {
 
   const quick = [
     {
-      to: "/dashboard/profile",
-      title: "Gestionar perfil",
-      desc: "Personaliza y actualiza tu página.",
+      to: "/dashboard/profiles",
+      title: "Gestionar perfiles",
+      desc: "Personaliza y actualiza tus páginas.",
       icon: UserRound,
       image: cardProfile.url,
     },

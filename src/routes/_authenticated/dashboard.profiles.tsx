@@ -73,7 +73,7 @@ function ProfilesPage() {
         location: profile.location ?? "",
         avatar_url: profile.avatar_url,
         banner_url: profile.banner_url,
-        theme: profile.theme as unknown as Record<string, unknown>,
+        theme: profile.theme as never,
       });
       if (error) throw error;
     },

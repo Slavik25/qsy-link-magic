@@ -35,7 +35,7 @@ type NavItem = { to: string; label: string; icon: LucideIcon; exact?: boolean; t
 
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Resumen", icon: LayoutGrid, exact: true },
-  { to: "/dashboard/profile", label: "Perfil", icon: UserRound },
+  { to: "/dashboard/profiles", label: "Perfiles", icon: UserRound },
   { to: "/dashboard/links", label: "Conexiones", icon: Link2 },
   { to: "/dashboard/socials", label: "Socials", icon: Share2 },
   { to: "/dashboard/badges", label: "Insignias", icon: BadgeCheck },
