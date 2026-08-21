@@ -51,14 +51,25 @@ export function ProfileView({
           className="relative rounded-full p-[2px]"
           style={{ background: `linear-gradient(140deg, ${t.accent}, transparent)` }}
         >
-          <img
-            src={profile.avatar_url || "https://i.pravatar.cc/240?img=1"}
-            alt={`${profile.display_name} avatar`}
-            width={compact ? 72 : 96}
-            height={compact ? 72 : 96}
-            loading="lazy"
-            className={`rounded-full object-cover ${compact ? "size-16" : "size-24"}`}
-          />
+          {profile.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt={`Avatar de ${profile.display_name || profile.username}`}
+              width={compact ? 72 : 96}
+              height={compact ? 72 : 96}
+              loading="lazy"
+              className={`rounded-full object-cover ${compact ? "size-16" : "size-24"}`}
+            />
+          ) : (
+            <span
+              className={`grid place-items-center rounded-full bg-background font-mono font-bold ${
+                compact ? "size-16 text-lg" : "size-24 text-2xl"
+              }`}
+              style={{ color: t.accent }}
+            >
+              {profile.username.slice(0, 2).toUpperCase()}
+            </span>
+          )}
         </div>
 
         <div className="mt-4 flex items-center gap-1.5">
