@@ -9,6 +9,7 @@ import {
   Panel,
   Pills,
   SaveBar,
+  ToggleRow,
   useProfileDraft,
 } from "@/components/qsy/profile-editor-ui";
 import type { ThemeConfig } from "@/lib/qsy";
@@ -103,6 +104,15 @@ function CustomizationSection() {
               />
             ),
           }))}
+        />
+      </Group>
+
+      <Group label="Tarjeta del perfil">
+        <ToggleRow
+          title="Mostrar cuadro de la tarjeta"
+          description="Desactívalo para eliminar el recuadro y dejar el contenido flotando sobre el fondo."
+          checked={t.show_card !== false}
+          onChange={(v) => setTheme("show_card", v)}
         />
       </Group>
 
