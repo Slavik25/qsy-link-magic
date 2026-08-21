@@ -25,6 +25,7 @@ import { QsyLogo } from "@/components/qsy/logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
+import { useIsAdmin } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
