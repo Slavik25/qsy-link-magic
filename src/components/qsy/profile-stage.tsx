@@ -27,7 +27,10 @@ export function ProfileStage({ theme, children }: Props) {
   }, [entered, theme.audio_url]);
 
   const overlay = (theme.overlay ?? 70) / 100;
-  const isVideo = theme.background_type === "video";
+  const isVideo =
+    theme.background_type === "video" ||
+    /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(theme.background ?? "");
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
