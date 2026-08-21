@@ -88,16 +88,13 @@ export function ProfileView({
             boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
           }}
         >
-          {deco && deco.key !== "none" && (
-            <span
+          {deco?.image && (
+            <img
               aria-hidden
-              className="pointer-events-none absolute -inset-[6px] rounded-full"
-              style={{
-                background: deco.ring,
-                animation: deco.animation,
-                mask: "radial-gradient(circle, transparent 58%, #000 60%)",
-                WebkitMask: "radial-gradient(circle, transparent 58%, #000 60%)",
-              }}
+              alt=""
+              src={deco.image}
+              loading="lazy"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[152%] max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
             />
           )}
           {profile.avatar_url ? (
