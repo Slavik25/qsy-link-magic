@@ -32,7 +32,7 @@ export function DashBanner({ eyebrow, title, description, image, tone = "violet"
           src={image}
           alt=""
           aria-hidden
-          className="pointer-events-none absolute right-0 top-0 hidden h-full w-1/2 object-cover object-left opacity-90 sm:block"
+          className="pointer-events-none absolute right-0 top-0 hidden h-full w-3/5 object-cover object-right opacity-90 sm:block [mask-image:linear-gradient(to_right,transparent,black_45%)]"
         />
       )}
       <div className="relative max-w-xl p-6 sm:p-8">
