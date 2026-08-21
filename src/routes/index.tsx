@@ -703,6 +703,20 @@ function ProfileCard({ p }: { p: ShowcaseProfile }) {
 
 function Landing() {
   const [handle, setHandle] = useState("");
+  const { data: stats } = usePlatformStats();
+  const { data: showcase } = useShowcaseProfiles(8);
+
+  const heroStats = [
+    { label: "Visitas totales", value: (stats?.views ?? 0).toLocaleString("es-ES") },
+    { label: "Creadores activos", value: (stats?.creators ?? 0).toLocaleString("es-ES") },
+    { label: "Links servidos", value: (stats?.links ?? 0).toLocaleString("es-ES") },
+    { label: "Badges verificados", value: (stats?.verified ?? 0).toLocaleString("es-ES") },
+  ];
+
+  const cards: ShowcaseProfile[] = showcase?.length ? showcase : [];
+  const colA = cards.length ? [...cards, ...cards] : [];
+  const colB = cards.length ? [...cards].reverse().concat([...cards].reverse()) : [];
+
 
   return (
     <div className="min-h-screen overflow-x-hidden">
