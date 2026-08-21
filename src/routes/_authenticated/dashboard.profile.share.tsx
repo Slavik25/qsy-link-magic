@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Panel, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
+import { RankBadge } from "@/components/qsy/rank-badge";
 import { DEFAULT_DOMAIN, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/share")({
@@ -67,15 +68,7 @@ function ShareSection() {
           <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
             <Globe className="size-3.5" /> Dominio del perfil
           </p>
-          <span
-            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-              isSeraph
-                ? "border-amber-300/50 bg-amber-300/10 text-amber-200"
-                : "border-border/60 bg-card/40 text-muted-foreground"
-            }`}
-          >
-            {isSeraph ? "Seraph" : rank === "obsidian" ? "Obsidian" : "Free"}
-          </span>
+          <RankBadge rank={rank} size="sm" />
         </div>
 
         <div className="grid gap-2 sm:grid-cols-3">
