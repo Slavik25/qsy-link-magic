@@ -47,20 +47,33 @@ function StatCard({
   value,
   hint,
   icon: Icon,
+  color = "var(--color-primary)",
+  delay = 0,
 }: {
   label: string;
   value: string;
   hint: string;
   icon: typeof Eye;
+  color?: string;
+  delay?: number;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50">
+    <div
+      className="pop-in shimmer-on-hover group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50"
+      style={{ animationDelay: `${delay}ms` }}
+    >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+        style={{ background: `color-mix(in oklab, ${color} 35%, transparent)` }}
       />
       <div className="relative flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-        <Icon className="size-3.5" />
+        <span
+          className="grid size-6 place-items-center rounded-md transition-transform duration-300 group-hover:scale-110"
+          style={{ background: `color-mix(in oklab, ${color} 18%, transparent)`, color }}
+        >
+          <Icon className="size-3.5" />
+        </span>
         {label}
       </div>
       <p className="relative mt-3 truncate text-2xl font-semibold">{value}</p>
@@ -116,7 +129,7 @@ function Overview() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 xl:grid-cols-[1fr_320px]">
+      <div className="grid gap-4 pop-in xl:grid-cols-[1fr_320px]">
         <DashBanner
           eyebrow="Resumen"
           title={`¡Hola, ${profile?.display_name || profile?.username || "qsy"}!`}
@@ -124,7 +137,7 @@ function Overview() {
           image={dashBanner.url}
         />
 
-        <aside className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl">
+        <aside className="pop-in flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl">
           {profile?.avatar_url ? (
             <img
               src={profile.avatar_url}
@@ -142,7 +155,7 @@ function Overview() {
               FREE
             </span>
           </div>
-          <Button asChild className="w-full rounded-xl">
+          <Button asChild className="pulse-glow w-full rounded-xl">
             <Link to="/dashboard/premium">Mejorar plan</Link>
           </Button>
         </aside>
@@ -154,14 +167,18 @@ function Overview() {
           value={`@${profile?.username ?? "…"}`}
           hint="Cámbiala desde Perfil"
           icon={Pencil}
+          color="#a78bfa"
+          delay={0}
         />
         <StatCard
           label="Conexiones"
           value={String(links.length + socials.length)}
           hint={`${links.length} links · ${socials.length} redes`}
           icon={Link2}
+          color="#38bdf8"
+          delay={80}
         />
-        <StatCard label="UID" value={uid.toLocaleString("es-ES")} hint="Identificador único" icon={Hash} />
+        <StatCard label="UID" value={uid.toLocaleString("es-ES")} hint="Identificador único" icon={Hash} color="#fbbf24" delay={160} />
         <StatCard
           label="Visitas únicas"
           value={(profile?.view_count ?? 0).toLocaleString("es-ES")}
@@ -169,15 +186,18 @@ function Overview() {
             (stats?.views ?? 0) > 0 ? `+${stats?.views} en 7 días` : "Sin visitas aún"
           }
           icon={Eye}
+          color="#34d399"
+          delay={240}
         />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-3">
-        {quick.map((q) => (
+        {quick.map((q, i) => (
           <Link
             key={q.title}
             to={q.to}
-            className="group relative flex h-24 items-center overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
+            style={{ animationDelay: `${120 + i * 90}ms` }}
+            className="pop-in shimmer-on-hover group relative flex h-24 items-center overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_18px_50px_-20px_var(--color-primary)]"
           >
             <img
               src={q.image}
@@ -190,7 +210,7 @@ function Overview() {
               className="pointer-events-none absolute inset-0 bg-gradient-to-r from-card via-card/85 to-transparent"
             />
             <div className="relative flex min-w-0 items-center gap-3 px-5">
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-background/70 text-primary">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-primary/40 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <q.icon className="size-5" />
               </span>
               <span className="min-w-0">
@@ -234,7 +254,7 @@ function Overview() {
       )}
 
       <section className="grid gap-4 lg:grid-cols-[1fr_340px]">
-        <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+        <div className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <div className="min-w-0">
               <h2 className="truncate text-base font-medium">Visitas al perfil</h2>
@@ -293,14 +313,14 @@ function Overview() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+        <div className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl" style={{ animationDelay: "120ms" }}>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
             <h2 className="truncate text-base font-medium">Progreso del perfil</h2>
             <span className="shrink-0 text-xs text-muted-foreground">{percent}%</span>
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-strong">
             <div
-              className="h-full rounded-full bg-primary transition-all duration-700"
+              className="h-full rounded-full bg-gradient-to-r from-primary via-primary/70 to-primary transition-all duration-700"
               style={{ width: `${percent}%` }}
             />
           </div>
