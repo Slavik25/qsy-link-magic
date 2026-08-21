@@ -30,7 +30,52 @@ export type ThemeConfig = {
   entry_text?: string;
   overlay?: number;
   username_effect?: string;
+  /* Assets */
+  cursor_url?: string;
+  /* Customization */
+  country?: string;
+  avatar_shape?: "circle" | "rounded" | "square" | "hexagon";
+  profile_width?: "compact" | "normal" | "wide";
+  card_bg_type?: "solid" | "gradient" | "image" | "video" | "transparent";
+  color_text?: string;
+  color_icon?: string;
+  color_border?: string;
+  /* Effects & media */
+  player_type?: "default" | "minimal" | "structured" | "text";
+  player_position?: string;
+  player_bg?: "solid" | "glass" | "transparent";
+  border_decoration?: "none" | "scifi" | "cyberpunk";
+  vfx_cursor_trail?: boolean;
+  vfx_glow_name?: boolean;
+  vfx_glow_links?: boolean;
+  vfx_glow_badges?: boolean;
+  vfx_sparkles?: boolean;
+  vfx_mono_icons?: boolean;
+  vfx_animated_title?: boolean;
+  vfx_invert_card?: boolean;
+  vfx_volume_control?: boolean;
+  /* Connections */
+  discord_id?: string;
+  discord_avatar?: boolean;
+  discord_decoration?: boolean;
+  spotify_user?: string;
+  video_overlay?: string;
+  /* Modules */
+  show_views?: boolean;
+  show_likes?: boolean;
+  typewriter?: string[];
+  /* Advanced */
+  profile_mode?: "public" | "unlisted" | "private";
+  show_bio?: boolean;
+  show_socials?: boolean;
+  bg_effect?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_image?: string;
+  meta_favicon?: string;
+  custom_css?: string;
 };
+
 
 export const defaultTheme: ThemeConfig = {
   template: "glass",
