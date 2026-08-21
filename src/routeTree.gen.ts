@@ -19,6 +19,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_authenticated/dashboard.badges'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
@@ -26,6 +27,14 @@ import { Route as AuthenticatedDashboardPremiumRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
+import { Route as AuthenticatedDashboardAdminBoostsRouteImport } from './routes/_authenticated/dashboard.admin.boosts'
+import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_authenticated/dashboard.admin.chat'
+import { Route as AuthenticatedDashboardAdminContentRouteImport } from './routes/_authenticated/dashboard.admin.content'
+import { Route as AuthenticatedDashboardAdminModerationRouteImport } from './routes/_authenticated/dashboard.admin.moderation'
+import { Route as AuthenticatedDashboardAdminSecurityRouteImport } from './routes/_authenticated/dashboard.admin.security'
+import { Route as AuthenticatedDashboardAdminStatusRouteImport } from './routes/_authenticated/dashboard.admin.status'
+import { Route as AuthenticatedDashboardAdminUsersRouteImport } from './routes/_authenticated/dashboard.admin.users'
 import { Route as AuthenticatedDashboardProfileIndexRouteImport } from './routes/_authenticated/dashboard.profile.index'
 import { Route as AuthenticatedDashboardProfileAdvancedRouteImport } from './routes/_authenticated/dashboard.profile.advanced'
 import { Route as AuthenticatedDashboardProfileConnectionsRouteImport } from './routes/_authenticated/dashboard.profile.connections'
@@ -84,6 +93,12 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAdminRoute =
+  AuthenticatedDashboardAdminRouteImport.update({
+    id: '/admin',
+    path: '/admin',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAnalyticsRoute =
   AuthenticatedDashboardAnalyticsRouteImport.update({
     id: '/analytics',
@@ -125,6 +140,54 @@ const AuthenticatedDashboardSettingsRoute =
     id: '/settings',
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAdminIndexRoute =
+  AuthenticatedDashboardAdminIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminBoostsRoute =
+  AuthenticatedDashboardAdminBoostsRouteImport.update({
+    id: '/boosts',
+    path: '/boosts',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminChatRoute =
+  AuthenticatedDashboardAdminChatRouteImport.update({
+    id: '/chat',
+    path: '/chat',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminContentRoute =
+  AuthenticatedDashboardAdminContentRouteImport.update({
+    id: '/content',
+    path: '/content',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminModerationRoute =
+  AuthenticatedDashboardAdminModerationRouteImport.update({
+    id: '/moderation',
+    path: '/moderation',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminSecurityRoute =
+  AuthenticatedDashboardAdminSecurityRouteImport.update({
+    id: '/security',
+    path: '/security',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminStatusRoute =
+  AuthenticatedDashboardAdminStatusRouteImport.update({
+    id: '/status',
+    path: '/status',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminUsersRoute =
+  AuthenticatedDashboardAdminUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
 const AuthenticatedDashboardProfileIndexRoute =
   AuthenticatedDashboardProfileIndexRouteImport.update({
@@ -178,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
@@ -186,12 +250,20 @@ export interface FileRoutesByFullPath {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
+  '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
+  '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
+  '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
+  '/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -209,12 +281,20 @@ export interface FileRoutesByTo {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
+  '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
+  '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
+  '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
+  '/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -228,6 +308,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
@@ -236,12 +317,20 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
+  '/_authenticated/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
+  '/_authenticated/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
+  '/_authenticated/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/_authenticated/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
+  '/_authenticated/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/_authenticated/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/_authenticated/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/_authenticated/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/_authenticated/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -255,6 +344,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/templates'
     | '/dashboard'
+    | '/dashboard/admin'
     | '/dashboard/analytics'
     | '/dashboard/badges'
     | '/dashboard/links'
@@ -263,12 +353,20 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/admin/boosts'
+    | '/dashboard/admin/chat'
+    | '/dashboard/admin/content'
+    | '/dashboard/admin/moderation'
+    | '/dashboard/admin/security'
+    | '/dashboard/admin/status'
+    | '/dashboard/admin/users'
     | '/dashboard/profile/advanced'
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/dashboard/admin/'
     | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -286,12 +384,20 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/dashboard/admin/boosts'
+    | '/dashboard/admin/chat'
+    | '/dashboard/admin/content'
+    | '/dashboard/admin/moderation'
+    | '/dashboard/admin/security'
+    | '/dashboard/admin/status'
+    | '/dashboard/admin/users'
     | '/dashboard/profile/advanced'
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/dashboard/admin'
     | '/dashboard/profile'
   id:
     | '__root__'
@@ -304,6 +410,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/templates'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/badges'
     | '/_authenticated/dashboard/links'
@@ -312,12 +419,20 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profiles'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/admin/boosts'
+    | '/_authenticated/dashboard/admin/chat'
+    | '/_authenticated/dashboard/admin/content'
+    | '/_authenticated/dashboard/admin/moderation'
+    | '/_authenticated/dashboard/admin/security'
+    | '/_authenticated/dashboard/admin/status'
+    | '/_authenticated/dashboard/admin/users'
     | '/_authenticated/dashboard/profile/advanced'
     | '/_authenticated/dashboard/profile/connections'
     | '/_authenticated/dashboard/profile/customization'
     | '/_authenticated/dashboard/profile/effects'
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
+    | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -404,6 +519,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/admin': {
+      id: '/_authenticated/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/analytics': {
       id: '/_authenticated/dashboard/analytics'
       path: '/analytics'
@@ -452,6 +574,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/admin/': {
+      id: '/_authenticated/dashboard/admin/'
+      path: '/'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/boosts': {
+      id: '/_authenticated/dashboard/admin/boosts'
+      path: '/boosts'
+      fullPath: '/dashboard/admin/boosts'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminBoostsRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/chat': {
+      id: '/_authenticated/dashboard/admin/chat'
+      path: '/chat'
+      fullPath: '/dashboard/admin/chat'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminChatRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/content': {
+      id: '/_authenticated/dashboard/admin/content'
+      path: '/content'
+      fullPath: '/dashboard/admin/content'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminContentRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/moderation': {
+      id: '/_authenticated/dashboard/admin/moderation'
+      path: '/moderation'
+      fullPath: '/dashboard/admin/moderation'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminModerationRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/security': {
+      id: '/_authenticated/dashboard/admin/security'
+      path: '/security'
+      fullPath: '/dashboard/admin/security'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminSecurityRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/status': {
+      id: '/_authenticated/dashboard/admin/status'
+      path: '/status'
+      fullPath: '/dashboard/admin/status'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminStatusRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/users': {
+      id: '/_authenticated/dashboard/admin/users'
+      path: '/users'
+      fullPath: '/dashboard/admin/users'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
     '/_authenticated/dashboard/profile/': {
       id: '/_authenticated/dashboard/profile/'
@@ -505,6 +683,41 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedDashboardAdminRouteChildren {
+  AuthenticatedDashboardAdminBoostsRoute: typeof AuthenticatedDashboardAdminBoostsRoute
+  AuthenticatedDashboardAdminChatRoute: typeof AuthenticatedDashboardAdminChatRoute
+  AuthenticatedDashboardAdminContentRoute: typeof AuthenticatedDashboardAdminContentRoute
+  AuthenticatedDashboardAdminModerationRoute: typeof AuthenticatedDashboardAdminModerationRoute
+  AuthenticatedDashboardAdminSecurityRoute: typeof AuthenticatedDashboardAdminSecurityRoute
+  AuthenticatedDashboardAdminStatusRoute: typeof AuthenticatedDashboardAdminStatusRoute
+  AuthenticatedDashboardAdminUsersRoute: typeof AuthenticatedDashboardAdminUsersRoute
+  AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
+}
+
+const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
+  {
+    AuthenticatedDashboardAdminBoostsRoute:
+      AuthenticatedDashboardAdminBoostsRoute,
+    AuthenticatedDashboardAdminChatRoute: AuthenticatedDashboardAdminChatRoute,
+    AuthenticatedDashboardAdminContentRoute:
+      AuthenticatedDashboardAdminContentRoute,
+    AuthenticatedDashboardAdminModerationRoute:
+      AuthenticatedDashboardAdminModerationRoute,
+    AuthenticatedDashboardAdminSecurityRoute:
+      AuthenticatedDashboardAdminSecurityRoute,
+    AuthenticatedDashboardAdminStatusRoute:
+      AuthenticatedDashboardAdminStatusRoute,
+    AuthenticatedDashboardAdminUsersRoute:
+      AuthenticatedDashboardAdminUsersRoute,
+    AuthenticatedDashboardAdminIndexRoute:
+      AuthenticatedDashboardAdminIndexRoute,
+  }
+
+const AuthenticatedDashboardAdminRouteWithChildren =
+  AuthenticatedDashboardAdminRoute._addFileChildren(
+    AuthenticatedDashboardAdminRouteChildren,
+  )
+
 interface AuthenticatedDashboardProfileRouteChildren {
   AuthenticatedDashboardProfileAdvancedRoute: typeof AuthenticatedDashboardProfileAdvancedRoute
   AuthenticatedDashboardProfileConnectionsRoute: typeof AuthenticatedDashboardProfileConnectionsRoute
@@ -539,6 +752,7 @@ const AuthenticatedDashboardProfileRouteWithChildren =
   )
 
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardBadgesRoute: typeof AuthenticatedDashboardBadgesRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
@@ -551,6 +765,8 @@ interface AuthenticatedDashboardRouteChildren {
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardAdminRoute:
+      AuthenticatedDashboardAdminRouteWithChildren,
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
     AuthenticatedDashboardBadgesRoute: AuthenticatedDashboardBadgesRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,

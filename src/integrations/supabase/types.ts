@@ -14,6 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_name: string
+          created_at: string
+          id: string
+          meta: Json
+          target: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_name?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          target?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_name?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          target?: string | null
+        }
+        Relationships: []
+      }
+      banned_usernames: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          reason?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          reason?: string
+        }
+        Relationships: []
+      }
+      boosts: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          profile_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          profile_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boosts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      devblog_posts: {
+        Row: {
+          author_id: string | null
+          body: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          published: boolean
+          slug: string
+          tag: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          body?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          slug: string
+          tag?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          slug?: string
+          tag?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ip_logs: {
+        Row: {
+          country: string | null
+          created_at: string
+          id: string
+          ip: string
+          path: string | null
+          profile_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          ip: string
+          path?: string | null
+          profile_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          ip?: string
+          path?: string | null
+          profile_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ip_logs_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       link_clicks: {
         Row: {
           browser: string | null
@@ -138,6 +310,35 @@ export type Database = {
           },
         ]
       }
+      profile_likes: {
+        Row: {
+          created_at: string
+          id: string
+          profile_id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          profile_id: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          profile_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_likes_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profile_presets: {
         Row: {
           avatar_url: string | null
@@ -227,6 +428,7 @@ export type Database = {
           display_name: string
           featured: boolean
           id: string
+          like_count: number
           location: string
           music: Json
           theme: Json
@@ -245,6 +447,7 @@ export type Database = {
           display_name?: string
           featured?: boolean
           id?: string
+          like_count?: number
           location?: string
           music?: Json
           theme?: Json
@@ -263,6 +466,7 @@ export type Database = {
           display_name?: string
           featured?: boolean
           id?: string
+          like_count?: number
           location?: string
           music?: Json
           theme?: Json
@@ -272,6 +476,115 @@ export type Database = {
           username?: string
           verified?: boolean
           view_count?: number
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          message: string
+          reporter_id: string | null
+          status: string
+          target_profile_id: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          reporter_id?: string | null
+          status?: string
+          target_profile_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          reporter_id?: string | null
+          status?: string
+          target_profile_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_target_profile_id_fkey"
+            columns: ["target_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sanctions: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          kind: string
+          profile_id: string | null
+          reason: string
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          profile_id?: string | null
+          reason?: string
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          profile_id?: string | null
+          reason?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sanctions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_status: {
+        Row: {
+          id: string
+          latency_ms: number
+          name: string
+          note: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          latency_ms?: number
+          name: string
+          note?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          latency_ms?: number
+          name?: string
+          note?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -309,6 +622,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      threats: {
+        Row: {
+          created_at: string
+          detail: string
+          id: string
+          kind: string
+          severity: string
+          source_ip: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string
+          id?: string
+          kind?: string
+          severity?: string
+          source_ip?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          id?: string
+          kind?: string
+          severity?: string
+          source_ip?: string | null
+          status?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
