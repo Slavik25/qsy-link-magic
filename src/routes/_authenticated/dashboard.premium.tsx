@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles } from "lucide-react";
+import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
-import { SHOP_DECORATIONS, SHOP_LAYOUTS, SHOP_PLAYERS } from "@/lib/shop";
+import {
+  SHOP_BG_EFFECTS,
+  SHOP_DECORATIONS,
+  SHOP_LAYOUTS,
+  SHOP_NAME_STYLES,
+  SHOP_PLAYERS,
+} from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
@@ -30,11 +36,13 @@ export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   }),
 });
 
-type Tab = "players" | "layouts" | "decorations";
+type Tab = "players" | "layouts" | "names" | "effects" | "decorations";
 
 const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "players", label: "Reproductores", icon: Music4 },
   { key: "layouts", label: "Layouts", icon: LayoutTemplate },
+  { key: "names", label: "Nombres", icon: Type },
+  { key: "effects", label: "Fondos", icon: Wand2 },
   { key: "decorations", label: "Decoraciones", icon: Sparkles },
 ];
 
