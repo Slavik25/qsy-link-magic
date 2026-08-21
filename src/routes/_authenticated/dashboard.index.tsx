@@ -18,6 +18,9 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { DashBanner } from "@/components/qsy/dash-banner";
 import dashBanner from "@/assets/dash-banner.png.asset.json";
+import cardProfile from "@/assets/card-32.png.asset.json";
+import cardTemplates from "@/assets/card-33.png.asset.json";
+import cardShop from "@/assets/card-34.png.asset.json";
 import {
   useAnalytics,
   useLinks,
@@ -93,21 +96,21 @@ function Overview() {
       title: "Gestionar perfil",
       desc: "Personaliza y actualiza tu página.",
       icon: UserRound,
-      tone: "from-primary/25",
+      image: cardProfile.url,
     },
     {
       to: "/templates",
       title: "Descubrir plantillas",
       desc: "Encuentra el look perfecto.",
       icon: Palette,
-      tone: "from-fuchsia-500/25",
+      image: cardTemplates.url,
     },
     {
       to: "/dashboard/premium",
       title: "Ver la tienda",
       desc: "Obtén ítems y temas exclusivos.",
       icon: Gem,
-      tone: "from-teal-400/25",
+      image: cardShop.url,
     },
   ] as const;
 
@@ -174,10 +177,19 @@ function Overview() {
           <Link
             key={q.title}
             to={q.to}
-            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
+            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
           >
-            <div className={`absolute inset-0 bg-gradient-to-r ${q.tone} to-transparent opacity-70`} aria-hidden />
-            <div className="relative flex items-center gap-3">
+            <img
+              src={q.image}
+              alt=""
+              aria-hidden
+              className="h-28 w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-t from-card via-card/40 to-transparent"
+            />
+            <div className="relative flex items-center gap-3 p-5">
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
                 <q.icon className="size-5" />
               </span>
