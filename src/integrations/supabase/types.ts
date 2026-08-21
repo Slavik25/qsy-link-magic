@@ -891,6 +891,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_grant_coins: {
+        Args: { _amount: number; _user_id: string }
+        Returns: number
+      }
       claim_mission: { Args: { _key: string }; Returns: number }
       has_role: {
         Args: {
