@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { logAdminAction, useAdminUsers, type AdminProfile } from "@/lib/admin-data";
 import { BADGES } from "@/lib/badges";
+import { RANKS, RANK_LABEL, type QsyRank } from "@/lib/domains";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/users")({
   component: AdminUsers,
