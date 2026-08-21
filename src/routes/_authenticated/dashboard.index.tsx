@@ -38,7 +38,7 @@ function Overview() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
           <p className="text-sm text-muted-foreground">
-            {profile ? `qsy.to/${profile.username}` : "Cargando…"}
+            {profile ? `qsy.rip/${profile.username}` : "Cargando…"}
           </p>
         </div>
         {profile && (

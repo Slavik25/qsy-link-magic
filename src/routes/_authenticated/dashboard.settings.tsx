@@ -68,7 +68,7 @@ function SettingsPage() {
 
       <section className="space-y-3 rounded-2xl glass p-6">
         <p className="text-sm text-muted-foreground">
-          Tu link público: <span className="font-mono text-foreground">qsy.to/{profile?.username ?? "…"}</span>
+          Tu link público: <span className="font-mono text-foreground">qsy.rip/{profile?.username ?? "…"}</span>
         </p>
         <Button variant="secondary" onClick={signOut}>
           Cerrar sesión
