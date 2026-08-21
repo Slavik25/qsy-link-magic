@@ -12,6 +12,9 @@ import {
   MousePointerClick,
   Music4,
   Palette,
+  Play,
+  Download,
+
   QrCode,
   Share2,
   Sparkles,
