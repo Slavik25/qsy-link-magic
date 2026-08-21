@@ -169,13 +169,11 @@ export function usePlatformStats() {
   return useQuery({
     queryKey: ["platform-stats"],
     queryFn: async () => {
-      const [profiles, links, verified, views] = await Promise.all([
+      const [profiles, links, socials, badges, views] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("links").select("id", { count: "exact", head: true }),
-        supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .eq("verified", true),
+        supabase.from("socials").select("id", { count: "exact", head: true }),
+        supabase.from("profile_badges").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("view_count"),
       ]);
       const totalViews = (views.data ?? []).reduce(
@@ -185,8 +183,8 @@ export function usePlatformStats() {
       return {
         views: totalViews,
         creators: profiles.count ?? 0,
-        links: links.count ?? 0,
-        verified: verified.count ?? 0,
+        links: (links.count ?? 0) + (socials.count ?? 0),
+        verified: badges.count ?? 0,
       };
     },
   });
