@@ -659,3 +659,113 @@
   background-size: 100% 100%, 100% 100%, 240px 240px, 240px 240px;
   animation: qsy-bg-shift 26s ease-in-out infinite;
 }
+
+/* ===== Layouts (theme.template) del biolink ===== */
+.qsy-tpl {
+  --tpl-bg: color-mix(in oklab, var(--background) 92%, transparent);
+  --tpl-border: color-mix(in oklab, var(--p-accent, #fff) 22%, transparent);
+  --tpl-radius: 1rem;
+  background: var(--tpl-bg);
+  border: 1px solid var(--tpl-border);
+  border-radius: var(--tpl-radius);
+}
+.qsy-tpl-glass {
+  --tpl-bg: color-mix(in oklab, var(--background) 60%, transparent);
+  backdrop-filter: blur(18px);
+}
+.qsy-tpl-neon {
+  --tpl-border: var(--p-accent, #22d3ee);
+  box-shadow: 0 0 0 1px var(--p-accent, #22d3ee), 0 0 45px -10px var(--p-accent, #22d3ee);
+}
+.qsy-tpl-aurora {
+  --tpl-bg: linear-gradient(160deg, color-mix(in oklab, var(--p-accent, #7c3aed) 35%, #14082a), #0b0b12 75%);
+  background-size: 180% 180%;
+  animation: qsy-bg-shift 16s ease-in-out infinite;
+}
+.qsy-tpl-terminal {
+  --tpl-bg: #05100a;
+  --tpl-border: #1f7a4d;
+  --tpl-radius: 4px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+.qsy-tpl-cinema {
+  --tpl-bg: color-mix(in oklab, #000 70%, transparent);
+  --tpl-radius: 0.5rem;
+  --tpl-border: color-mix(in oklab, #fff 12%, transparent);
+  backdrop-filter: blur(6px);
+}
+.qsy-tpl-sakura {
+  --tpl-bg: linear-gradient(160deg, #f472b666, #4c1d9599 55%, #0b0b12);
+  --tpl-border: #f9a8d4aa;
+  --tpl-radius: 1.75rem;
+  box-shadow: 0 0 60px -20px #f472b6;
+}
+.qsy-tpl-brutal {
+  --tpl-bg: #101010;
+  --tpl-border: #fff;
+  --tpl-radius: 0;
+  border-width: 3px;
+  box-shadow: 10px 10px 0 0 var(--p-accent, #fff);
+}
+.qsy-tpl-holo {
+  --tpl-bg: linear-gradient(130deg, #22d3ee44, #a855f744 40%, #f0abfc33 70%, #0b0b12);
+  background-size: 220% 220%;
+  animation: qsy-bg-shift 9s ease-in-out infinite;
+  --tpl-border: #a5f3fc99;
+}
+.qsy-tpl-poster {
+  --tpl-radius: 0.75rem;
+  --tpl-bg: color-mix(in oklab, var(--background) 82%, transparent);
+  --tpl-border: color-mix(in oklab, #fff 16%, transparent);
+}
+.qsy-tpl-minimal {
+  --tpl-bg: #0a0a0a;
+  --tpl-border: #ffffff26;
+  filter: saturate(0.15);
+}
+.qsy-tpl-dark {
+  --tpl-bg: #0b0b12;
+  --tpl-border: #ffffff1a;
+}
+.qsy-tpl-vapor {
+  --tpl-bg: linear-gradient(160deg, #ff6ec755, #22d3ee55 60%, #0b0b12);
+  --tpl-border: #ff6ec7aa;
+  box-shadow: 0 0 50px -18px #22d3ee;
+}
+.qsy-tpl-arcade {
+  --tpl-bg: #12123a;
+  --tpl-border: #f472b6;
+  --tpl-radius: 2px;
+  border-width: 3px;
+  box-shadow: 0 0 0 3px #22d3ee inset;
+}
+.qsy-tpl-ivory {
+  --tpl-bg: linear-gradient(160deg, #f5efe6, #d8cbb8);
+  --tpl-border: #8b7f7066;
+  color: #1c1917;
+}
+.qsy-tpl-ivory .text-muted-foreground,
+.qsy-tpl-ivory .text-foreground\/80 { color: #57534e; }
+.qsy-tpl-nebula {
+  --tpl-bg: radial-gradient(120% 90% at 20% 0%, #5b21b688, transparent 60%),
+    radial-gradient(120% 90% at 80% 100%, #0ea5e988, transparent 60%), #0b0b12;
+  --tpl-border: #a78bfa66;
+}
+.qsy-tpl-y2k {
+  --tpl-bg: linear-gradient(150deg, #c0c9ff, #f0abfc 45%, #a5b4fc 80%);
+  --tpl-border: #ffffffcc;
+  --tpl-radius: 1.5rem;
+  color: #16121f;
+  box-shadow: 0 0 40px -12px #f0abfc, inset 0 1px 0 #fff;
+}
+.qsy-tpl-y2k .text-muted-foreground,
+.qsy-tpl-y2k .text-foreground\/80 { color: #3b3355; }
+
+/* Formas de avatar */
+.qsy-shape-circle { border-radius: 9999px; }
+.qsy-shape-rounded { border-radius: 16px; }
+.qsy-shape-square { border-radius: 3px; }
+.qsy-shape-hexagon {
+  border-radius: 8px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+}

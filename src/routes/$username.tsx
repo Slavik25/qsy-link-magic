@@ -69,11 +69,21 @@ function PublicProfile() {
 
   const { profile, links, socials, badges, views } = data;
   const music = profile.music as { title?: string; artist?: string };
+  const widthClass =
+    profile.theme.profile_width === "compact"
+      ? "max-w-md"
+      : profile.theme.profile_width === "wide"
+        ? "max-w-3xl"
+        : "max-w-xl";
 
   return (
     <ProfileStage theme={profile.theme} music={music}>
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
-      <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-10">
+      <main
+        className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
+      >
+
+
 
         <ProfileView
           profile={profile}
