@@ -203,7 +203,7 @@ function BadgeManager({ profile, onClose }: { profile: AdminProfile; onClose: ()
         .eq("profile_id", profile.id)
         .order("position", { ascending: true });
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as { id: string; badge_key: string; position: number }[];
     },
   });
 
