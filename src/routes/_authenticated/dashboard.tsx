@@ -57,7 +57,7 @@ function DashboardLayout() {
   const crumb = useCrumb();
   const [open, setOpen] = useState(false);
 
-  const uid = profile ? parseInt(profile.id.replace(/\D/g, "").slice(0, 7) || "0", 10) : 0;
+  const uid = (profile as { uid?: number } | undefined)?.uid ?? 0;
 
   async function signOut() {
     await queryClient.cancelQueries();

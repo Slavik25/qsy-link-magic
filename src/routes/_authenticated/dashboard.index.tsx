@@ -89,7 +89,7 @@ function Overview() {
   const { data: socials = [] } = useSocials(profile?.id);
   const { data: showcase = [] } = useShowcaseProfiles(16);
 
-  const uid = profile ? parseInt(profile.id.replace(/\D/g, "").slice(0, 7) || "0", 10) : 0;
+  const uid = (profile as { uid?: number } | undefined)?.uid ?? 0;
 
   const tasks = [
     { label: "Sube un avatar", done: !!profile?.avatar_url, to: "/dashboard/profile", icon: UserRound },
