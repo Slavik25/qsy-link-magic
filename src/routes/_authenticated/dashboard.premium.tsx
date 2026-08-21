@@ -145,19 +145,8 @@ function ShopPage() {
                   <Price price={p.price} premium={p.premium} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
-                <div
-                  className="mt-4 flex items-center gap-3 rounded-2xl border border-border/60 p-3"
-                  style={{ background: p.preview }}
-                >
-                  <span className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary">
-                    <Music4 className="size-4" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-medium">QSY Radio</p>
-                    <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface-strong">
-                      <div className="h-full w-1/3 rounded-full bg-primary" />
-                    </div>
-                  </div>
+                <div className="mt-4">
+                  <PlayerPreview player={p} />
                 </div>
                 {p.price > 0 && !owned.has(p.key) ? (
                   <Button
