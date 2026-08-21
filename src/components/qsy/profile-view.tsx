@@ -1,4 +1,4 @@
-import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
+import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
@@ -14,6 +14,7 @@ type Props = {
   socials: Pick<Social, "id" | "platform" | "url">[];
   badges?: string[];
   views?: number;
+  likes?: number;
   music?: { title?: string; artist?: string } | null;
   compact?: boolean;
   onLinkClick?: (link: { id: string; title: string; url: string }) => void;
@@ -25,6 +26,7 @@ export function ProfileView({
   socials,
   badges = [],
   views = 0,
+  likes = 0,
   music,
   compact = false,
   onLinkClick,
@@ -264,10 +266,20 @@ export function ProfileView({
           </div>
         )}
 
-        <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Eye className="size-3" />
-          {views.toLocaleString()} visitas
-        </p>
+        <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          {t.show_views !== false && (
+            <span className="inline-flex items-center gap-1.5">
+              <Eye className="size-3" />
+              {views.toLocaleString()} visitas
+            </span>
+          )}
+          {t.show_likes !== false && (
+            <span className="inline-flex items-center gap-1.5">
+              <Heart className="size-3" style={{ color: t.accent }} />
+              {likes.toLocaleString()} likes
+            </span>
+          )}
+        </div>
       </div>
       </div>
     </div>
