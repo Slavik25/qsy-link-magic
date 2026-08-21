@@ -298,8 +298,8 @@ function ProfilesPage() {
             Cada perfil es <strong className="text-foreground">totalmente independiente</strong>: su
             propia URL, avatar, banner, enlaces, insignias, muro y diseño. Pulsa{" "}
             <strong className="text-foreground">Gestionar</strong> para elegir cuál editas en el
-            dashboard. Plan <span className="text-primary">Free</span> · {FREE_LIMIT} perfiles · V.I.P
-            3 · Premium 5.
+            dashboard. Plan <RankName rank={rank} /> · {FREE_LIMIT} perfiles · Free 2 · Obsidian 3 ·
+            Seraph 5.
           </p>
         </div>
       </section>
