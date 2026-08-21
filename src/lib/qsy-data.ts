@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { readTheme, type Profile, type ProfileLink, type Social } from "./qsy";
@@ -13,21 +14,60 @@ export function useSession() {
   });
 }
 
-export function useMyProfile() {
+/* ---------- Active profile (each profile is a fully independent row) ---------- */
+
+const ACTIVE_KEY = "qsy:active-profile";
+const listeners = new Set<() => void>();
+let activeId: string | null =
+  typeof window !== "undefined" ? window.localStorage.getItem(ACTIVE_KEY) : null;
+
+export function setActiveProfileId(id: string | null) {
+  activeId = id;
+  if (typeof window !== "undefined") {
+    if (id) window.localStorage.setItem(ACTIVE_KEY, id);
+    else window.localStorage.removeItem(ACTIVE_KEY);
+  }
+  listeners.forEach((l) => l());
+}
+
+export function useActiveProfileId() {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => {
+        listeners.delete(cb);
+      };
+    },
+    () => activeId,
+    () => null,
+  );
+}
+
+/** All profiles owned by the signed-in user. Each row is independent. */
+export function useMyProfiles() {
   return useQuery({
     queryKey: ["my-profile"],
     queryFn: async () => {
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return null;
+      if (!auth.user) return [] as Profile[];
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("user_id", auth.user.id)
-        .maybeSingle();
+        .order("created_at", { ascending: true });
       if (error) throw error;
-      return data ? shape(data) : null;
+      return (data ?? []).map(shape);
     },
   });
+}
+
+/** The profile currently being edited/managed in the dashboard. */
+export function useMyProfile() {
+  const active = useActiveProfileId();
+  const query = useMyProfiles();
+  const list = query.data ?? [];
+  const chosen = list.find((p) => p.id === active) ?? list[0] ?? null;
+  return { ...query, data: query.data ? chosen : undefined };
 }
 
 export function useProfileByUsername(username: string) {
