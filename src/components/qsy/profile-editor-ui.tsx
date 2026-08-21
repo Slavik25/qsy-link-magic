@@ -55,6 +55,9 @@ export function useProfileDraft() {
   const setTheme = <K extends keyof ThemeConfig>(key: K, value: ThemeConfig[K]) =>
     setDraft((d) => ({ ...d, theme: { ...d.theme, [key]: value } }));
 
+  const setThemeMany = (patch: Partial<ThemeConfig>) =>
+    setDraft((d) => ({ ...d, theme: { ...d.theme, ...patch } }));
+
   async function save() {
     if (!profile) return;
     setSaving(true);
@@ -78,7 +81,7 @@ export function useProfileDraft() {
     void queryClient.invalidateQueries({ queryKey: ["my-profile"] });
   }
 
-  return { profile, draft, set, setTheme, save, saving };
+  return { profile, draft, set, setTheme, setThemeMany, save, saving };
 }
 
 export function Panel({

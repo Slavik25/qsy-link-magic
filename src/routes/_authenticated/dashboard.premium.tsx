@@ -134,7 +134,7 @@ function ShopPage() {
       {tab === "players" && (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_PLAYERS.map((p) => {
-            const active = theme?.player_type === p.player_type;
+            const active = (theme?.player_key ?? "player-default") === p.key;
             return (
               <article
                 key={p.key}
@@ -145,7 +145,10 @@ function ShopPage() {
                   <Price price={p.price} premium={p.premium} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
-                <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border/60 bg-surface p-3">
+                <div
+                  className="mt-4 flex items-center gap-3 rounded-2xl border border-border/60 p-3"
+                  style={{ background: p.preview }}
+                >
                   <span className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary">
                     <Music4 className="size-4" />
                   </span>
@@ -169,7 +172,15 @@ function ShopPage() {
                     className="mt-4 w-full rounded-xl"
                     variant={active ? "secondary" : "default"}
                     onClick={() =>
-                      apply({ player_type: p.player_type as never, player_bg: p.player_bg as never }, p.name)
+                      apply(
+                        {
+                          player_key: p.key,
+                          player_type: p.player_type,
+                          player_bg: p.player_bg,
+                          ...(p.player_position ? { player_position: p.player_position } : {}),
+                        },
+                        p.name,
+                      )
                     }
                   >
                     {active ? (
@@ -190,7 +201,7 @@ function ShopPage() {
       {tab === "layouts" && (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_LAYOUTS.map((l) => {
-            const active = theme?.profile_width === l.profile_width && theme?.template === l.template;
+            const active = (theme?.layout_key ?? "layout-glass") === l.key;
             return (
               <article
                 key={l.key}
@@ -218,9 +229,12 @@ function ShopPage() {
                       onClick={() =>
                         apply(
                           {
+                            layout_key: l.key,
                             template: l.template,
                             profile_width: l.profile_width,
                             avatar_shape: l.avatar_shape,
+                            ...(l.card_bg_type ? { card_bg_type: l.card_bg_type } : {}),
+                            ...(l.show_card !== undefined ? { show_card: l.show_card } : {}),
                           },
                           l.name,
                         )
@@ -252,8 +266,16 @@ function ShopPage() {
                 className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 text-center backdrop-blur-xl transition-colors hover:border-primary/40"
               >
                 <div className="relative mx-auto grid size-28 place-items-center">
-                  <span className="grid size-[74px] place-items-center rounded-full bg-surface-strong font-mono text-sm text-primary">
-                    QSY
+                  <span className="grid size-[74px] place-items-center overflow-hidden rounded-full bg-surface-strong font-mono text-sm text-primary">
+                    {profile?.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt={`Avatar de @${profile.username}`}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      "QSY"
+                    )}
                   </span>
                   {d.image && (
                     <img
