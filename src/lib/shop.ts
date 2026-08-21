@@ -574,6 +574,14 @@ export function playerByKey(key?: string) {
   return SHOP_PLAYERS.find((p) => p.key === key);
 }
 
+export function nameStyleByEffect(effect?: string) {
+  return SHOP_NAME_STYLES.find((n) => n.effect === (effect ?? "none"));
+}
+
+export function bgEffectByEffect(effect?: string) {
+  return SHOP_BG_EFFECTS.find((b) => b.effect === (effect ?? "none"));
+}
+
 /** Un item es usable si es gratis o si el usuario lo desbloqueó. */
 export function isOwned(item: ShopItem, unlocks: Iterable<string>) {
   if (item.price === 0) return true;
