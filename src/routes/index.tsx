@@ -49,16 +49,8 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const features = [
-  { icon: UserRound, title: "Perfiles personalizados", desc: "Avatar, banner, bio, ubicación y badge verificado." },
-  { icon: Link2, title: "Links ilimitados", desc: "Ordena, activa y mide cada enlace en segundos." },
-  { icon: Share2, title: "Redes sociales", desc: "Discord, Instagram, TikTok, GitHub, Steam y más." },
-  { icon: Music4, title: "Música", desc: "Añade tu track favorito y reprodúcelo en tu perfil." },
-  { icon: BarChart3, title: "Analytics", desc: "Visitas, clicks, CTR, país, dispositivo y referrer." },
-  { icon: Palette, title: "Temas personalizados", desc: "Blur, opacidad, glow, radios, colores y efectos." },
-];
-
 const chips = [
+
   { icon: BadgeCheck, label: "Perfil verificado" },
   { icon: Sparkles, label: "Efectos de texto" },
   { icon: Palette, label: "Temas custom" },
