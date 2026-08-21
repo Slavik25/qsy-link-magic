@@ -49,7 +49,7 @@ function LoginPage() {
       toast.error(error.message);
       return;
     }
-    navigate({ to: "/dashboard" });
+    await navigate({ to: "/dashboard" });
   }
 
   async function google() {

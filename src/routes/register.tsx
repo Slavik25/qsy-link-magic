@@ -50,7 +50,7 @@ function RegisterPage() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
@@ -63,8 +63,14 @@ function RegisterPage() {
       toast.error(error.message);
       return;
     }
+    if (!data.session) {
+      toast.success("Cuenta creada", {
+        description: "Revisa tu email y confirma tu cuenta para entrar al dashboard.",
+      });
+      return;
+    }
     toast.success("Cuenta creada. Bienvenido a QSY.");
-    navigate({ to: "/dashboard" });
+    await navigate({ to: "/dashboard" });
   }
 
   async function google() {
