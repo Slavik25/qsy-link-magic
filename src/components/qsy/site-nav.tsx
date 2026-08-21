@@ -1,3 +1,4 @@
+import { profileHost } from "@/lib/domains";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, User } from "lucide-react";
@@ -177,7 +178,7 @@ export function SiteNav() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-48">
                 <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  qsy.rip/{profile?.username ?? ""}
+                  {profileHost(profile)}/{profile?.username ?? ""}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="gap-2 text-xs">

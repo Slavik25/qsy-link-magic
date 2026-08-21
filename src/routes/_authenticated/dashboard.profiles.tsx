@@ -1,3 +1,4 @@
+import { profileHost } from "@/lib/domains";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -173,7 +174,7 @@ function ProfilesPage() {
               )}
 
               <p className="mt-3 truncate text-sm font-semibold">{p.display_name || p.username}</p>
-              <p className="truncate text-xs text-muted-foreground">qsy.rip/{p.username}</p>
+              <p className="truncate text-xs text-muted-foreground">{profileHost(p)}/{p.username}</p>
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {p.view_count?.toLocaleString("es-ES") ?? 0} visitas
               </p>
