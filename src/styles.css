@@ -396,3 +396,9 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+@keyframes qsy-deco-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
