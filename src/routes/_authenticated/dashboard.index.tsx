@@ -359,7 +359,7 @@ function Overview() {
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-[1fr_340px]">
+      <section>
         <GlobalChat />
       </section>
     </div>
