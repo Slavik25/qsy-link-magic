@@ -195,7 +195,7 @@ function Overview() {
           <div className="mt-3 flex gap-4 overflow-x-auto rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
             {showcase.map((p) => (
               <Link
-                key={p.id}
+                key={p.username}
                 to="/$username"
                 params={{ username: p.username }}
                 className="group flex w-16 shrink-0 flex-col items-center gap-2"
