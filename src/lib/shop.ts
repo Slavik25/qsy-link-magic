@@ -441,3 +441,18 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
 export function decorationByKey(key?: string) {
   return SHOP_DECORATIONS.find((d) => d.key === key);
 }
+
+export function layoutByKey(key?: string) {
+  return SHOP_LAYOUTS.find((l) => l.key === key);
+}
+
+export function playerByKey(key?: string) {
+  return SHOP_PLAYERS.find((p) => p.key === key);
+}
+
+/** Un item es usable si es gratis o si el usuario lo desbloqueó. */
+export function isOwned(item: ShopItem, unlocks: Iterable<string>) {
+  if (item.price === 0) return true;
+  for (const k of unlocks) if (k === item.key) return true;
+  return false;
+}
