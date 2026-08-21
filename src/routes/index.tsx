@@ -337,7 +337,7 @@ function Landing() {
             </Button>
           </div>
 
-          <div className="grid h-[420px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
+          <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
             <div className="marquee-y flex flex-col gap-4">
               {[...liveProfiles, ...liveProfiles].map((p, i) => (
                 <ProfileCard key={`a-${p.user}-${i}`} p={p} />
