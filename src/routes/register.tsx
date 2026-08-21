@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { SiteNav } from "@/components/qsy/site-nav";
+import { ArrowRight, AtSign, Lock, Mail } from "lucide-react";
+import { AuthShell } from "@/components/qsy/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,54 +80,102 @@ function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <SiteNav />
-      <main className="mx-auto flex max-w-md flex-col px-4 py-16">
-        <h1 className="text-2xl font-semibold tracking-tight">Crea tu QSY</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Tu identidad. Un solo link.</p>
+    <AuthShell
+      side="left"
+      eyebrow="Crear una cuenta QSY"
+      title="Crea tu cuenta"
+      subtitle="Gratis para siempre · sin tarjeta"
+    >
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="username" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            Tu link
+          </Label>
+          <div className="relative">
+            <AtSign className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <span className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 font-mono text-xs text-primary">
+              qsy.to/
+            </span>
+            <Input
+              id="username"
+              value={username}
+              maxLength={24}
+              placeholder="tu_usuario"
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
+              className="h-12 rounded-xl bg-background/60 pl-[5.6rem] font-mono"
+            />
+          </div>
+        </div>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-4 rounded-2xl glass p-6">
-          <div className="space-y-2">
-            <Label htmlFor="username">Usuario</Label>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-muted-foreground">qsy.to/</span>
-              <Input
-                id="username"
-                value={username}
-                maxLength={24}
-                onChange={(e) => setUsername(e.target.value.toLowerCase())}
-                placeholder="brayan"
-              />
-            </div>
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            Email
+          </Label>
+          <div className="relative">
+            <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              maxLength={255}
+              placeholder="you@example.com"
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-12 rounded-xl bg-background/60 pl-10"
+            />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" maxLength={255} value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            Contraseña
+          </Label>
+          <div className="relative">
+            <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="password"
               type="password"
-              maxLength={72}
               value={password}
+              maxLength={72}
+              placeholder="••••••••••"
               onChange={(e) => setPassword(e.target.value)}
+              className="h-12 rounded-xl bg-background/60 pl-10"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creando…" : "Crear mi QSY"}
-          </Button>
-          <Button type="button" variant="secondary" className="w-full" onClick={google}>
-            Continuar con Google
-          </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            ¿Ya tienes cuenta?{" "}
-            <Link to="/login" className="text-foreground hover:underline">
-              Inicia sesión
-            </Link>
-          </p>
-        </form>
-      </main>
-    </div>
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
+        >
+          {loading ? "Creando…" : "Crear mi QSY"}
+          <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+        </Button>
+
+        <div className="flex items-center gap-3 py-1">
+          <span className="h-px flex-1 bg-border" />
+          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            o regístrate con
+          </span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={google}
+          className="h-12 w-full rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          Google
+        </Button>
+
+        <p className="pt-2 text-center text-xs text-muted-foreground">
+          ¿Ya tienes cuenta?{" "}
+          <Link to="/login" className="font-semibold text-primary hover:underline">
+            Inicia sesión
+          </Link>
+        </p>
+      </form>
+    </AuthShell>
   );
 }
