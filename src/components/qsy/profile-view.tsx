@@ -88,12 +88,12 @@ export function ProfileView({
       >
       <div className="relative flex flex-col items-center text-center">
         <div
-          className={`relative rounded-full p-[3px] ${
+          className={`relative p-[3px] ${shapeClass} ${
             profile.banner_url ? (compact ? "-mt-8" : "-mt-12") : ""
           }`}
           style={{
             background: `linear-gradient(140deg, ${t.accent}, transparent)`,
-            boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
+            boxShadow: `0 18px 40px -18px ${t.accent}`,
           }}
         >
           {deco?.image && (
@@ -112,11 +112,11 @@ export function ProfileView({
               width={compact ? 72 : 96}
               height={compact ? 72 : 96}
               loading="lazy"
-              className={`rounded-full object-cover ${compact ? "size-16" : "size-24"}`}
+              className={`object-cover ${shapeClass} ${compact ? "size-16" : "size-24"}`}
             />
           ) : (
             <span
-              className={`grid place-items-center rounded-full bg-background font-mono font-bold ${
+              className={`grid place-items-center bg-background font-mono font-bold ${shapeClass} ${
                 compact ? "size-16 text-lg" : "size-24 text-2xl"
               }`}
               style={{ color: t.accent }}
@@ -125,6 +125,7 @@ export function ProfileView({
             </span>
           )}
         </div>
+
 
 
         <div className="mt-4 flex items-center gap-1.5">
