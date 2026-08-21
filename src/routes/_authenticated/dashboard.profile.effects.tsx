@@ -45,7 +45,7 @@ function EffectsSection() {
       player_key: p.key,
       player_type: p.player_type,
       player_bg: p.player_bg,
-      player_position: p.player_position ?? t.player_position,
+      ...(p.player_position ? { player_position: p.player_position } : {}),
     });
   }
 

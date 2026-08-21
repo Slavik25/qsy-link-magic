@@ -51,8 +51,8 @@ function CustomizationSection() {
       template: l.template,
       profile_width: l.profile_width,
       avatar_shape: l.avatar_shape,
-      card_bg_type: l.card_bg_type ?? t.card_bg_type,
-      show_card: l.show_card ?? t.show_card,
+      ...(l.card_bg_type ? { card_bg_type: l.card_bg_type } : {}),
+      ...(l.show_card !== undefined ? { show_card: l.show_card } : {}),
     });
   }
 
