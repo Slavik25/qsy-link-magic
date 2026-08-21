@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   Activity,
   Gauge,
+  Gift,
   Image as ImageIcon,
   KeyRound,
   MessageSquareWarning,
@@ -25,6 +26,7 @@ const TABS = [
   { to: "/dashboard/admin/content", label: "Contenido", icon: ImageIcon },
   { to: "/dashboard/admin/status", label: "Servicios", icon: Activity },
   { to: "/dashboard/admin/boosts", label: "Boosts", icon: Rocket },
+  { to: "/dashboard/admin/shop", label: "Tienda", icon: Gift },
   { to: "/dashboard/admin/integrations", label: "Integraciones", icon: KeyRound },
 ] as const;
 

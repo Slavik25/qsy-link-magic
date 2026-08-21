@@ -67,7 +67,7 @@ function PublicProfile() {
     );
   }
 
-  const { profile, links, socials, badges, views } = data;
+  const { profile, links, socials, badges, views, likes } = data;
   const music = profile.music as { title?: string; artist?: string };
   const widthClass =
     profile.theme.profile_width === "compact"
@@ -91,6 +91,7 @@ function PublicProfile() {
           socials={socials}
           badges={badges}
           views={views}
+          likes={likes}
           music={music}
           onLinkClick={(l) => {
             void supabase.from("link_clicks").insert({

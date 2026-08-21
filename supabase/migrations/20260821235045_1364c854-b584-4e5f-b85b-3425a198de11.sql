@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.admin_grant_coins(uuid, integer) FROM anon;

@@ -103,6 +103,7 @@ export function useProfileByUsername(username: string) {
         socials: (socials.data ?? []) as Social[],
         badges: (badges.data ?? []).map((b: { badge_key: string }) => b.badge_key),
         views: views.count ?? 0,
+        likes: ((data as any).like_count as number) ?? 0,
       };
     },
   });
