@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.sync_rank_vip_badge() FROM PUBLIC, anon, authenticated;
