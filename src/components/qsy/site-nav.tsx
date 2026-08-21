@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
+import { LANGS, useI18n } from "@/lib/i18n";
 
 const items = [
   { label: "Explore", to: "/explore" as const },
@@ -52,18 +53,9 @@ function useTheme() {
   return { dark, toggle };
 }
 
-function useLang() {
-  const [lang, setLang] = useState<(typeof LANGS)[number]["code"]>("es");
-  useEffect(() => {
-    const saved = localStorage.getItem("qsy-lang") as (typeof LANGS)[number]["code"] | null;
-    if (saved) setLang(saved);
-  }, []);
-  function change(code: (typeof LANGS)[number]["code"]) {
-    setLang(code);
-    localStorage.setItem("qsy-lang", code);
-    document.documentElement.lang = code;
-  }
-  return { lang, change };
+function useLangSelector() {
+  const { lang, setLang } = useI18n();
+  return { lang, change: setLang };
 }
 
 export function SiteNav() {
