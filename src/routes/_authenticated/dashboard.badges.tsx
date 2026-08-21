@@ -89,7 +89,11 @@ function BadgesPage() {
                     : "border-white/5 bg-surface-strong grayscale opacity-60"
                 }`}
               >
-                <img src={b.img} alt={b.name} className="size-6" loading="lazy" />
+                {b.img ? (
+                  <img src={b.img} alt={b.name} className="size-6" loading="lazy" />
+                ) : b.icon ? (
+                  <b.icon className="size-5 text-muted-foreground" />
+                ) : null}
               </span>
 
               <div className="min-w-0 flex-1">
