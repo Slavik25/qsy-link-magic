@@ -183,6 +183,42 @@ export type Database = {
           },
         ]
       }
+      integration_settings: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          key: string
+          label: string
+          updated_at: string
+          updated_by: string | null
+          value: string | null
+          value_hint: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          key: string
+          label: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+          value_hint?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          key?: string
+          label?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+          value_hint?: string | null
+        }
+        Relationships: []
+      }
       ip_logs: {
         Row: {
           country: string | null
