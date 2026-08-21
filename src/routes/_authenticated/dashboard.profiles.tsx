@@ -35,6 +35,12 @@ function ProfilesPage() {
   const [username, setUsername] = useState("");
 
   const active = profiles.find((p) => p.id === activeId) ?? profiles[0] ?? null;
+  const rank = normalizeRank(
+    profiles.find((p) => p.rank === "seraph")?.rank ??
+      profiles.find((p) => p.rank === "obsidian")?.rank ??
+      active?.rank,
+  );
+  const FREE_LIMIT = RANK_PROFILE_LIMIT[rank];
   const used = profiles.length;
   const full = used >= FREE_LIMIT;
 
