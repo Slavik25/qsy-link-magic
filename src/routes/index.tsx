@@ -844,49 +844,68 @@ function Landing() {
       </section>
 
       {/* Especificaciones */}
-      <section id="features" className="relative mx-auto max-w-6xl px-4 py-24 text-center sm:px-6">
-        <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-primary" /> Especificaciones · 100% gratis
-        </span>
-        <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-          La estructura
-          <br />
-          <span className="text-gradient-violet">definitiva.</span>
-        </h2>
-        <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-          Cada característica diseñada para que tu perfil destaque entre millones.
-        </p>
+      <section id="features" className="relative overflow-hidden py-28">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(var(--foreground)_1px,transparent_1px),linear-gradient(90deg,var(--foreground)_1px,transparent_1px)] [background-size:64px_64px] mask-fade-y"
+        />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex flex-col gap-6 border-b border-border/60 pb-10 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-primary pulse-glow" /> Especificaciones · 100% gratis
+              </span>
+              <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
+                La estructura
+                <br />
+                <span className="text-gradient-violet">definitiva.</span>
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-right">
+              Seis piezas que trabajan juntas para que tu perfil cargue al instante, se vea único y
+              te diga exactamente qué funciona.
+            </p>
+          </div>
 
-        <div className="mt-12 grid gap-4 text-left sm:grid-cols-6">
-          {specs.map((s, i) => (
-            <article
-              key={s.title}
-              className={`group relative overflow-hidden rounded-[26px] border border-border/70 bg-card/50 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)] ${s.span}`}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
-              />
-              <div className="relative flex items-center justify-between">
-                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                  <s.icon className="size-5" />
-                </span>
-                <span className="font-mono text-[11px] text-muted-foreground/60">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
+          <div className="mt-10 grid gap-4 text-left sm:grid-cols-6">
+            {specs.map((s, i) => (
+              <article
+                key={s.title}
+                className={`group relative flex flex-col overflow-hidden rounded-[28px] border border-border/70 bg-card/40 p-7 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:bg-card/60 hover:shadow-[0_70px_140px_-70px_var(--primary)] ${s.span}`}
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-24 -top-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
+                />
 
-              <h3 className="relative mt-5 text-lg font-semibold">{s.title}</h3>
-              <p className="relative mt-1.5 text-sm text-muted-foreground">{s.desc}</p>
+                <div className="relative flex items-start justify-between">
+                  <span className="grid size-11 place-items-center rounded-2xl border border-border/60 bg-background/60 text-primary transition-all duration-500 group-hover:border-primary/50 group-hover:bg-primary/15 group-hover:scale-105">
+                    <s.icon className="size-5" />
+                  </span>
+                  <span className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/50">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
 
-              <div className="relative mt-6">
-                <SpecVisual kind={s.visual} />
-              </div>
-            </article>
-          ))}
+                <h3 className="relative mt-6 text-lg font-semibold tracking-tight">{s.title}</h3>
+                <p className="relative mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {s.desc}
+                </p>
+
+                <div className="relative mt-auto pt-7">
+                  <SpecVisual kind={s.visual} />
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
-
       </section>
+
+
 
 
       {/* Módulos e integraciones */}
