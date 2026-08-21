@@ -135,35 +135,78 @@ const qrCells = Array.from({ length: 49 }, (_, i) => {
   return corner || (x * 3 + y * 5 + x * y) % 3 === 0;
 });
 
-function DiscordPreview() {
+function PreviewFrame({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex h-full flex-col justify-center gap-3 p-5">
-      <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/70 p-3 backdrop-blur-xl">
-        <div className="relative">
-          <span className="grid size-11 place-items-center rounded-xl bg-primary/20 font-mono text-xs font-bold text-primary">
-            QSY
-          </span>
-          <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-background bg-primary pulse-glow" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold">brayan</p>
-          <p className="truncate text-[10px] text-muted-foreground">En línea · qsy.rip/brayan</p>
-        </div>
-        <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary">
-          Live
+    <div className="relative h-full overflow-hidden rounded-[26px] border border-border/70 bg-background/70 backdrop-blur-2xl">
+      <div aria-hidden className="pointer-events-none absolute inset-0 starfield twinkle opacity-30" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-1/3 size-64 rounded-full bg-primary/15 blur-3xl"
+      />
+      <div className="relative flex items-center gap-2 border-b border-border/60 px-4 py-2.5">
+        <span className="size-2 rounded-full bg-border" />
+        <span className="size-2 rounded-full bg-border" />
+        <span className="size-2 rounded-full bg-primary/70" />
+        <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          {title}
         </span>
       </div>
+      <div className="relative h-[calc(100%-41px)]">{children}</div>
+    </div>
+  );
+}
 
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-3 backdrop-blur-xl">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+function DiscordPreview() {
+  return (
+    <div className="flex h-full flex-col justify-center gap-3 p-6">
+      <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/70 backdrop-blur-xl">
+        <div aria-hidden className="h-14 bg-gradient-to-r from-primary/70 via-accent/60 to-primary/20" />
+        <div className="-mt-8 px-5 pb-5">
+          <div className="flex items-end justify-between">
+            <div className="relative">
+              <span className="grid size-16 place-items-center rounded-2xl border-4 border-card bg-background font-mono text-[11px] font-bold text-primary">
+                QSY
+              </span>
+              <span className="absolute -bottom-1 -right-1 size-4 rounded-full border-[3px] border-card bg-primary pulse-glow" />
+            </div>
+            <span className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-primary">
+              <span className="size-1.5 rounded-full bg-primary pulse-glow" /> Live
+            </span>
+          </div>
+          <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold">
+            brayan <BadgeCheck className="size-3.5 text-primary" />
+          </p>
+          <p className="text-[11px] text-muted-foreground">@brayan · miembro desde 2021</p>
+          <div className="mt-3 flex gap-1.5">
+            {["Early", "Nitro", "Boost", "HypeSquad"].map((b) => (
+              <span
+                key={b}
+                className="rounded-md border border-border/60 bg-background/60 px-1.5 py-0.5 text-[9px] text-muted-foreground"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-card/60 p-3.5 backdrop-blur-xl">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           Jugando a
         </p>
-        <div className="mt-2 flex items-center gap-3">
-          <span className="size-9 shrink-0 rounded-lg bg-gradient-to-br from-primary/70 to-accent/60" />
+        <div className="mt-2.5 flex items-center gap-3">
+          <span className="size-11 shrink-0 rounded-xl bg-gradient-to-br from-primary/80 to-accent/50" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-medium">Valorant · Ascent</p>
+            <p className="truncate text-[10px] text-muted-foreground">Partida competitiva</p>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
-              <span className="block h-full w-2/3 rounded-full bg-primary" />
+              <span className="block h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-accent" />
             </div>
           </div>
           <span className="font-mono text-[10px] text-muted-foreground">42:18</span>
@@ -175,64 +218,87 @@ function DiscordPreview() {
 
 function GamingPreview() {
   const games = [
-    { name: "Roblox", meta: "1.2k visitas", pct: 82 },
-    { name: "Steam", meta: "412 horas", pct: 64 },
-    { name: "Twitch", meta: "En directo", pct: 93 },
+    { name: "Roblox", meta: "1.2k visitas", pct: 82, spark: [30, 50, 40, 70, 60, 90] },
+    { name: "Steam", meta: "412 horas", pct: 64, spark: [20, 35, 55, 45, 70, 62] },
+    { name: "Twitch", meta: "En directo · 1.4k", pct: 93, spark: [40, 60, 55, 80, 75, 96] },
   ];
   return (
-    <div className="flex h-full flex-col justify-center gap-2.5 p-5">
+    <div className="flex h-full flex-col justify-center gap-3 p-6">
       {games.map((g, i) => (
         <div
           key={g.name}
-          className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3 py-2.5 backdrop-blur-xl"
+          className="group/g flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 px-4 py-3 backdrop-blur-xl transition-colors hover:border-primary/40"
+          style={{ animationDelay: `${i * 100}ms` }}
         >
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
             <Gamepad2 className="size-4" />
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="font-medium">{g.name}</span>
+              <span className="font-semibold">{g.name}</span>
               <span className="text-muted-foreground">{g.meta}</span>
             </div>
-            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-border">
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
               <span
                 className="block h-full rounded-full bg-gradient-to-r from-primary to-accent"
-                style={{ width: `${g.pct}%`, animationDelay: `${i * 120}ms` }}
+                style={{ width: `${g.pct}%` }}
               />
             </div>
           </div>
+          <div className="flex h-7 w-14 items-end gap-[2px]">
+            {g.spark.map((h, j) => (
+              <span
+                key={j}
+                className="flex-1 rounded-sm bg-primary/50 bar-grow"
+                style={{ height: `${h}%`, animationDelay: `${j * 70}ms` }}
+              />
+            ))}
+          </div>
         </div>
       ))}
+      <div className="flex items-center justify-between rounded-2xl border border-dashed border-border/60 px-4 py-2.5 text-[10px] text-muted-foreground">
+        <span>Sincronización automática cada 60s</span>
+        <span className="font-mono text-primary">ONLINE</span>
+      </div>
     </div>
   );
 }
 
 function MusicPreview() {
   return (
-    <div className="flex h-full items-center gap-4 p-5">
-      <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border border-border/60">
-        <div className="size-full bg-gradient-to-br from-primary via-accent to-primary/30" />
-        <span className="absolute inset-0 grid place-items-center">
-          <span className="grid size-9 place-items-center rounded-full bg-background/70 backdrop-blur-xl">
-            <Play className="size-4 fill-current text-primary" />
+    <div className="flex h-full flex-col justify-center gap-4 p-6">
+      <div className="flex items-center gap-4 rounded-3xl border border-border/60 bg-card/60 p-4 backdrop-blur-xl">
+        <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border border-border/60">
+          <div className="size-full bg-gradient-to-br from-primary via-accent to-primary/20" />
+          <span className="absolute inset-0 grid place-items-center">
+            <span className="grid size-10 place-items-center rounded-full bg-background/70 backdrop-blur-xl">
+              <Play className="size-4 fill-current text-primary" />
+            </span>
           </span>
-        </span>
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Reproduciendo ahora
-        </p>
-        <p className="mt-1 truncate text-sm font-semibold">Midnight Signal</p>
-        <p className="truncate text-[11px] text-muted-foreground">Nova · Single</p>
-        <div className="mt-3 flex h-10 items-end gap-[3px]">
-          {waveform.map((h, i) => (
-            <span
-              key={i}
-              className="flex-1 rounded-full bg-primary/70 bar-grow"
-              style={{ height: `${h}%`, animationDelay: `${i * 45}ms` }}
-            />
-          ))}
         </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            Reproduciendo ahora
+          </p>
+          <p className="mt-1 truncate text-base font-semibold">Midnight Signal</p>
+          <p className="truncate text-[11px] text-muted-foreground">Nova · Single · 2026</p>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="font-mono text-[9px] text-muted-foreground">1:12</span>
+            <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-border">
+              <span className="block h-full w-2/5 rounded-full bg-gradient-to-r from-primary to-accent" />
+            </span>
+            <span className="font-mono text-[9px] text-muted-foreground">3:04</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex h-16 items-end gap-[3px] rounded-2xl border border-border/60 bg-card/40 px-4 py-3">
+        {waveform.map((h, i) => (
+          <span
+            key={i}
+            className="flex-1 rounded-full bg-gradient-to-t from-primary/30 to-primary bar-grow"
+            style={{ height: `${h}%`, animationDelay: `${i * 45}ms` }}
+          />
+        ))}
       </div>
     </div>
   );
@@ -240,22 +306,27 @@ function MusicPreview() {
 
 function QrPreview() {
   return (
-    <div className="flex h-full items-center justify-center gap-5 p-5">
-      <div className="grid grid-cols-7 gap-1 rounded-2xl border border-border/60 bg-background/80 p-3 backdrop-blur-xl">
-        {qrCells.map((on, i) => (
-          <span
-            key={i}
-            className={`size-2.5 rounded-[3px] ${on ? "bg-primary" : "bg-border/70"}`}
-          />
-        ))}
+    <div className="flex h-full items-center justify-center gap-6 p-6">
+      <div className="relative rounded-3xl border border-border/60 bg-card/70 p-4 backdrop-blur-xl">
+        <div className="grid grid-cols-7 gap-1">
+          {qrCells.map((on, i) => (
+            <span
+              key={i}
+              className={`size-3 rounded-[4px] ${on ? "bg-primary" : "bg-border/60"}`}
+              style={{ opacity: on ? 1 : 0.7 }}
+            />
+          ))}
+        </div>
+        <span className="absolute inset-x-4 top-1/2 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
+        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/brayan</p>
       </div>
-      <div className="space-y-2 text-left">
-        {["PNG y SVG", "Color de acento", "Logo centrado"].map((r) => (
+      <div className="space-y-2.5 text-left">
+        {["PNG · SVG · PDF", "Color de acento", "Logo centrado", "Escaneo ilimitado"].map((r) => (
           <p key={r} className="flex items-center gap-2 text-[11px] text-muted-foreground">
             <Check className="size-3.5 text-primary" /> {r}
           </p>
         ))}
-        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-[10px] text-foreground backdrop-blur-xl">
+        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-[10px] font-medium text-primary">
           <Download className="size-3" /> Descargar QR
         </span>
       </div>
@@ -269,6 +340,7 @@ function ModulePreview({ kind }: { kind: (typeof modules)[number]["kind"] }) {
   if (kind === "music") return <MusicPreview />;
   return <QrPreview />;
 }
+
 
 const specs: {
   icon: typeof UserRound;
