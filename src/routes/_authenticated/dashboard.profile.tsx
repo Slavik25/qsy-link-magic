@@ -7,8 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AssetUploader } from "@/components/qsy/asset-uploader";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
+
+type ProfileForm = z.infer<typeof schema>;
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
   component: ProfileEditor,
