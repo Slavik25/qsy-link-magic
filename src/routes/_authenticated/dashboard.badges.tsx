@@ -1,18 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  BadgeCheck,
-  Bug,
-  Crown,
-  Gem,
-  Gift,
-  Image as ImageIcon,
-  Rocket,
-  Server,
-  Snowflake,
-  Sparkles,
-  Star,
-  Trophy,
-} from "lucide-react";
+import { Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyProfile } from "@/lib/qsy-data";
 
@@ -30,40 +17,43 @@ type BadgeDef = {
   key: string;
   name: string;
   description: string;
-  icon: typeof Star;
+  img: string;
   action?: string;
   unlocked?: (v: { verified: boolean; views: number }) => boolean;
 };
 
 const BADGES: BadgeDef[] = [
-  { key: "staff", name: "Staff", description: "Formas parte del equipo de QSY.", icon: Rocket },
-  { key: "helper", name: "Helper", description: "Ayudas activamente a la comunidad.", icon: Sparkles, action: "Unirme" },
-  { key: "premium", name: "Premium", description: "Consigue el paquete premium.", icon: Gem, action: "Obtener" },
+  { key: "staff", name: "Staff", description: "Formas parte del equipo de QSY.", img: "/badges/staff.svg" },
+  { key: "moderator", name: "Moderador", description: "Moderas la comunidad de QSY.", img: "/badges/moderator.svg" },
+  { key: "helper", name: "Helper", description: "Ayudas activamente a la comunidad.", img: "/badges/helper.svg", action: "Unirme" },
+  { key: "premium", name: "Premium", description: "Consigue el paquete premium.", img: "/badges/premium.svg", action: "Obtener" },
   {
     key: "verified",
     name: "Verified",
     description: "Creador verificado en QSY.",
-    icon: BadgeCheck,
+    img: "/badges/verified.svg",
     action: "Solicitar",
     unlocked: (v) => v.verified,
   },
-  { key: "donor", name: "Donor", description: "Apoya el proyecto con una donación.", icon: Gift, action: "Donar" },
-  { key: "gifter", name: "Gifter", description: "Regala QSY Premium a alguien.", icon: Gift, action: "Regalar" },
-  { key: "host", name: "Image Host", description: "Acceso al hosting de imágenes.", icon: ImageIcon, action: "Obtener" },
-  { key: "domain", name: "Domain Legend", description: "Añade un dominio propio a QSY.", icon: Server, action: "Añadir" },
-  { key: "og", name: "OG", description: "Estuviste desde el principio.", icon: Crown },
-  { key: "booster", name: "Server Booster", description: "Boostea el servidor de Discord.", icon: Rocket, action: "Boost" },
-  { key: "bug", name: "Bug Hunter", description: "Reporta un bug al equipo.", icon: Bug, action: "Reportar" },
+  { key: "donor", name: "Donor", description: "Apoya el proyecto con una donación.", img: "/badges/donor.svg", action: "Donar" },
+  { key: "gifter", name: "Gifter", description: "Regala QSY Premium a alguien.", img: "/badges/gifter.svg", action: "Regalar" },
+  { key: "host", name: "Image Host", description: "Acceso al hosting de imágenes.", img: "/badges/imagehost.svg", action: "Obtener" },
+  { key: "domain", name: "Domain Legend", description: "Añade un dominio propio a QSY.", img: "/badges/domain.svg", action: "Añadir" },
+  { key: "og", name: "OG", description: "Estuviste desde el principio.", img: "/badges/og.svg" },
+  { key: "king", name: "King", description: "Top 1 del ranking mensual.", img: "/badges/king.svg" },
+  { key: "booster", name: "Server Booster", description: "Boostea el servidor de Discord.", img: "/badges/booster.svg", action: "Boost" },
+  { key: "bug", name: "Bug Hunter", description: "Reporta un bug al equipo.", img: "/badges/bughunter.svg", action: "Reportar" },
+  { key: "dev", name: "Developer", description: "Colaboras en el desarrollo de QSY.", img: "/badges/developer.svg" },
   {
     key: "views100",
     name: "100 visitas",
     description: "Alcanza 100 visitas en tu perfil.",
-    icon: Trophy,
+    img: "/badges/winner.svg",
     unlocked: (v) => v.views >= 100,
   },
-  { key: "winter", name: "Winter 2026", description: "Badge exclusivo de la temporada de invierno.", icon: Snowflake },
-  { key: "winner", name: "Winner", description: "Gana un evento de QSY.", icon: Trophy },
+  { key: "winter", name: "Winter 2026", description: "Badge exclusivo de la temporada de invierno.", img: "/badges/winter.svg" },
 ];
+
 
 function BadgesPage() {
   const { data: profile } = useMyProfile();
@@ -92,12 +82,15 @@ function BadgesPage() {
               }`}
             >
               <span
-                className={`grid size-10 shrink-0 place-items-center rounded-xl ${
-                  unlocked ? "bg-primary/20 text-primary" : "bg-surface-strong text-muted-foreground"
+                className={`grid size-10 shrink-0 place-items-center rounded-xl border ${
+                  unlocked
+                    ? "border-primary/40 bg-primary/15"
+                    : "border-white/5 bg-surface-strong grayscale opacity-60"
                 }`}
               >
-                <b.icon className="size-5" />
+                <img src={b.img} alt={b.name} className="size-6" loading="lazy" />
               </span>
+
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{b.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{b.description}</p>
