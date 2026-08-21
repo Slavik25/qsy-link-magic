@@ -135,35 +135,78 @@ const qrCells = Array.from({ length: 49 }, (_, i) => {
   return corner || (x * 3 + y * 5 + x * y) % 3 === 0;
 });
 
-function DiscordPreview() {
+function PreviewFrame({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex h-full flex-col justify-center gap-3 p-5">
-      <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/70 p-3 backdrop-blur-xl">
-        <div className="relative">
-          <span className="grid size-11 place-items-center rounded-xl bg-primary/20 font-mono text-xs font-bold text-primary">
-            QSY
-          </span>
-          <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-background bg-primary pulse-glow" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold">brayan</p>
-          <p className="truncate text-[10px] text-muted-foreground">En línea · qsy.rip/brayan</p>
-        </div>
-        <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary">
-          Live
+    <div className="relative h-full overflow-hidden rounded-[26px] border border-border/70 bg-background/70 backdrop-blur-2xl">
+      <div aria-hidden className="pointer-events-none absolute inset-0 starfield twinkle opacity-30" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-1/3 size-64 rounded-full bg-primary/15 blur-3xl"
+      />
+      <div className="relative flex items-center gap-2 border-b border-border/60 px-4 py-2.5">
+        <span className="size-2 rounded-full bg-border" />
+        <span className="size-2 rounded-full bg-border" />
+        <span className="size-2 rounded-full bg-primary/70" />
+        <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          {title}
         </span>
       </div>
+      <div className="relative h-[calc(100%-41px)]">{children}</div>
+    </div>
+  );
+}
 
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-3 backdrop-blur-xl">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+function DiscordPreview() {
+  return (
+    <div className="flex h-full flex-col justify-center gap-3 p-6">
+      <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/70 backdrop-blur-xl">
+        <div aria-hidden className="h-14 bg-gradient-to-r from-primary/70 via-accent/60 to-primary/20" />
+        <div className="-mt-8 px-5 pb-5">
+          <div className="flex items-end justify-between">
+            <div className="relative">
+              <span className="grid size-16 place-items-center rounded-2xl border-4 border-card bg-background font-mono text-[11px] font-bold text-primary">
+                QSY
+              </span>
+              <span className="absolute -bottom-1 -right-1 size-4 rounded-full border-[3px] border-card bg-primary pulse-glow" />
+            </div>
+            <span className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-primary">
+              <span className="size-1.5 rounded-full bg-primary pulse-glow" /> Live
+            </span>
+          </div>
+          <p className="mt-3 flex items-center gap-1.5 text-sm font-semibold">
+            brayan <BadgeCheck className="size-3.5 text-primary" />
+          </p>
+          <p className="text-[11px] text-muted-foreground">@brayan · miembro desde 2021</p>
+          <div className="mt-3 flex gap-1.5">
+            {["Early", "Nitro", "Boost", "HypeSquad"].map((b) => (
+              <span
+                key={b}
+                className="rounded-md border border-border/60 bg-background/60 px-1.5 py-0.5 text-[9px] text-muted-foreground"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-card/60 p-3.5 backdrop-blur-xl">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           Jugando a
         </p>
-        <div className="mt-2 flex items-center gap-3">
-          <span className="size-9 shrink-0 rounded-lg bg-gradient-to-br from-primary/70 to-accent/60" />
+        <div className="mt-2.5 flex items-center gap-3">
+          <span className="size-11 shrink-0 rounded-xl bg-gradient-to-br from-primary/80 to-accent/50" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-medium">Valorant · Ascent</p>
+            <p className="truncate text-[10px] text-muted-foreground">Partida competitiva</p>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
-              <span className="block h-full w-2/3 rounded-full bg-primary" />
+              <span className="block h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-accent" />
             </div>
           </div>
           <span className="font-mono text-[10px] text-muted-foreground">42:18</span>
@@ -175,64 +218,87 @@ function DiscordPreview() {
 
 function GamingPreview() {
   const games = [
-    { name: "Roblox", meta: "1.2k visitas", pct: 82 },
-    { name: "Steam", meta: "412 horas", pct: 64 },
-    { name: "Twitch", meta: "En directo", pct: 93 },
+    { name: "Roblox", meta: "1.2k visitas", pct: 82, spark: [30, 50, 40, 70, 60, 90] },
+    { name: "Steam", meta: "412 horas", pct: 64, spark: [20, 35, 55, 45, 70, 62] },
+    { name: "Twitch", meta: "En directo · 1.4k", pct: 93, spark: [40, 60, 55, 80, 75, 96] },
   ];
   return (
-    <div className="flex h-full flex-col justify-center gap-2.5 p-5">
+    <div className="flex h-full flex-col justify-center gap-3 p-6">
       {games.map((g, i) => (
         <div
           key={g.name}
-          className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3 py-2.5 backdrop-blur-xl"
+          className="group/g flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 px-4 py-3 backdrop-blur-xl transition-colors hover:border-primary/40"
+          style={{ animationDelay: `${i * 100}ms` }}
         >
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
             <Gamepad2 className="size-4" />
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="font-medium">{g.name}</span>
+              <span className="font-semibold">{g.name}</span>
               <span className="text-muted-foreground">{g.meta}</span>
             </div>
-            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-border">
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
               <span
                 className="block h-full rounded-full bg-gradient-to-r from-primary to-accent"
-                style={{ width: `${g.pct}%`, animationDelay: `${i * 120}ms` }}
+                style={{ width: `${g.pct}%` }}
               />
             </div>
           </div>
+          <div className="flex h-7 w-14 items-end gap-[2px]">
+            {g.spark.map((h, j) => (
+              <span
+                key={j}
+                className="flex-1 rounded-sm bg-primary/50 bar-grow"
+                style={{ height: `${h}%`, animationDelay: `${j * 70}ms` }}
+              />
+            ))}
+          </div>
         </div>
       ))}
+      <div className="flex items-center justify-between rounded-2xl border border-dashed border-border/60 px-4 py-2.5 text-[10px] text-muted-foreground">
+        <span>Sincronización automática cada 60s</span>
+        <span className="font-mono text-primary">ONLINE</span>
+      </div>
     </div>
   );
 }
 
 function MusicPreview() {
   return (
-    <div className="flex h-full items-center gap-4 p-5">
-      <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border border-border/60">
-        <div className="size-full bg-gradient-to-br from-primary via-accent to-primary/30" />
-        <span className="absolute inset-0 grid place-items-center">
-          <span className="grid size-9 place-items-center rounded-full bg-background/70 backdrop-blur-xl">
-            <Play className="size-4 fill-current text-primary" />
+    <div className="flex h-full flex-col justify-center gap-4 p-6">
+      <div className="flex items-center gap-4 rounded-3xl border border-border/60 bg-card/60 p-4 backdrop-blur-xl">
+        <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border border-border/60">
+          <div className="size-full bg-gradient-to-br from-primary via-accent to-primary/20" />
+          <span className="absolute inset-0 grid place-items-center">
+            <span className="grid size-10 place-items-center rounded-full bg-background/70 backdrop-blur-xl">
+              <Play className="size-4 fill-current text-primary" />
+            </span>
           </span>
-        </span>
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          Reproduciendo ahora
-        </p>
-        <p className="mt-1 truncate text-sm font-semibold">Midnight Signal</p>
-        <p className="truncate text-[11px] text-muted-foreground">Nova · Single</p>
-        <div className="mt-3 flex h-10 items-end gap-[3px]">
-          {waveform.map((h, i) => (
-            <span
-              key={i}
-              className="flex-1 rounded-full bg-primary/70 bar-grow"
-              style={{ height: `${h}%`, animationDelay: `${i * 45}ms` }}
-            />
-          ))}
         </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            Reproduciendo ahora
+          </p>
+          <p className="mt-1 truncate text-base font-semibold">Midnight Signal</p>
+          <p className="truncate text-[11px] text-muted-foreground">Nova · Single · 2026</p>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="font-mono text-[9px] text-muted-foreground">1:12</span>
+            <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-border">
+              <span className="block h-full w-2/5 rounded-full bg-gradient-to-r from-primary to-accent" />
+            </span>
+            <span className="font-mono text-[9px] text-muted-foreground">3:04</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex h-16 items-end gap-[3px] rounded-2xl border border-border/60 bg-card/40 px-4 py-3">
+        {waveform.map((h, i) => (
+          <span
+            key={i}
+            className="flex-1 rounded-full bg-gradient-to-t from-primary/30 to-primary bar-grow"
+            style={{ height: `${h}%`, animationDelay: `${i * 45}ms` }}
+          />
+        ))}
       </div>
     </div>
   );
@@ -240,22 +306,27 @@ function MusicPreview() {
 
 function QrPreview() {
   return (
-    <div className="flex h-full items-center justify-center gap-5 p-5">
-      <div className="grid grid-cols-7 gap-1 rounded-2xl border border-border/60 bg-background/80 p-3 backdrop-blur-xl">
-        {qrCells.map((on, i) => (
-          <span
-            key={i}
-            className={`size-2.5 rounded-[3px] ${on ? "bg-primary" : "bg-border/70"}`}
-          />
-        ))}
+    <div className="flex h-full items-center justify-center gap-6 p-6">
+      <div className="relative rounded-3xl border border-border/60 bg-card/70 p-4 backdrop-blur-xl">
+        <div className="grid grid-cols-7 gap-1">
+          {qrCells.map((on, i) => (
+            <span
+              key={i}
+              className={`size-3 rounded-[4px] ${on ? "bg-primary" : "bg-border/60"}`}
+              style={{ opacity: on ? 1 : 0.7 }}
+            />
+          ))}
+        </div>
+        <span className="absolute inset-x-4 top-1/2 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-70" />
+        <p className="mt-3 text-center font-mono text-[10px] text-muted-foreground">qsy.rip/brayan</p>
       </div>
-      <div className="space-y-2 text-left">
-        {["PNG y SVG", "Color de acento", "Logo centrado"].map((r) => (
+      <div className="space-y-2.5 text-left">
+        {["PNG · SVG · PDF", "Color de acento", "Logo centrado", "Escaneo ilimitado"].map((r) => (
           <p key={r} className="flex items-center gap-2 text-[11px] text-muted-foreground">
             <Check className="size-3.5 text-primary" /> {r}
           </p>
         ))}
-        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-[10px] text-foreground backdrop-blur-xl">
+        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-[10px] font-medium text-primary">
           <Download className="size-3" /> Descargar QR
         </span>
       </div>
@@ -269,6 +340,126 @@ function ModulePreview({ kind }: { kind: (typeof modules)[number]["kind"] }) {
   if (kind === "music") return <MusicPreview />;
   return <QrPreview />;
 }
+
+
+function ModulesShowcase() {
+  const [active, setActive] = useState(0);
+  const m = modules[active]!;
+
+  return (
+    <section className="relative overflow-hidden py-28">
+      <div aria-hidden className="pointer-events-none absolute inset-0 aurora opacity-50" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+      />
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="max-w-2xl">
+          <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <Sparkles className="size-3.5 text-primary" /> Módulos potentes
+          </span>
+          <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
+            Módulos que se
+            <br />
+            <span className="text-gradient-violet">sienten vivos.</span>
+          </h2>
+          <p className="mt-4 max-w-lg text-muted-foreground">
+            Cada módulo se actualiza en tiempo real dentro de tu perfil. Sin código, sin
+            configuración: conecta y listo.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
+          <div className="flex flex-col gap-2.5">
+            {modules.map((mod, i) => {
+              const on = i === active;
+              return (
+                <button
+                  key={mod.title}
+                  type="button"
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => setActive(i)}
+                  aria-pressed={on}
+                  className={`group relative overflow-hidden rounded-3xl border p-5 text-left transition-all duration-500 ${
+                    on
+                      ? "border-primary/50 bg-card/70 shadow-[0_40px_100px_-60px_var(--primary)]"
+                      : "border-border/60 bg-card/30 hover:border-border"
+                  } backdrop-blur-xl`}
+                >
+                  <span
+                    aria-hidden
+                    className={`absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-primary to-accent transition-transform duration-500 ${
+                      on ? "scale-y-100" : "scale-y-0"
+                    }`}
+                  />
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`grid size-11 shrink-0 place-items-center rounded-2xl transition-all duration-500 ${
+                        on ? "bg-primary/25 text-primary scale-105" : "bg-muted/40 text-muted-foreground"
+                      }`}
+                    >
+                      <mod.icon className="size-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="truncate text-sm font-semibold">{mod.title}</h3>
+                        <span className="shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary">
+                          {mod.tag}
+                        </span>
+                      </div>
+                      <p
+                        className={`mt-1 text-[11px] leading-relaxed text-muted-foreground transition-all duration-500 ${
+                          on ? "max-h-16 opacity-100" : "max-h-0 overflow-hidden opacity-0 lg:max-h-16 lg:opacity-60"
+                        }`}
+                      >
+                        {mod.desc}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            <div className="mt-2 flex items-center justify-between rounded-3xl border border-dashed border-border/60 px-5 py-4">
+              <p className="text-[11px] text-muted-foreground">
+                +60 conexiones disponibles
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary"
+              >
+                Probar ahora <ArrowRight className="size-3" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative min-h-[460px]">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 rounded-[40px] bg-primary/10 blur-3xl"
+            />
+            <div key={m.kind} className="relative h-[460px] rise">
+              <PreviewFrame title={`qsy.rip/brayan · ${m.tag}`}>
+                {m.image ? (
+                  <img
+                    src={m.image}
+                    alt={`${m.title} en QSY`}
+                    loading="lazy"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <ModulePreview kind={m.kind} />
+                )}
+              </PreviewFrame>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 const specs: {
   icon: typeof UserRound;
@@ -653,120 +844,73 @@ function Landing() {
       </section>
 
       {/* Especificaciones */}
-      <section id="features" className="relative mx-auto max-w-6xl px-4 py-24 text-center sm:px-6">
-        <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-primary" /> Especificaciones · 100% gratis
-        </span>
-        <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-          La estructura
-          <br />
-          <span className="text-gradient-violet">definitiva.</span>
-        </h2>
-        <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-          Cada característica diseñada para que tu perfil destaque entre millones.
-        </p>
+      <section id="features" className="relative overflow-hidden py-28">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(var(--foreground)_1px,transparent_1px),linear-gradient(90deg,var(--foreground)_1px,transparent_1px)] [background-size:64px_64px] mask-fade-y"
+        />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex flex-col gap-6 border-b border-border/60 pb-10 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-primary pulse-glow" /> Especificaciones · 100% gratis
+              </span>
+              <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
+                La estructura
+                <br />
+                <span className="text-gradient-violet">definitiva.</span>
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-right">
+              Seis piezas que trabajan juntas para que tu perfil cargue al instante, se vea único y
+              te diga exactamente qué funciona.
+            </p>
+          </div>
 
-        <div className="mt-12 grid gap-4 text-left sm:grid-cols-6">
-          {specs.map((s, i) => (
-            <article
-              key={s.title}
-              className={`group relative overflow-hidden rounded-[26px] border border-border/70 bg-card/50 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)] ${s.span}`}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
-              />
-              <div className="relative flex items-center justify-between">
-                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                  <s.icon className="size-5" />
-                </span>
-                <span className="font-mono text-[11px] text-muted-foreground/60">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
+          <div className="mt-10 grid gap-4 text-left sm:grid-cols-6">
+            {specs.map((s, i) => (
+              <article
+                key={s.title}
+                className={`group relative flex flex-col overflow-hidden rounded-[28px] border border-border/70 bg-card/40 p-7 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:bg-card/60 hover:shadow-[0_70px_140px_-70px_var(--primary)] ${s.span}`}
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-24 -top-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
+                />
 
-              <h3 className="relative mt-5 text-lg font-semibold">{s.title}</h3>
-              <p className="relative mt-1.5 text-sm text-muted-foreground">{s.desc}</p>
+                <div className="relative flex items-start justify-between">
+                  <span className="grid size-11 place-items-center rounded-2xl border border-border/60 bg-background/60 text-primary transition-all duration-500 group-hover:border-primary/50 group-hover:bg-primary/15 group-hover:scale-105">
+                    <s.icon className="size-5" />
+                  </span>
+                  <span className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground/50">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
 
-              <div className="relative mt-6">
-                <SpecVisual kind={s.visual} />
-              </div>
-            </article>
-          ))}
+                <h3 className="relative mt-6 text-lg font-semibold tracking-tight">{s.title}</h3>
+                <p className="relative mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {s.desc}
+                </p>
+
+                <div className="relative mt-auto pt-7">
+                  <SpecVisual kind={s.visual} />
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
-
       </section>
+
+
 
 
       {/* Módulos e integraciones */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="text-center">
-          <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            <Sparkles className="size-3.5 text-primary" /> Módulos potentes
-          </span>
-          <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-            Módulos e <span className="text-gradient-violet">integraciones.</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-            Conecta tus plataformas favoritas y muéstralas en vivo dentro de tu perfil.
-          </p>
-        </div>
+      <ModulesShowcase />
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
-          {modules.map((m, i) => (
-            <article
-              key={m.title}
-              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
-              style={{ animationDelay: `${i * 90}ms` }}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -left-24 -bottom-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              />
-
-              <div className="relative m-3 overflow-hidden rounded-3xl border border-border/60">
-                {m.image ? (
-                  <img
-                    src={m.image}
-                    alt={`${m.title} en QSY`}
-                    loading="lazy"
-                    className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="relative h-52 w-full aurora">
-                    <div aria-hidden className="absolute inset-0 starfield twinkle opacity-40" />
-                    <div className="relative h-full transition-transform duration-700 group-hover:scale-[1.02]">
-                      <ModulePreview kind={m.kind} />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="relative px-7 pb-7 pt-2">
-                <div className="flex items-start justify-between">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                    <m.icon className="size-5" />
-                  </span>
-                  <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-                    {m.tag}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
-                <span
-                  aria-hidden
-                  className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-700 group-hover:w-full"
-                />
-              </div>
-            </article>
-          ))}
-        </div>
-
-      </section>
 
 
       {/* Dominios premium */}
