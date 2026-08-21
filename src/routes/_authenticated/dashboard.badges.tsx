@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Gem } from "lucide-react";
+import { CalendarClock, Gem, Hourglass, Infinity as InfinityIcon, Medal, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyProfile } from "@/lib/qsy-data";
 
