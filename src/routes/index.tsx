@@ -12,6 +12,9 @@ import {
   MousePointerClick,
   Music4,
   Palette,
+  Play,
+  Download,
+
   QrCode,
   Share2,
   Sparkles,
@@ -46,16 +49,8 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const features = [
-  { icon: UserRound, title: "Perfiles personalizados", desc: "Avatar, banner, bio, ubicación y badge verificado." },
-  { icon: Link2, title: "Links ilimitados", desc: "Ordena, activa y mide cada enlace en segundos." },
-  { icon: Share2, title: "Redes sociales", desc: "Discord, Instagram, TikTok, GitHub, Steam y más." },
-  { icon: Music4, title: "Música", desc: "Añade tu track favorito y reprodúcelo en tu perfil." },
-  { icon: BarChart3, title: "Analytics", desc: "Visitas, clicks, CTR, país, dispositivo y referrer." },
-  { icon: Palette, title: "Temas personalizados", desc: "Blur, opacidad, glow, radios, colores y efectos." },
-];
-
 const chips = [
+
   { icon: BadgeCheck, label: "Perfil verificado" },
   { icon: Sparkles, label: "Efectos de texto" },
   { icon: Palette, label: "Temas custom" },
@@ -98,38 +93,343 @@ const modules: {
   title: string;
   desc: string;
   tag: string;
+  kind: "discord" | "gaming" | "music" | "qr";
   image?: string;
-  rows: string[];
 }[] = [
   {
     icon: MessageCircle,
     title: "Módulo Discord",
     desc: "Estado en vivo, actividad y servidor conectado directamente en tu perfil.",
     tag: "En vivo",
-    rows: ["Jugando · Valorant", "Servidor · qsy.rip/community", "Estado · En línea"],
+    kind: "discord",
   },
   {
     icon: Gamepad2,
     title: "Módulo Gaming",
     desc: "Steam, Roblox y Twitch: muestra qué juegas y cuándo estás online.",
     tag: "Popular",
-    rows: ["Roblox · 1.2k visitas", "Steam · 412 horas", "Twitch · En directo"],
+    kind: "gaming",
   },
   {
     icon: Music4,
     title: "Módulo Música",
     desc: "Spotify sincronizado con reproducción y portada animada.",
     tag: "Nuevo",
-    rows: ["Reproduciendo ahora", "Portada animada", "Preview de 30s"],
+    kind: "music",
   },
   {
     icon: QrCode,
     title: "Módulo QR",
     desc: "Genera y descarga tu QR con acento personalizado en un click.",
     tag: "Pro",
-    rows: ["PNG y SVG", "Color de acento", "Logo centrado"],
+    kind: "qr",
   },
 ];
+
+const waveform = [18, 34, 52, 30, 68, 84, 46, 92, 58, 74, 38, 62, 88, 44, 26, 56, 78, 40];
+
+const qrCells = Array.from({ length: 49 }, (_, i) => {
+  const x = i % 7;
+  const y = Math.floor(i / 7);
+  const corner = (x < 2 && y < 2) || (x > 4 && y < 2) || (x < 2 && y > 4);
+  return corner || (x * 3 + y * 5 + x * y) % 3 === 0;
+});
+
+function DiscordPreview() {
+  return (
+    <div className="flex h-full flex-col justify-center gap-3 p-5">
+      <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/70 p-3 backdrop-blur-xl">
+        <div className="relative">
+          <span className="grid size-11 place-items-center rounded-xl bg-primary/20 font-mono text-xs font-bold text-primary">
+            QSY
+          </span>
+          <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-background bg-primary pulse-glow" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-semibold">brayan</p>
+          <p className="truncate text-[10px] text-muted-foreground">En línea · qsy.rip/brayan</p>
+        </div>
+        <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary">
+          Live
+        </span>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-background/60 p-3 backdrop-blur-xl">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          Jugando a
+        </p>
+        <div className="mt-2 flex items-center gap-3">
+          <span className="size-9 shrink-0 rounded-lg bg-gradient-to-br from-primary/70 to-accent/60" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-medium">Valorant · Ascent</p>
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
+              <span className="block h-full w-2/3 rounded-full bg-primary" />
+            </div>
+          </div>
+          <span className="font-mono text-[10px] text-muted-foreground">42:18</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GamingPreview() {
+  const games = [
+    { name: "Roblox", meta: "1.2k visitas", pct: 82 },
+    { name: "Steam", meta: "412 horas", pct: 64 },
+    { name: "Twitch", meta: "En directo", pct: 93 },
+  ];
+  return (
+    <div className="flex h-full flex-col justify-center gap-2.5 p-5">
+      {games.map((g, i) => (
+        <div
+          key={g.name}
+          className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3 py-2.5 backdrop-blur-xl"
+        >
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary">
+            <Gamepad2 className="size-4" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="font-medium">{g.name}</span>
+              <span className="text-muted-foreground">{g.meta}</span>
+            </div>
+            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-border">
+              <span
+                className="block h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                style={{ width: `${g.pct}%`, animationDelay: `${i * 120}ms` }}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MusicPreview() {
+  return (
+    <div className="flex h-full items-center gap-4 p-5">
+      <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border border-border/60">
+        <div className="size-full bg-gradient-to-br from-primary via-accent to-primary/30" />
+        <span className="absolute inset-0 grid place-items-center">
+          <span className="grid size-9 place-items-center rounded-full bg-background/70 backdrop-blur-xl">
+            <Play className="size-4 fill-current text-primary" />
+          </span>
+        </span>
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          Reproduciendo ahora
+        </p>
+        <p className="mt-1 truncate text-sm font-semibold">Midnight Signal</p>
+        <p className="truncate text-[11px] text-muted-foreground">Nova · Single</p>
+        <div className="mt-3 flex h-10 items-end gap-[3px]">
+          {waveform.map((h, i) => (
+            <span
+              key={i}
+              className="flex-1 rounded-full bg-primary/70 bar-grow"
+              style={{ height: `${h}%`, animationDelay: `${i * 45}ms` }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QrPreview() {
+  return (
+    <div className="flex h-full items-center justify-center gap-5 p-5">
+      <div className="grid grid-cols-7 gap-1 rounded-2xl border border-border/60 bg-background/80 p-3 backdrop-blur-xl">
+        {qrCells.map((on, i) => (
+          <span
+            key={i}
+            className={`size-2.5 rounded-[3px] ${on ? "bg-primary" : "bg-border/70"}`}
+          />
+        ))}
+      </div>
+      <div className="space-y-2 text-left">
+        {["PNG y SVG", "Color de acento", "Logo centrado"].map((r) => (
+          <p key={r} className="flex items-center gap-2 text-[11px] text-muted-foreground">
+            <Check className="size-3.5 text-primary" /> {r}
+          </p>
+        ))}
+        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-[10px] text-foreground backdrop-blur-xl">
+          <Download className="size-3" /> Descargar QR
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ModulePreview({ kind }: { kind: (typeof modules)[number]["kind"] }) {
+  if (kind === "discord") return <DiscordPreview />;
+  if (kind === "gaming") return <GamingPreview />;
+  if (kind === "music") return <MusicPreview />;
+  return <QrPreview />;
+}
+
+const specs: {
+  icon: typeof UserRound;
+  title: string;
+  desc: string;
+  span: string;
+  visual: "profile" | "links" | "analytics" | "theme" | "socials" | "music";
+}[] = [
+  {
+    icon: UserRound,
+    title: "Perfiles personalizados",
+    desc: "Avatar, banner, bio, ubicación y badge verificado.",
+    span: "sm:col-span-3 lg:col-span-2",
+    visual: "profile",
+  },
+  {
+    icon: BarChart3,
+    title: "Analytics en vivo",
+    desc: "Visitas, clicks, CTR, país, dispositivo y referrer.",
+    span: "sm:col-span-3 lg:col-span-4",
+    visual: "analytics",
+  },
+  {
+    icon: Link2,
+    title: "Links ilimitados",
+    desc: "Ordena, activa y mide cada enlace en segundos.",
+    span: "sm:col-span-3 lg:col-span-3",
+    visual: "links",
+  },
+  {
+    icon: Palette,
+    title: "Temas personalizados",
+    desc: "Blur, opacidad, glow, radios, colores y efectos.",
+    span: "sm:col-span-3 lg:col-span-3",
+    visual: "theme",
+  },
+  {
+    icon: Share2,
+    title: "Redes sociales",
+    desc: "Discord, Instagram, TikTok, GitHub, Steam y más.",
+    span: "sm:col-span-3 lg:col-span-4",
+    visual: "socials",
+  },
+  {
+    icon: Music4,
+    title: "Música",
+    desc: "Añade tu track favorito y reprodúcelo en tu perfil.",
+    span: "sm:col-span-3 lg:col-span-2",
+    visual: "music",
+  },
+];
+
+function SpecVisual({ kind }: { kind: (typeof specs)[number]["visual"] }) {
+  if (kind === "analytics") {
+    return (
+      <div className="flex h-20 items-end gap-1.5">
+        {bars.map((b, i) => (
+          <span
+            key={i}
+            className="flex-1 rounded-t-md bg-gradient-to-t from-primary/20 to-primary bar-grow"
+            style={{ height: `${b}%`, animationDelay: `${i * 60}ms` }}
+          />
+        ))}
+      </div>
+    );
+  }
+  if (kind === "links") {
+    return (
+      <div className="space-y-2">
+        {["Portfolio", "Tienda", "Discord"].map((l, i) => (
+          <div
+            key={l}
+            className="flex items-center justify-between rounded-xl border border-border/60 bg-background/50 px-3 py-2 text-[11px] transition-transform duration-500 group-hover:translate-x-1"
+            style={{ transitionDelay: `${i * 60}ms` }}
+          >
+            <span className="flex items-center gap-2">
+              <Link2 className="size-3 text-primary" /> {l}
+            </span>
+            <ArrowRight className="size-3 text-muted-foreground" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (kind === "profile") {
+    return (
+      <div className="rounded-2xl border border-border/60 bg-background/50 p-3">
+        <div className="flex items-center gap-3">
+          <span className="grid size-10 place-items-center rounded-full bg-primary/20 font-mono text-[10px] font-bold text-primary">
+            QSY
+          </span>
+          <div className="min-w-0">
+            <p className="flex items-center gap-1 text-xs font-semibold">
+              Brayan <BadgeCheck className="size-3.5 text-primary" />
+            </p>
+            <p className="text-[10px] text-muted-foreground">qsy.rip/brayan</p>
+          </div>
+        </div>
+        <div className="mt-3 space-y-1.5">
+          <span className="block h-1.5 w-full rounded-full bg-border" />
+          <span className="block h-1.5 w-2/3 rounded-full bg-border" />
+        </div>
+      </div>
+    );
+  }
+  if (kind === "theme") {
+    return (
+      <div className="flex items-center gap-2">
+        {["from-primary to-accent", "from-accent to-primary/40", "from-primary/60 to-background", "from-foreground/70 to-muted"].map(
+          (g, i) => (
+            <span
+              key={i}
+              className={`size-10 rounded-xl bg-gradient-to-br ${g} border border-border/60 transition-transform duration-500 group-hover:-translate-y-1`}
+              style={{ transitionDelay: `${i * 70}ms` }}
+            />
+          ),
+        )}
+        <div className="ml-2 flex-1 space-y-2">
+          <span className="block h-1.5 w-full rounded-full bg-border">
+            <span className="block h-full w-3/5 rounded-full bg-primary" />
+          </span>
+          <span className="block h-1.5 w-full rounded-full bg-border">
+            <span className="block h-full w-1/3 rounded-full bg-accent" />
+          </span>
+        </div>
+      </div>
+    );
+  }
+  if (kind === "socials") {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {["Discord", "Instagram", "TikTok", "GitHub", "Steam", "Spotify", "X", "Twitch"].map((s, i) => (
+          <span
+            key={s}
+            className="rounded-full border border-border/60 bg-background/50 px-3 py-1 text-[10px] text-muted-foreground transition-colors duration-500 group-hover:border-primary/40 group-hover:text-foreground"
+            style={{ transitionDelay: `${i * 40}ms` }}
+          >
+            {s}
+          </span>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2">
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent">
+        <Play className="size-4 fill-current text-primary-foreground" />
+      </span>
+      <div className="flex h-8 flex-1 items-end gap-[3px]">
+        {waveform.slice(0, 12).map((h, i) => (
+          <span
+            key={i}
+            className="flex-1 rounded-full bg-primary/60 bar-grow"
+            style={{ height: `${h}%`, animationDelay: `${i * 55}ms` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 const domains = ["qsy.rip", "qsy.es", "qsy.bio"];
 
@@ -366,33 +666,35 @@ function Landing() {
           Cada característica diseñada para que tu perfil destaque entre millones.
         </p>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] border border-border/70 bg-border/60 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f, i) => (
-            <div
-              key={f.title}
-              className="group relative overflow-hidden bg-card/60 p-7 backdrop-blur-xl transition-colors duration-500 hover:bg-card"
+        <div className="mt-12 grid gap-4 text-left sm:grid-cols-6">
+          {specs.map((s, i) => (
+            <article
+              key={s.title}
+              className={`group relative overflow-hidden rounded-[26px] border border-border/70 bg-card/50 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)] ${s.span}`}
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
               />
-              <div className="flex items-center justify-between">
-                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                  <f.icon className="size-5" />
+              <div className="relative flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
+                  <s.icon className="size-5" />
                 </span>
                 <span className="font-mono text-[11px] text-muted-foreground/60">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h3 className="mt-5 text-lg font-semibold">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
-              <span
-                aria-hidden
-                className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-500 group-hover:w-full"
-              />
-            </div>
+
+              <h3 className="relative mt-5 text-lg font-semibold">{s.title}</h3>
+              <p className="relative mt-1.5 text-sm text-muted-foreground">{s.desc}</p>
+
+              <div className="relative mt-6">
+                <SpecVisual kind={s.visual} />
+              </div>
+            </article>
           ))}
         </div>
+
       </section>
 
 
@@ -410,39 +712,35 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {modules.map((m) => (
-            <div
+        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          {modules.map((m, i) => (
+            <article
               key={m.title}
-              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
+              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
+              style={{ animationDelay: `${i * 90}ms` }}
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -left-20 -bottom-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                className="pointer-events-none absolute -left-24 -bottom-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
               />
 
-              {/* Preview del módulo — reemplazable por captura */}
               <div className="relative m-3 overflow-hidden rounded-3xl border border-border/60">
                 {m.image ? (
                   <img
                     src={m.image}
                     alt={`${m.title} en QSY`}
                     loading="lazy"
-                    className="h-44 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="relative h-44 w-full aurora">
-                    <div aria-hidden className="absolute inset-0 starfield opacity-40" />
-                    <div className="relative flex h-full flex-col justify-center gap-2 p-5">
-                      {m.rows.map((r) => (
-                        <div
-                          key={r}
-                          className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-xs text-muted-foreground backdrop-blur-xl"
-                        >
-                          <span className="size-1.5 rounded-full bg-primary pulse-glow" />
-                          {r}
-                        </div>
-                      ))}
+                  <div className="relative h-52 w-full aurora">
+                    <div aria-hidden className="absolute inset-0 starfield twinkle opacity-40" />
+                    <div className="relative h-full transition-transform duration-700 group-hover:scale-[1.02]">
+                      <ModulePreview kind={m.kind} />
                     </div>
                   </div>
                 )}
@@ -450,7 +748,7 @@ function Landing() {
 
               <div className="relative px-7 pb-7 pt-2">
                 <div className="flex items-start justify-between">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
                     <m.icon className="size-5" />
                   </span>
                   <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
@@ -459,10 +757,15 @@ function Landing() {
                 </div>
                 <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
+                <span
+                  aria-hidden
+                  className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-700 group-hover:w-full"
+                />
               </div>
-            </div>
+            </article>
           ))}
         </div>
+
       </section>
 
 
