@@ -207,39 +207,7 @@ function Landing() {
               </div>
             </div>
 
-            <div
-              className="rise tilt-card-r float-slow rounded-3xl border border-accent/30 bg-card/60 p-3 shadow-[0_60px_140px_-70px_var(--accent)] backdrop-blur-xl"
-              style={{ animationDelay: "460ms" }}
-            >
-              <div className="flex items-center gap-2 px-2 pb-3">
-                <span className="size-2.5 rounded-full bg-destructive/80" />
-                <span className="size-2.5 rounded-full bg-chart-5/80" />
-                <span className="size-2.5 rounded-full bg-primary/80" />
-                <span className="ml-2 font-mono text-[11px] text-muted-foreground">
-                  live_biolinks.v1
-                </span>
-                <span className="ml-auto rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold text-accent">
-                  LIVE PAGES
-                </span>
-              </div>
-              <div className="space-y-2 rounded-2xl border border-border/60 bg-background/70 p-4 text-left">
-                {["@brayan", "@nova", "@kaito", "@lumen"].map((u, i) => (
-                  <div
-                    key={u}
-                    className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-surface-strong"
-                    style={{ animationDelay: `${600 + i * 90}ms` }}
-                  >
-                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/20 text-[11px] font-bold text-primary">
-                      {u[1]?.toUpperCase()}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate font-mono text-xs">qsy.to/{u.slice(1)}</span>
-                    <span className="shrink-0 text-[10px] text-muted-foreground">
-                      {(12 - i * 2).toFixed(1)}k
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <div className="hidden lg:block" aria-hidden="true" />
           </div>
         </div>
 
