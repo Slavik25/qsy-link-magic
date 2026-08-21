@@ -239,6 +239,7 @@ export function ProfileView({
           {views.toLocaleString()} visitas
         </p>
       </div>
+      </div>
     </div>
-  );
+
 }
