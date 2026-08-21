@@ -27,6 +27,7 @@ import { Route as AuthenticatedDashboardMissionsRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardPremiumRouteImport } from './routes/_authenticated/dashboard.premium'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
+import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardAdminBoostsRouteImport } from './routes/_authenticated/dashboard.admin.boosts'
@@ -140,6 +141,12 @@ const AuthenticatedDashboardProfilesRoute =
   AuthenticatedDashboardProfilesRouteImport.update({
     id: '/profiles',
     path: '/profiles',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardRankRoute =
+  AuthenticatedDashboardRankRouteImport.update({
+    id: '/rank',
+    path: '/rank',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardSettingsRoute =
@@ -256,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
+  '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -288,6 +296,7 @@ export interface FileRoutesByTo {
   '/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
+  '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -325,6 +334,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
+  '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -362,6 +372,7 @@ export interface FileRouteTypes {
     | '/dashboard/premium'
     | '/dashboard/profile'
     | '/dashboard/profiles'
+    | '/dashboard/rank'
     | '/dashboard/settings'
     | '/dashboard/'
     | '/dashboard/admin/boosts'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/dashboard/missions'
     | '/dashboard/premium'
     | '/dashboard/profiles'
+    | '/dashboard/rank'
     | '/dashboard/settings'
     | '/dashboard'
     | '/dashboard/admin/boosts'
@@ -430,6 +442,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/premium'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/profiles'
+    | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/boosts'
@@ -586,6 +599,13 @@ declare module '@tanstack/react-router' {
       path: '/profiles'
       fullPath: '/dashboard/profiles'
       preLoaderRoute: typeof AuthenticatedDashboardProfilesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/rank': {
+      id: '/_authenticated/dashboard/rank'
+      path: '/rank'
+      fullPath: '/dashboard/rank'
+      preLoaderRoute: typeof AuthenticatedDashboardRankRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/settings': {
@@ -780,6 +800,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRouteWithChildren
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
+  AuthenticatedDashboardRankRoute: typeof AuthenticatedDashboardRankRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -796,6 +817,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProfileRoute:
       AuthenticatedDashboardProfileRouteWithChildren,
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
+    AuthenticatedDashboardRankRoute: AuthenticatedDashboardRankRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
