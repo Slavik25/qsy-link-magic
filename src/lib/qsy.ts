@@ -26,6 +26,9 @@ export type ThemeConfig = {
   background: string;
   background_type?: string;
   audio_url?: string;
+  audio_title?: string;
+  audio_artist?: string;
+  audio_volume?: number;
   entry_enabled?: boolean;
   entry_text?: string;
   overlay?: number;
@@ -93,6 +96,9 @@ export const defaultTheme: ThemeConfig = {
   background: "",
   background_type: "image",
   audio_url: "",
+  audio_title: "",
+  audio_artist: "",
+  audio_volume: 40,
   entry_enabled: false,
   entry_text: "click to enter...",
   overlay: 70,

@@ -16,6 +16,8 @@ type Props = {
   maxMb?: number;
   preview?: "image" | "audio" | "video" | "none";
   onChange: (url: string) => void;
+  /** Se llama con el nombre original del archivo subido. */
+  onFileName?: ((name: string) => void) | undefined;
 };
 
 export function AssetUploader({
@@ -26,6 +28,7 @@ export function AssetUploader({
   maxMb = 8,
   preview = "image",
   onChange,
+  onFileName,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -55,6 +58,7 @@ export function AssetUploader({
       if (signErr || !signed) throw signErr ?? new Error("No se pudo generar el enlace");
 
       onChange(signed.signedUrl);
+      onFileName?.(file.name);
       toast.success(`${label} subido`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Error al subir el archivo");
