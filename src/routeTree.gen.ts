@@ -29,6 +29,7 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardSocialsRouteImport } from './routes/_authenticated/dashboard.socials'
+import { Route as AuthenticatedDashboardProfileIndexRouteImport } from './routes/_authenticated/dashboard.profile.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -140,6 +141,12 @@ const AuthenticatedDashboardSocialsRoute =
     path: '/socials',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardProfileIndexRoute =
+  AuthenticatedDashboardProfileIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -156,11 +163,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -176,11 +184,11 @@ export interface FileRoutesByTo {
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -199,11 +207,12 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/music': typeof AuthenticatedDashboardMusicRoute
   '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
-  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/socials': typeof AuthenticatedDashboardSocialsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/socials'
     | '/dashboard/'
+    | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -242,11 +252,11 @@ export interface FileRouteTypes {
     | '/dashboard/links'
     | '/dashboard/music'
     | '/dashboard/premium'
-    | '/dashboard/profile'
     | '/dashboard/profiles'
     | '/dashboard/settings'
     | '/dashboard/socials'
     | '/dashboard'
+    | '/dashboard/profile'
   id:
     | '__root__'
     | '/'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/socials'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -424,8 +435,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSocialsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/profile/': {
+      id: '/_authenticated/dashboard/profile/'
+      path: '/'
+      fullPath: '/dashboard/profile/'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
   }
 }
+
+interface AuthenticatedDashboardProfileRouteChildren {
+  AuthenticatedDashboardProfileIndexRoute: typeof AuthenticatedDashboardProfileIndexRoute
+}
+
+const AuthenticatedDashboardProfileRouteChildren: AuthenticatedDashboardProfileRouteChildren =
+  {
+    AuthenticatedDashboardProfileIndexRoute:
+      AuthenticatedDashboardProfileIndexRoute,
+  }
+
+const AuthenticatedDashboardProfileRouteWithChildren =
+  AuthenticatedDashboardProfileRoute._addFileChildren(
+    AuthenticatedDashboardProfileRouteChildren,
+  )
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
@@ -434,7 +467,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMusicRoute: typeof AuthenticatedDashboardMusicRoute
   AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
-  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRouteWithChildren
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardSocialsRoute: typeof AuthenticatedDashboardSocialsRoute
@@ -450,7 +483,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMusicRoute: AuthenticatedDashboardMusicRoute,
     AuthenticatedDashboardPremiumRoute: AuthenticatedDashboardPremiumRoute,
-    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+    AuthenticatedDashboardProfileRoute:
+      AuthenticatedDashboardProfileRouteWithChildren,
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardSocialsRoute: AuthenticatedDashboardSocialsRoute,
