@@ -65,7 +65,7 @@ function PublicProfile() {
     );
   }
 
-  const { profile, links, socials, views } = data;
+  const { profile, links, socials, badges, views } = data;
   const music = profile.music as { title?: string; artist?: string };
 
   return (
@@ -75,6 +75,7 @@ function PublicProfile() {
           profile={profile}
           links={links}
           socials={socials}
+          badges={badges}
           views={views}
           music={music}
           onLinkClick={(l) => {
