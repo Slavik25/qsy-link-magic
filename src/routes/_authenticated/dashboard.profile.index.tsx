@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AssetUploader } from "@/components/qsy/asset-uploader";
 import { Panel, SaveBar, useProfileDraft } from "@/components/qsy/profile-editor-ui";
+import { detectEmbed, prettyTrackName, splitTrackName } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/")({
   component: AssetsSection,
@@ -61,6 +62,11 @@ function AssetsSection() {
           preview="audio"
           value={t.audio_url ?? ""}
           onChange={(url) => setTheme("audio_url", url)}
+          onFileName={(name) => {
+            const parsed = splitTrackName(prettyTrackName(name));
+            setTheme("audio_title", parsed.title);
+            if (parsed.artist) setTheme("audio_artist", parsed.artist);
+          }}
         />
         <AssetUploader
           label="Cursor"
@@ -104,13 +110,49 @@ function AssetsSection() {
               onChange={(e) => setTheme("background", e.target.value)}
             />
           </div>
-          <div className="space-y-2">
-            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">Audio URL</Label>
+          <div className="space-y-2 sm:col-span-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Música · MP3, YouTube, Spotify, SoundCloud o Apple Music
+            </Label>
             <Input
               value={t.audio_url ?? ""}
               maxLength={500}
-              placeholder="Pega enlace directo de audio (MP3)…"
-              onChange={(e) => setTheme("audio_url", e.target.value)}
+              placeholder="https://open.spotify.com/track/… · https://youtu.be/… · https://…/cancion.mp3"
+              onChange={(e) => {
+                const v = e.target.value;
+                setTheme("audio_url", v);
+                if (v && !detectEmbed(v) && !t.audio_title) {
+                  const parsed = splitTrackName(prettyTrackName(v));
+                  setTheme("audio_title", parsed.title);
+                  if (parsed.artist) setTheme("audio_artist", parsed.artist);
+                }
+              }}
+            />
+            {detectEmbed(t.audio_url) && (
+              <p className="text-[11px] text-primary">
+                Detectado: {detectEmbed(t.audio_url)?.provider} · se mostrará el reproductor de la
+                plataforma en tu biolink.
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Título de la canción
+            </Label>
+            <Input
+              value={t.audio_title ?? ""}
+              maxLength={120}
+              placeholder="Se detecta del archivo subido…"
+              onChange={(e) => setTheme("audio_title", e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">Artista</Label>
+            <Input
+              value={t.audio_artist ?? ""}
+              maxLength={120}
+              placeholder="Artista o autor"
+              onChange={(e) => setTheme("audio_artist", e.target.value)}
             />
           </div>
           <div className="space-y-2">
