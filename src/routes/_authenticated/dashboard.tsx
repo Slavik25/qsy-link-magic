@@ -53,6 +53,7 @@ function useCrumb() {
 
 function DashboardLayout() {
   const { data: profile } = useMyProfile();
+  const { data: isAdmin } = useIsAdmin();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const crumb = useCrumb();
