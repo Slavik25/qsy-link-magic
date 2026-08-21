@@ -19,11 +19,6 @@ const items = [
   { label: "Templates", to: "/templates" as const },
 ];
 
-const LANGS = [
-  { code: "es", label: "Español", short: "ES", flag: "https://flagcdn.com/w40/es.png" },
-  { code: "pt", label: "Português", short: "PT", flag: "https://flagcdn.com/w40/br.png" },
-  { code: "en", label: "English", short: "EN", flag: "https://flagcdn.com/w40/gb.png" },
-] as const;
 
 function Flag({ src, alt }: { src: string; alt: string }) {
   return (
