@@ -177,27 +177,26 @@ function Overview() {
           <Link
             key={q.title}
             to={q.to}
-            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
+            className="group relative flex h-24 items-center overflow-hidden rounded-2xl border border-border/60 bg-card/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
           >
             <img
               src={q.image}
               alt=""
               aria-hidden
-              className="h-28 w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
+              className="pointer-events-none absolute inset-y-0 right-0 h-full w-2/3 object-cover object-right transition-transform duration-500 group-hover:scale-105"
             />
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-t from-card via-card/40 to-transparent"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-card via-card/85 to-transparent"
             />
-            <div className="relative flex items-center gap-3 p-5">
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
+            <div className="relative flex min-w-0 items-center gap-3 px-5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-background/70 text-primary">
                 <q.icon className="size-5" />
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{q.title}</span>
                 <span className="block truncate text-xs text-muted-foreground">{q.desc}</span>
               </span>
-              <ChevronRight className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
             </div>
           </Link>
         ))}
