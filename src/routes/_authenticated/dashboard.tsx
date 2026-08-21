@@ -118,6 +118,22 @@ function DashboardLayout() {
               )}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              to="/dashboard/admin"
+              onClick={() => setOpen(false)}
+              activeProps={{
+                className: "border-primary/60 bg-primary/15 text-foreground",
+              }}
+              className="group flex items-center gap-3 rounded-xl border border-primary/30 px-3 py-2.5 text-sm text-primary transition-all duration-200 hover:bg-primary/10"
+            >
+              <ShieldAlert className="size-[18px] shrink-0" />
+              <span className="min-w-0 flex-1 truncate">Administración</span>
+              <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-primary">
+                ADMIN
+              </span>
+            </Link>
+          )}
         </nav>
 
         <div className="space-y-3 border-t border-border/60 p-3">
