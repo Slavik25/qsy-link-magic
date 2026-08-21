@@ -22,7 +22,14 @@ export function isDomain(value: unknown): value is QsyDomain {
   return QSY_DOMAINS.some((d) => d.key === value);
 }
 
+/** Host visible del perfil (solo Seraph puede cambiarlo). */
+export function profileHost(profile?: { rank?: string | null; domain?: string | null } | null) {
+  if (profile?.rank === "seraph" && isDomain(profile.domain)) return profile.domain;
+  return DEFAULT_DOMAIN;
+}
+
 /** URL pública del perfil respetando el dominio elegido. */
 export function profileUrl(username: string, domain?: string | null) {
   return `https://${isDomain(domain) ? domain : DEFAULT_DOMAIN}/${username}`;
 }
+
