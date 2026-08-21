@@ -35,12 +35,11 @@ export function AuthShell({
         }`}
       >
         <section className="rise text-center lg:text-left">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <QsyLogo className="size-8" />
-            <span className="text-lg font-semibold tracking-tight">
-              QSY<span className="text-primary">.to</span>
-            </span>
-          </Link>
+          <div className="inline-flex items-center">
+            <QsyLogo />
+            <span className="text-lg font-semibold tracking-tight text-primary">.to</span>
+          </div>
+
           <h2 className="mt-8 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
             Tu perfil premium en{" "}
             <span className="text-gradient-violet">un solo link.</span>
