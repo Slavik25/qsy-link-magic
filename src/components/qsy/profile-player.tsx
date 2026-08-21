@@ -4,7 +4,7 @@ import type { ThemeConfig } from "@/lib/qsy";
 
 type Props = {
   theme: ThemeConfig;
-  music?: { title?: string; artist?: string; cover?: string } | null;
+  music?: { title?: string; artist?: string; cover?: string } | null | undefined;
   /** true cuando el reproductor se ancla a la pantalla (dock/corner) */
   floating?: boolean;
 };
