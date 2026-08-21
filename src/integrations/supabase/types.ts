@@ -106,6 +106,48 @@ export type Database = {
           },
         ]
       }
+      profile_presets: {
+        Row: {
+          avatar_url: string | null
+          banner_url: string | null
+          bio: string
+          created_at: string
+          display_name: string
+          id: string
+          location: string
+          name: string
+          theme: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          bio?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          location?: string
+          name?: string
+          theme?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          bio?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          location?: string
+          name?: string
+          theme?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profile_views: {
         Row: {
           browser: string | null
