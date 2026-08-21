@@ -1,6 +1,7 @@
 import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
+import { badgeByKey } from "@/lib/badges";
 
 type Props = {
   profile: Pick<
@@ -9,6 +10,7 @@ type Props = {
   >;
   links: Pick<ProfileLink, "id" | "title" | "url" | "icon">[];
   socials: Pick<Social, "id" | "platform" | "url">[];
+  badges?: string[];
   views?: number;
   music?: { title?: string; artist?: string } | null;
   compact?: boolean;
