@@ -84,11 +84,22 @@ export function ProfileView({
             profile.banner_url ? (compact ? "-mt-8" : "-mt-12") : ""
           }`}
           style={{
-            background: deco?.ring && deco.key !== "none" ? deco.ring : `linear-gradient(140deg, ${t.accent}, transparent)`,
-            animation: deco?.animation,
+            background: `linear-gradient(140deg, ${t.accent}, transparent)`,
             boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
           }}
         >
+          {deco && deco.key !== "none" && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -inset-[6px] rounded-full"
+              style={{
+                background: deco.ring,
+                animation: deco.animation,
+                mask: "radial-gradient(circle, transparent 58%, #000 60%)",
+                WebkitMask: "radial-gradient(circle, transparent 58%, #000 60%)",
+              }}
+            />
+          )}
           {profile.avatar_url ? (
             <img
               src={profile.avatar_url}
