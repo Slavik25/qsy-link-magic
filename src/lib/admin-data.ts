@@ -58,7 +58,7 @@ export function useAdminUsers(search: string) {
       let query = supabase
         .from("profiles")
         .select(
-          "id, uid, username, display_name, avatar_url, banner_url, verified, featured, view_count, like_count, created_at, user_id, bio",
+          "id, uid, username, display_name, avatar_url, banner_url, verified, featured, view_count, like_count, created_at, user_id, bio, rank, domain",
         )
         .order("uid", { ascending: true })
         .limit(200);
