@@ -9,9 +9,11 @@ import {
   Panel,
   Pills,
   SaveBar,
+  ShopEquipGrid,
   ToggleRow,
   useProfileDraft,
 } from "@/components/qsy/profile-editor-ui";
+import { SHOP_LAYOUTS, type LayoutDef } from "@/lib/shop";
 import type { ThemeConfig } from "@/lib/qsy";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/customization")({
@@ -38,8 +40,21 @@ const WIDTHS = [
 ];
 
 function CustomizationSection() {
-  const { draft, set, setTheme, save, saving } = useProfileDraft();
+  const { draft, set, setTheme, setThemeMany, save, saving } = useProfileDraft();
   const t = draft.theme;
+
+  function equipLayout(key: string) {
+    const l = SHOP_LAYOUTS.find((x) => x.key === key);
+    if (!l) return;
+    setThemeMany({
+      layout_key: l.key,
+      template: l.template,
+      profile_width: l.profile_width,
+      avatar_shape: l.avatar_shape,
+      card_bg_type: l.card_bg_type ?? t.card_bg_type,
+      show_card: l.show_card ?? t.show_card,
+    });
+  }
 
   return (
     <Panel
@@ -69,6 +84,17 @@ function CustomizationSection() {
           />
         </div>
       </div>
+
+      <Group label="Layouts">
+        <ShopEquipGrid
+          items={SHOP_LAYOUTS}
+          activeKey={t.layout_key ?? "layout-glass"}
+          onEquip={equipLayout}
+          renderPreview={(item) => (
+            <div className="h-24 w-full" style={{ background: (item as LayoutDef).preview }} />
+          )}
+        />
+      </Group>
 
       <Group label="Forma del avatar">
         <OptionGrid
