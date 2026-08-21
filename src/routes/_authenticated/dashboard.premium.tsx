@@ -1,52 +1,310 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, Gem } from "lucide-react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useMyProfile } from "@/lib/qsy-data";
+import type { ThemeConfig } from "@/lib/qsy";
+import { SHOP_DECORATIONS, SHOP_LAYOUTS, SHOP_PLAYERS } from "@/lib/shop";
+import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/dashboard/premium")({
-  component: PremiumPage,
+  component: ShopPage,
   head: () => ({
     meta: [
-      { title: "Premium · QSY" },
-      { name: "description", content: "Desbloquea todas las funciones avanzadas de tu biolink QSY." },
+      { title: "Tienda · QSY" },
+      {
+        name: "description",
+        content:
+          "Compra reproductores de música, layouts personalizados y decoraciones de avatar para tu biolink QSY.",
+      },
+      { property: "og:title", content: "Tienda · QSY" },
+      { property: "og:description", content: "Reproductores, layouts y decoraciones para tu biolink." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
-const perks = [
-  "Badges personalizados y reordenables",
-  "Efectos de fondo y de username exclusivos",
-  "Analytics avanzados con exportación",
-  "Dominios premium: qsy.rip, qsy.es y qsy.bio",
-  "Hosting de imágenes y audio ilimitado",
-  "Widgets de Discord, Spotify y gaming",
+type Tab = "players" | "layouts" | "decorations";
+
+const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
+  { key: "players", label: "Reproductores", icon: Music4 },
+  { key: "layouts", label: "Layouts", icon: LayoutTemplate },
+  { key: "decorations", label: "Decoraciones", icon: Sparkles },
 ];
 
-function PremiumPage() {
+function Price({ price, premium }: { price: number; premium?: boolean | undefined }) {
+  return (
+    <span
+      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${
+        premium ? "border-primary/50 bg-primary/10 text-primary" : "border-border/60 text-muted-foreground"
+      }`}
+    >
+      {price === 0 ? "Gratis" : `${price} créditos`}
+    </span>
+  );
+}
+
+function ShopPage() {
+  const [tab, setTab] = useState<Tab>("players");
+  const { data: profile } = useMyProfile();
+  const { data: coins } = useWallet();
+  const { data: unlocks } = useUnlocks();
+  const qc = useQueryClient();
+  const theme = profile?.theme;
+  const owned = new Set(unlocks ?? []);
+
+  async function buy(key: string, price: number, name: string) {
+    try {
+      const balance = await purchaseItem(key);
+      toast.success(`${name} comprado`, { description: `Saldo restante: ${balance} QSY Coins` });
+      await qc.invalidateQueries({ queryKey: ["wallet"] });
+      await qc.invalidateQueries({ queryKey: ["unlocks"] });
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(
+        msg.includes("not enough") ? "No tienes suficientes QSY Coins" : "No se pudo comprar",
+        { description: msg.includes("not enough") ? `Necesitas ${price} coins. Completa misiones para ganarlos.` : msg },
+      );
+    }
+  }
+
+  async function apply(patch: Partial<ThemeConfig>, label: string) {
+    if (!profile) {
+      toast.error("Selecciona un perfil primero");
+      return;
+    }
+    const next = { ...profile.theme, ...patch };
+    const { error } = await supabase
+      .from("profiles")
+      .update({ theme: next as never })
+      .eq("id", profile.id);
+    if (error) {
+      toast.error("No se pudo equipar", { description: error.message });
+      return;
+    }
+    toast.success(`${label} equipado en @${profile.username}`);
+    void qc.invalidateQueries({ queryKey: ["my-profile"] });
+  }
+
   return (
     <div className="space-y-8">
       <header>
         <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-          <Gem className="size-5 text-primary" /> Premium
+          <Gem className="size-5 text-primary" /> Tienda
         </h1>
         <p className="text-sm text-muted-foreground">
-          Lleva tu perfil QSY al máximo nivel con funciones exclusivas.
+          Reproductores de música, layouts personalizados y decoraciones de avatar estilo Discord.
         </p>
       </header>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/40 bg-primary/10 px-5 py-4">
+        <div className="flex items-center gap-3">
+          <Coins className="size-5 text-primary" />
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Tus QSY Coins</p>
+            <p className="text-xl font-bold text-primary">{(coins ?? 0).toLocaleString("es-ES")}</p>
+          </div>
+        </div>
+        <Button asChild variant="secondary" size="sm" className="rounded-xl">
+          <Link to="/dashboard/missions">Conseguir más en Misiones</Link>
+        </Button>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-medium transition-colors ${
+              tab === t.key
+                ? "border-primary/50 bg-primary/10 text-primary"
+                : "border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+            }`}
+          >
+            <t.icon className="size-4" /> {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "players" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_PLAYERS.map((p) => {
+            const active = theme?.player_type === p.player_type;
+            return (
+              <article
+                key={p.key}
+                className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <h2 className="text-sm font-semibold">{p.name}</h2>
+                  <Price price={p.price} premium={p.premium} />
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{p.description}</p>
+                <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border/60 bg-surface p-3">
+                  <span className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary">
+                    <Music4 className="size-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-medium">QSY Radio</p>
+                    <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface-strong">
+                      <div className="h-full w-1/3 rounded-full bg-primary" />
+                    </div>
+                  </div>
+                </div>
+                {p.price > 0 && !owned.has(p.key) ? (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant="secondary"
+                    onClick={() => buy(p.key, p.price, p.name)}
+                  >
+                    <Lock className="size-4" /> Comprar · {p.price} QSY
+                  </Button>
+                ) : (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant={active ? "secondary" : "default"}
+                    onClick={() =>
+                      apply({ player_type: p.player_type as never, player_bg: p.player_bg as never }, p.name)
+                    }
+                  >
+                    {active ? (
+                      <>
+                        <Check className="size-4" /> Equipado
+                      </>
+                    ) : (
+                      "Equipar"
+                    )}
+                  </Button>
+                )}
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "layouts" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_LAYOUTS.map((l) => {
+            const active = theme?.profile_width === l.profile_width && theme?.template === l.template;
+            return (
+              <article
+                key={l.key}
+                className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div className="h-28" style={{ background: l.preview }} />
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-sm font-semibold">{l.name}</h2>
+                    <Price price={l.price} premium={l.premium} />
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{l.description}</p>
+                  {l.price > 0 && !owned.has(l.key) ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(l.key, l.price, l.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {l.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() =>
+                        apply(
+                          {
+                            template: l.template,
+                            profile_width: l.profile_width,
+                            avatar_shape: l.avatar_shape,
+                          },
+                          l.name,
+                        )
+                      }
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "decorations" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_DECORATIONS.map((d) => {
+            const active = (theme?.avatar_decoration ?? "none") === d.key;
+            return (
+              <article
+                key={d.key}
+                className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 text-center backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div className="mx-auto grid size-24 place-items-center">
+                  <span
+                    className="grid size-24 place-items-center rounded-full p-[5px]"
+                    style={{ background: d.ring, animation: d.animation }}
+                  >
+                    <span className="grid size-full place-items-center rounded-full bg-background font-mono text-sm text-primary">
+                      QSY
+                    </span>
+                  </span>
+                </div>
+                <div className="mt-4 flex items-center justify-center gap-2">
+                  <h2 className="text-sm font-semibold">{d.name}</h2>
+                  <Price price={d.price} premium={d.premium} />
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{d.description}</p>
+                {d.price > 0 && !owned.has(d.key) ? (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant="secondary"
+                    onClick={() => buy(d.key, d.price, d.name)}
+                  >
+                    <Lock className="size-4" /> Comprar · {d.price} QSY
+                  </Button>
+                ) : (
+                  <Button
+                    className="mt-4 w-full rounded-xl"
+                    variant={active ? "secondary" : "default"}
+                    onClick={() => apply({ avatar_decoration: d.key }, d.name)}
+                  >
+                    {active ? (
+                      <>
+                        <Check className="size-4" /> Equipado
+                      </>
+                    ) : (
+                      "Equipar"
+                    )}
+                  </Button>
+                )}
+              </article>
+            );
+          })}
+        </section>
+      )}
 
       <section className="rounded-3xl border border-primary/30 bg-primary/10 p-8">
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">QSY Premium</p>
         <p className="mt-3 text-4xl font-extrabold">
           4,99 € <span className="text-base font-normal text-muted-foreground">/ mes</span>
         </p>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-          {perks.map((p) => (
-            <li key={p} className="flex items-start gap-2 text-sm">
-              <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-              <span className="text-muted-foreground">{p}</span>
-            </li>
-          ))}
-        </ul>
-        <Button className="mt-8 rounded-xl px-8">Mejorar ahora</Button>
+        <p className="mt-3 max-w-xl text-sm text-muted-foreground">
+          Desbloquea todos los artículos marcados como premium, perfiles ilimitados, dominios qsy.rip / qsy.es
+          / qsy.bio y analíticas avanzadas.
+        </p>
+        <Button className="mt-6 rounded-xl px-8">Mejorar ahora</Button>
       </section>
     </div>
   );

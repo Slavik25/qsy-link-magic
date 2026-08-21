@@ -145,6 +145,44 @@ export type Database = {
         }
         Relationships: []
       }
+      global_chat_messages: {
+        Row: {
+          author_avatar: string | null
+          author_name: string
+          created_at: string
+          id: string
+          message: string
+          profile_id: string | null
+          user_id: string
+        }
+        Insert: {
+          author_avatar?: string | null
+          author_name?: string
+          created_at?: string
+          id?: string
+          message: string
+          profile_id?: string | null
+          user_id: string
+        }
+        Update: {
+          author_avatar?: string | null
+          author_name?: string
+          created_at?: string
+          id?: string
+          message?: string
+          profile_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_chat_messages_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ip_logs: {
         Row: {
           country: string | null
@@ -277,6 +315,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mission_claims: {
+        Row: {
+          created_at: string
+          id: string
+          mission_key: string
+          reward: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mission_key: string
+          reward?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mission_key?: string
+          reward?: number
+          user_id?: string
+        }
+        Relationships: []
       }
       profile_badges: {
         Row: {
@@ -588,6 +650,27 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_items: {
+        Row: {
+          created_at: string
+          key: string
+          kind: string
+          price: number
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          kind?: string
+          price?: number
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          kind?: string
+          price?: number
+        }
+        Relationships: []
+      }
       socials: {
         Row: {
           created_at: string
@@ -674,6 +757,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_unlocks: {
+        Row: {
+          created_at: string
+          id: string
+          item_key: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_key: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_wallets: {
+        Row: {
+          coins: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          coins?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          coins?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       wall_posts: {
         Row: {
           author_avatar: string | null
@@ -727,6 +849,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_mission: { Args: { _key: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -734,6 +857,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      mission_progress: { Args: { _key: string }; Returns: number }
+      purchase_item: { Args: { _key: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

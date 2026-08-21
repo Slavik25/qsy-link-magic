@@ -35,6 +35,7 @@ export type ThemeConfig = {
   /* Customization */
   country?: string;
   avatar_shape?: "circle" | "rounded" | "square" | "hexagon";
+  avatar_decoration?: string;
   profile_width?: "compact" | "normal" | "wide";
   card_bg_type?: "solid" | "gradient" | "image" | "video" | "transparent";
   show_card?: boolean;
@@ -95,6 +96,7 @@ export const defaultTheme: ThemeConfig = {
   overlay: 70,
   username_effect: "none",
   avatar_shape: "circle",
+  avatar_decoration: "none",
   profile_width: "normal",
   card_bg_type: "solid",
   show_card: true,

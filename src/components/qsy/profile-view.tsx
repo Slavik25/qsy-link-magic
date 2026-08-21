@@ -2,6 +2,7 @@ import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
+import { decorationByKey } from "@/lib/shop";
 
 type Props = {
   profile: Pick<
@@ -28,6 +29,7 @@ export function ProfileView({
   onLinkClick,
 }: Props) {
   const t = profile.theme;
+  const deco = decorationByKey(t.avatar_decoration);
   const style = {
     "--p-accent": t.accent,
     "--p-radius": `${t.radius}px`,
@@ -86,6 +88,18 @@ export function ProfileView({
             boxShadow: `0 0 0 4px color-mix(in oklab, var(--background) 80%, transparent), 0 18px 40px -18px ${t.accent}`,
           }}
         >
+          {deco && deco.key !== "none" && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -inset-[6px] rounded-full"
+              style={{
+                background: deco.ring,
+                animation: deco.animation,
+                mask: "radial-gradient(circle, transparent 58%, #000 60%)",
+                WebkitMask: "radial-gradient(circle, transparent 58%, #000 60%)",
+              }}
+            />
+          )}
           {profile.avatar_url ? (
             <img
               src={profile.avatar_url}
