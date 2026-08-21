@@ -331,7 +331,7 @@ function Overview() {
           </div>
 
           <Button asChild variant="secondary" className="mt-4 w-full rounded-xl">
-            <Link to="/dashboard/appearance">
+            <Link to="/dashboard/profiles">
               <Sparkles className="size-4" /> Personalizar mi página
             </Link>
           </Button>
