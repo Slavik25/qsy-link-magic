@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
+import { ProfileStage } from "@/components/qsy/profile-stage";
 import { QsyLogo } from "@/components/qsy/logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,20 +69,8 @@ function PublicProfile() {
   const music = profile.music as { title?: string; artist?: string };
 
   return (
-    <div
-      className="min-h-screen py-10"
-      style={
-        profile.theme.background
-          ? {
-              backgroundImage: `linear-gradient(rgba(8,8,8,.75), rgba(8,8,8,.92)), url(${profile.theme.background})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundAttachment: "fixed",
-            }
-          : undefined
-      }
-    >
-      <main className="mx-auto max-w-xl px-4">
+    <ProfileStage theme={profile.theme}>
+      <main className="mx-auto max-w-xl px-4 py-10">
         <ProfileView
           profile={profile}
           links={links}
@@ -108,6 +97,6 @@ function PublicProfile() {
           </Link>
         </div>
       </main>
-    </div>
+    </ProfileStage>
   );
 }

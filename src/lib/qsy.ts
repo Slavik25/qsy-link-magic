@@ -24,6 +24,12 @@ export type ThemeConfig = {
   font: string;
   effects: string;
   background: string;
+  background_type?: string;
+  audio_url?: string;
+  entry_enabled?: boolean;
+  entry_text?: string;
+  overlay?: number;
+  username_effect?: string;
 };
 
 export const defaultTheme: ThemeConfig = {
@@ -36,6 +42,12 @@ export const defaultTheme: ThemeConfig = {
   font: "inter",
   effects: "none",
   background: "",
+  background_type: "image",
+  audio_url: "",
+  entry_enabled: false,
+  entry_text: "click to enter...",
+  overlay: 70,
+  username_effect: "none",
 };
 
 export type Profile = {
