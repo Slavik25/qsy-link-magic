@@ -42,7 +42,7 @@ export function useProfileByUsername(username: string) {
       if (error) throw error;
       if (!data) return null;
       const profile = shape(data);
-      const [links, socials, views] = await Promise.all([
+      const [links, socials, badges, views] = await Promise.all([
         supabase
           .from("links")
           .select("*")
@@ -50,12 +50,18 @@ export function useProfileByUsername(username: string) {
           .eq("active", true)
           .order("position"),
         supabase.from("socials").select("*").eq("profile_id", profile.id).order("position"),
+        supabase
+          .from("profile_badges")
+          .select("badge_key,position")
+          .eq("profile_id", profile.id)
+          .order("position"),
         Promise.resolve({ count: (data as any).view_count ?? 0 }),
       ]);
       return {
         profile,
         links: (links.data ?? []) as ProfileLink[],
         socials: (socials.data ?? []) as Social[],
+        badges: (badges.data ?? []).map((b: { badge_key: string }) => b.badge_key),
         views: views.count ?? 0,
       };
     },
@@ -202,6 +208,22 @@ export function useShowcaseProfiles(limit = 8) {
         .limit(limit);
       if (error) throw error;
       return data ?? [];
+    },
+  });
+}
+
+export function useProfileBadges(profileId?: string) {
+  return useQuery({
+    queryKey: ["profile-badges", profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_badges")
+        .select("badge_key,position")
+        .eq("profile_id", profileId!)
+        .order("position");
+      if (error) throw error;
+      return (data ?? []).map((r: { badge_key: string }) => r.badge_key);
     },
   });
 }
