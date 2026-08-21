@@ -82,12 +82,15 @@ function BadgesPage() {
               }`}
             >
               <span
-                className={`grid size-10 shrink-0 place-items-center rounded-xl ${
-                  unlocked ? "bg-primary/20 text-primary" : "bg-surface-strong text-muted-foreground"
+                className={`grid size-10 shrink-0 place-items-center rounded-xl border ${
+                  unlocked
+                    ? "border-primary/40 bg-primary/15"
+                    : "border-white/5 bg-surface-strong grayscale opacity-60"
                 }`}
               >
-                <b.icon className="size-5" />
+                <img src={b.img} alt={b.name} className="size-6" loading="lazy" />
               </span>
+
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{b.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{b.description}</p>
