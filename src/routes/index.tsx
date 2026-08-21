@@ -718,39 +718,35 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {modules.map((m) => (
-            <div
+        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          {modules.map((m, i) => (
+            <article
               key={m.title}
-              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
+              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
+              style={{ animationDelay: `${i * 90}ms` }}
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -left-20 -bottom-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                className="pointer-events-none absolute -left-24 -bottom-24 size-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
               />
 
-              {/* Preview del módulo — reemplazable por captura */}
               <div className="relative m-3 overflow-hidden rounded-3xl border border-border/60">
                 {m.image ? (
                   <img
                     src={m.image}
                     alt={`${m.title} en QSY`}
                     loading="lazy"
-                    className="h-44 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-52 w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="relative h-44 w-full aurora">
-                    <div aria-hidden className="absolute inset-0 starfield opacity-40" />
-                    <div className="relative flex h-full flex-col justify-center gap-2 p-5">
-                      {m.rows.map((r) => (
-                        <div
-                          key={r}
-                          className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-xs text-muted-foreground backdrop-blur-xl"
-                        >
-                          <span className="size-1.5 rounded-full bg-primary pulse-glow" />
-                          {r}
-                        </div>
-                      ))}
+                  <div className="relative h-52 w-full aurora">
+                    <div aria-hidden className="absolute inset-0 starfield twinkle opacity-40" />
+                    <div className="relative h-full transition-transform duration-700 group-hover:scale-[1.02]">
+                      <ModulePreview kind={m.kind} />
                     </div>
                   </div>
                 )}
@@ -758,7 +754,7 @@ function Landing() {
 
               <div className="relative px-7 pb-7 pt-2">
                 <div className="flex items-start justify-between">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary/25">
                     <m.icon className="size-5" />
                   </span>
                   <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
@@ -767,10 +763,15 @@ function Landing() {
                 </div>
                 <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
+                <span
+                  aria-hidden
+                  className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-700 group-hover:w-full"
+                />
               </div>
-            </div>
+            </article>
           ))}
         </div>
+
       </section>
 
 
