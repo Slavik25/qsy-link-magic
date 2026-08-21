@@ -42,20 +42,29 @@ function LinksEditor() {
       position: links.length,
       active: true,
     });
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     setDraft({ title: "", url: "", icon: "link" });
     void refresh();
   }
 
   async function update(link: ProfileLink, patch: Partial<ProfileLink>) {
     const { error } = await supabase.from("links").update(patch).eq("id", link.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void refresh();
   }
 
   async function remove(link: ProfileLink) {
     const { error } = await supabase.from("links").delete().eq("id", link.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void refresh();
   }
 
