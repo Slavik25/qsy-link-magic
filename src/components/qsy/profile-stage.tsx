@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { useState } from "react";
 import type { ThemeConfig } from "@/lib/qsy";
+import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 
 type Props = {
   theme: ThemeConfig;
+  music?: { title?: string; artist?: string; cover?: string } | null;
   children: React.ReactNode;
 };
 
@@ -12,19 +13,9 @@ type Props = {
  * custom background (image or video), dark overlay, optional
  * "click to enter" splash and background audio with a mute toggle.
  */
-export function ProfileStage({ theme, children }: Props) {
+export function ProfileStage({ theme, music, children }: Props) {
   const gate = !!theme.entry_enabled;
   const [entered, setEntered] = useState(!gate);
-  const [muted, setMuted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    if (!entered || !theme.audio_url) return;
-    const el = audioRef.current;
-    if (!el) return;
-    el.volume = 0.4;
-    void el.play().catch(() => undefined);
-  }, [entered, theme.audio_url]);
 
   const overlay = (theme.overlay ?? 70) / 100;
   const isVideo =
@@ -60,12 +51,6 @@ export function ProfileStage({ theme, children }: Props) {
         />
       )}
 
-      {theme.audio_url && (
-        <audio ref={audioRef} src={theme.audio_url} loop muted={muted}>
-          <track kind="captions" />
-        </audio>
-      )}
-
       <div
         className={`relative transition-all duration-700 ${
           entered ? "opacity-100 blur-0" : "pointer-events-none scale-[1.03] opacity-0 blur-md"
@@ -74,15 +59,8 @@ export function ProfileStage({ theme, children }: Props) {
         {children}
       </div>
 
-      {entered && theme.audio_url && (
-        <button
-          type="button"
-          onClick={() => setMuted((m) => !m)}
-          aria-label={muted ? "Activar sonido" : "Silenciar"}
-          className="fixed left-4 top-4 z-30 grid size-10 place-items-center rounded-full glass text-foreground/80 transition-colors hover:text-foreground"
-        >
-          {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
-        </button>
+      {entered && theme.audio_url && isFloatingPlayer(theme) && (
+        <ProfilePlayer theme={theme} music={music} floating />
       )}
 
       {!entered && (
