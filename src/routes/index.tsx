@@ -77,7 +77,14 @@ const heroStats = [
 
 const bars = [28, 44, 36, 62, 48, 74, 58, 88, 66, 94, 72, 100];
 
-const liveProfiles = [
+// image: coloca aquí la ruta de la captura cuando la tengas (import desde src/assets)
+const liveProfiles: {
+  user: string;
+  name: string;
+  tag: string;
+  views: string;
+  image?: string;
+}[] = [
   { user: "brayan", name: "Brayan Bicet", tag: "Creator", views: "84.2k" },
   { user: "nova", name: "Nova", tag: "Music", views: "62.9k" },
   { user: "kaito", name: "Kaito", tag: "Gaming", views: "51.4k" },
@@ -86,30 +93,41 @@ const liveProfiles = [
   { user: "vega", name: "Vega", tag: "Streamer", views: "29.6k" },
 ];
 
-const modules = [
+const modules: {
+  icon: typeof MessageCircle;
+  title: string;
+  desc: string;
+  tag: string;
+  image?: string;
+  rows: string[];
+}[] = [
   {
     icon: MessageCircle,
     title: "Módulo Discord",
     desc: "Estado en vivo, actividad y servidor conectado directamente en tu perfil.",
     tag: "En vivo",
+    rows: ["Jugando · Valorant", "Servidor · qsy.gg/community", "Estado · En línea"],
   },
   {
     icon: Gamepad2,
     title: "Módulo Gaming",
     desc: "Steam, Roblox y Twitch: muestra qué juegas y cuándo estás online.",
     tag: "Popular",
+    rows: ["Roblox · 1.2k visitas", "Steam · 412 horas", "Twitch · En directo"],
   },
   {
     icon: Music4,
     title: "Módulo Música",
     desc: "Spotify sincronizado con reproducción y portada animada.",
     tag: "Nuevo",
+    rows: ["Reproduciendo ahora", "Portada animada", "Preview de 30s"],
   },
   {
     icon: QrCode,
     title: "Módulo QR",
     desc: "Genera y descarga tu QR con acento personalizado en un click.",
     tag: "Pro",
+    rows: ["PNG y SVG", "Color de acento", "Logo centrado"],
   },
 ];
 
@@ -123,21 +141,41 @@ const connections = [
 
 function ProfileCard({ p }: { p: (typeof liveProfiles)[number] }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface/80 p-3 backdrop-blur-xl transition-colors hover:border-primary/50">
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/15 font-mono text-xs font-bold text-primary">
-        {p.user.slice(0, 2).toUpperCase()}
-      </span>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-sm font-semibold">{p.name}</p>
-        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.to/{p.user}</p>
+    <div className="group overflow-hidden rounded-3xl border border-border/60 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]">
+      <div className="relative h-24 overflow-hidden">
+        {p.image ? (
+          <img
+            src={p.image}
+            alt={`Perfil QSY de ${p.name}`}
+            loading="lazy"
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div aria-hidden className="size-full aurora starfield opacity-90" />
+        )}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
       </div>
-      <div className="text-right">
-        <p className="text-xs font-semibold text-primary">{p.views}</p>
-        <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{p.tag}</p>
+
+      <div className="-mt-7 px-4 pb-4 text-left">
+        <span className="grid size-12 place-items-center rounded-2xl border border-border/70 bg-background/80 font-mono text-xs font-bold text-primary backdrop-blur-xl">
+          {p.user.slice(0, 2).toUpperCase()}
+        </span>
+        <div className="mt-3 flex items-center gap-1.5">
+          <p className="truncate text-sm font-semibold">{p.name}</p>
+          <BadgeCheck className="size-3.5 shrink-0 text-primary" />
+        </div>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">qsy.to/{p.user}</p>
+        <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
+          <span className="rounded-full border border-border/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            {p.tag}
+          </span>
+          <span className="text-xs font-semibold text-primary">{p.views}</span>
+        </div>
       </div>
     </div>
   );
 }
+
 
 function Landing() {
   const [handle, setHandle] = useState("");
@@ -299,7 +337,7 @@ function Landing() {
             </Button>
           </div>
 
-          <div className="grid h-[420px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
+          <div className="grid h-[560px] grid-cols-2 gap-4 overflow-hidden mask-fade-y">
             <div className="marquee-y flex flex-col gap-4">
               {[...liveProfiles, ...liveProfiles].map((p, i) => (
                 <ProfileCard key={`a-${p.user}-${i}`} p={p} />
@@ -314,44 +352,57 @@ function Landing() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Especificaciones */}
       <section id="features" className="relative mx-auto max-w-6xl px-4 py-24 text-center sm:px-6">
         <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-primary" /> Todo incluido · 100% gratis
+          <span className="size-1.5 rounded-full bg-primary" /> Especificaciones · 100% gratis
         </span>
         <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-          Tu perfil.
+          La estructura
           <br />
-          <span className="text-gradient-violet">Sin límites.</span>
+          <span className="text-gradient-violet">definitiva.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
           Cada característica diseñada para que tu perfil destaque entre millones.
         </p>
 
-        <div className="mt-12 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] border border-border/70 bg-border/60 text-left sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f, i) => (
             <div
               key={f.title}
-              className="group relative overflow-hidden rounded-3xl border border-border/70 bg-card/50 p-6 backdrop-blur-xl lift hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]"
+              className="group relative overflow-hidden bg-card/60 p-7 backdrop-blur-xl transition-colors duration-500 hover:bg-card"
             >
               <div
                 aria-hidden
                 className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
               />
-              <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                <f.icon className="size-5" />
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
+                  <f.icon className="size-5" />
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground/60">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
               <h3 className="mt-5 text-lg font-semibold">{f.title}</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
+              <span
+                aria-hidden
+                className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-500 group-hover:w-full"
+              />
             </div>
           ))}
         </div>
       </section>
 
+
       {/* Módulos e integraciones */}
       <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
         <div className="text-center">
-          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+          <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            <Sparkles className="size-3.5 text-primary" /> Módulos potentes
+          </span>
+          <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
             Módulos e <span className="text-gradient-violet">integraciones.</span>
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
@@ -359,30 +410,61 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {modules.map((m) => (
             <div
               key={m.title}
-              className="group relative overflow-hidden rounded-3xl border border-border/70 bg-card/50 p-7 backdrop-blur-xl lift hover:border-primary/50"
+              className="group relative overflow-hidden rounded-[28px] border border-border/70 bg-card/50 backdrop-blur-xl transition-all duration-500 hover:border-primary/50 hover:shadow-[0_60px_130px_-70px_var(--primary)]"
             >
               <div
                 aria-hidden
                 className="pointer-events-none absolute -left-20 -bottom-20 size-48 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
               />
-              <div className="flex items-start justify-between">
-                <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110">
-                  <m.icon className="size-5" />
-                </span>
-                <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-                  {m.tag}
-                </span>
+
+              {/* Preview del módulo — reemplazable por captura */}
+              <div className="relative m-3 overflow-hidden rounded-3xl border border-border/60">
+                {m.image ? (
+                  <img
+                    src={m.image}
+                    alt={`${m.title} en QSY`}
+                    loading="lazy"
+                    className="h-44 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="relative h-44 w-full aurora">
+                    <div aria-hidden className="absolute inset-0 starfield opacity-40" />
+                    <div className="relative flex h-full flex-col justify-center gap-2 p-5">
+                      {m.rows.map((r) => (
+                        <div
+                          key={r}
+                          className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-xs text-muted-foreground backdrop-blur-xl"
+                        >
+                          <span className="size-1.5 rounded-full bg-primary pulse-glow" />
+                          {r}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <h3 className="mt-6 text-lg font-semibold">{m.title}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
+
+              <div className="relative px-7 pb-7 pt-2">
+                <div className="flex items-start justify-between">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110">
+                    <m.icon className="size-5" />
+                  </span>
+                  <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
+                    {m.tag}
+                  </span>
+                </div>
+                <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">{m.desc}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
+
 
       {/* Dominios premium */}
       <section className="relative overflow-hidden border-y border-border/50 py-24">
