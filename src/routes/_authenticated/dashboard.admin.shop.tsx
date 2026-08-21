@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Check, Coins, Eye, Gift, Heart, Rocket, Trash2 } from "lucide-react";
+import { Check, Coins, Eye, Gift, Heart, Rocket, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AdminCard, Empty, Pill } from "@/components/qsy/admin-ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { logAdminAction, useAdminUsers, type AdminProfile } from "@/lib/admin-data";
+import { BADGES } from "@/lib/badges";
 import {
   SHOP_BG_EFFECTS,
   SHOP_DECORATIONS,
@@ -58,6 +59,22 @@ function useWallet(userId?: string | null) {
   });
 }
 
+function useProfileBadges(profileId?: string | null) {
+  return useQuery({
+    queryKey: ["admin-profile-badges", profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_badges")
+        .select("id, badge_key, position")
+        .eq("profile_id", profileId!)
+        .order("position");
+      if (error) throw error;
+      return (data ?? []) as { id: string; badge_key: string; position: number }[];
+    },
+  });
+}
+
 function AdminShop() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
@@ -70,6 +87,7 @@ function AdminShop() {
   const userId = selected?.user_id ?? null;
   const { data: unlocks } = useUnlocks(userId);
   const { data: wallet } = useWallet(userId);
+  const { data: profileBadges } = useProfileBadges(selected?.id ?? null);
 
   const items = useMemo(() => GROUPS.find((g) => g.id === group)?.items ?? [], [group]);
   const owned = new Set(unlocks ?? []);
@@ -103,6 +121,28 @@ function AdminShop() {
     await logAdminAction("coins:grant", selected?.username, { coins });
     toast.success(`${coins > 0 ? "+" : ""}${coins} QSY Coins`);
     void qc.invalidateQueries({ queryKey: ["admin-wallet", userId] });
+  }
+
+  async function grantBadge(key: string) {
+    if (!selected) return;
+    const { error } = await supabase.from("profile_badges").insert({
+      profile_id: selected.id,
+      badge_key: key,
+      position: profileBadges?.length ?? 0,
+    });
+    if (error) { toast.error("No se pudo otorgar la insignia", { description: error.message }); return; }
+    await logAdminAction("badge:grant", selected.username, { badge: key });
+    toast.success("Insignia otorgada");
+    void qc.invalidateQueries({ queryKey: ["admin-profile-badges", selected.id] });
+  }
+
+  async function revokeBadge(id: string, key: string) {
+    if (!selected) return;
+    const { error } = await supabase.from("profile_badges").delete().eq("id", id);
+    if (error) { toast.error("No se pudo quitar la insignia", { description: error.message }); return; }
+    await logAdminAction("badge:revoke", selected.username, { badge: key });
+    toast.success("Insignia retirada");
+    void qc.invalidateQueries({ queryKey: ["admin-profile-badges", selected.id] });
   }
 
   async function boost(kind: "views" | "likes") {
@@ -197,6 +237,62 @@ function AdminShop() {
                 Este perfil no tiene cuenta asociada: no se le pueden dar coins ni artículos.
               </p>
             )}
+          </AdminCard>
+
+          <AdminCard
+            title={`Insignias · @${selected.username}`}
+            desc="Otorga o retira insignias visibles en el biolink"
+          >
+            {profileBadges?.length ? (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {profileBadges.map((b) => {
+                  const def = BADGES.find((x) => x.key === b.badge_key);
+                  return (
+                    <span
+                      key={b.id}
+                      className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-xs"
+                    >
+                      {def?.img ? (
+                        <img src={def.img} alt="" className="size-4" />
+                      ) : def?.icon ? (
+                        <def.icon className="size-4" style={{ color: def.color ?? undefined }} />
+                      ) : null}
+                      {def?.name ?? b.badge_key}
+                      <button
+                        onClick={() => revokeBadge(b.id, b.badge_key)}
+                        title="Quitar"
+                        className="text-muted-foreground hover:text-destructive"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="mb-4">
+                <Empty text="Este usuario no tiene insignias todavía." />
+              </div>
+            )}
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {BADGES.filter((b) => !(profileBadges ?? []).some((o) => o.badge_key === b.key)).map(
+                (b) => (
+                  <button
+                    key={b.key}
+                    onClick={() => grantBadge(b.key)}
+                    className="flex items-center gap-2 rounded-2xl border border-border/60 bg-surface px-3 py-2 text-left text-xs transition-colors hover:border-primary/50"
+                  >
+                    {b.img ? (
+                      <img src={b.img} alt="" className="size-5" />
+                    ) : b.icon ? (
+                      <b.icon className="size-5" style={{ color: b.color ?? undefined }} />
+                    ) : null}
+                    <span className="min-w-0 truncate">{b.name}</span>
+                    <Gift className="ml-auto size-3 text-muted-foreground" />
+                  </button>
+                ),
+              )}
+            </div>
           </AdminCard>
 
           <AdminCard
