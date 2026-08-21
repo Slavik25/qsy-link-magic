@@ -49,7 +49,7 @@ const BADGES: BadgeDef[] = [
   { key: "year2", name: "Veteran (2 años)", description: "Lleva más de 2 años en QSY.", icon: Shield },
   { key: "year5", name: "Legend (5 años)", description: "Lleva más de 5 años en QSY.", icon: Medal },
   { key: "year7", name: "Ancient (7 años)", description: "Lleva más de 7 años en QSY.", icon: Hourglass },
-  { key: "year10", name: "Immortal (10 años)", description: "Lleva más de 10 años en QSY.", icon: Infinity },
+  { key: "year10", name: "Immortal (10 años)", description: "Lleva más de 10 años en QSY.", icon: InfinityIcon },
 ];
 
 
