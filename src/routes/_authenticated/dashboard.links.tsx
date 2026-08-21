@@ -1,52 +1,112 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ExternalLink, Plus, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useLinks, useMyProfile } from "@/lib/qsy-data";
+import { LINK_PLATFORMS, buildUrl, platformById, type LinkPlatform } from "@/lib/link-platforms";
 import type { ProfileLink } from "@/lib/qsy";
 
 export const Route = createFileRoute("/_authenticated/dashboard/links")({
   component: LinksEditor,
+  head: () => ({
+    meta: [
+      { title: "Links · Dashboard QSY" },
+      {
+        name: "description",
+        content: "Conecta tus redes sociales y añade URLs personalizadas a tu biolink QSY.",
+      },
+    ],
+  }),
 });
 
 const schema = z.object({
   title: z.string().trim().min(1, "Título requerido").max(60),
-  url: z.string().trim().url("URL inválida").max(500),
-  icon: z.string().trim().max(24),
+  url: z.string().trim().min(1, "Valor requerido").max(500),
 });
+
+function PlatformMark({ platform, size = 40 }: { platform: LinkPlatform; size?: number }) {
+  return (
+    <span
+      aria-hidden
+      className="grid shrink-0 place-items-center rounded-xl border font-semibold"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.4,
+        color: platform.color,
+        borderColor: `${platform.color}33`,
+        background: `${platform.color}14`,
+        boxShadow: `0 0 24px ${platform.color}1f`,
+      }}
+    >
+      {platform.name.charAt(0).toUpperCase()}
+    </span>
+  );
+}
 
 function LinksEditor() {
   const { data: profile } = useMyProfile();
   const { data: links = [] } = useLinks(profile?.id);
   const queryClient = useQueryClient();
-  const [draft, setDraft] = useState({ title: "", url: "", icon: "link" });
+  const [query, setQuery] = useState("");
+  const [picked, setPicked] = useState<LinkPlatform | null>(null);
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: ["links", profile?.id] });
 
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? LINK_PLATFORMS.filter((p) => p.name.toLowerCase().includes(q)) : LINK_PLATFORMS;
+  }, [query]);
+
+  function open(platform: LinkPlatform) {
+    setPicked(platform);
+    setValue("");
+    setTitle(platform.id === "link" ? "" : platform.name);
+  }
+
   async function add() {
-    const parsed = schema.safeParse(draft);
+    if (!picked || !profile) return;
+    const parsed = schema.safeParse({
+      title: title || picked.name,
+      url: buildUrl(picked, value),
+    });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]!.message);
       return;
     }
+    setSaving(true);
     const { error } = await supabase.from("links").insert({
       ...parsed.data,
-      profile_id: profile!.id,
+      icon: picked.id,
+      profile_id: profile.id,
       position: links.length,
       active: true,
     });
+    setSaving(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    setDraft({ title: "", url: "", icon: "link" });
+    setPicked(null);
+    toast.success(`${picked.name} añadido`);
     void refresh();
   }
 
@@ -80,62 +140,189 @@ function LinksEditor() {
   }
 
   return (
-    <div className="max-w-3xl space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Links</h1>
+    <div className="max-w-4xl space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Links</h1>
+          <p className="text-sm text-muted-foreground">
+            Conecta tus redes sociales y añade tus propias URLs. Tú decides qué mostrar y en qué orden.
+          </p>
+        </div>
+        {profile && (
+          <a
+            href={`/${profile.username}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Ver mi página <ExternalLink className="size-3.5" />
+          </a>
+        )}
+      </header>
 
-      <div className="space-y-3 rounded-2xl glass p-6">
-        <div className="grid gap-3 sm:grid-cols-[1fr_1.4fr_auto]">
-          <div className="space-y-2">
-            <Label htmlFor="t">Título</Label>
-            <Input id="t" maxLength={60} value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+      <section className="rounded-2xl glass p-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-medium">Conecta tus redes</h2>
+            <p className="text-xs text-muted-foreground">
+              Elige una plataforma para añadirla a tu perfil.
+            </p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="u">URL</Label>
-            <Input id="u" maxLength={500} placeholder="https://" value={draft.url} onChange={(e) => setDraft({ ...draft, url: e.target.value })} />
-          </div>
-          <div className="flex items-end">
-            <Button onClick={add} disabled={!profile}>
-              <Plus className="size-4" /> Añadir
-            </Button>
+          <div className="relative w-full max-w-56">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              maxLength={40}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar plataforma…"
+              aria-label="Buscar plataforma"
+              className="pl-9"
+            />
           </div>
         </div>
-      </div>
 
-      <ul className="space-y-3">
-        {links.map((l, i) => (
-          <li key={l.id} className="flex flex-wrap items-center gap-3 rounded-2xl glass p-4">
-            <div className="flex flex-col gap-1">
-              <button aria-label="Subir" onClick={() => move(i, -1)} className="text-muted-foreground hover:text-foreground">
-                <ArrowUp className="size-4" />
-              </button>
-              <button aria-label="Bajar" onClick={() => move(i, 1)} className="text-muted-foreground hover:text-foreground">
-                <ArrowDown className="size-4" />
-              </button>
-            </div>
-            <Input
-              className="w-40"
-              maxLength={60}
-              defaultValue={l.title}
-              onBlur={(e) => e.target.value !== l.title && update(l, { title: e.target.value.slice(0, 60) })}
-            />
-            <Input
-              className="min-w-0 flex-1"
-              maxLength={500}
-              defaultValue={l.url}
-              onBlur={(e) => e.target.value !== l.url && update(l, { url: e.target.value.slice(0, 500) })}
-            />
-            <Switch checked={l.active} onCheckedChange={(v) => update(l, { active: v })} aria-label="Activo" />
-            <button aria-label="Eliminar" onClick={() => remove(l)} className="text-muted-foreground hover:text-destructive">
-              <Trash2 className="size-4" />
+        <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7">
+          {results.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => open(p)}
+              className="group flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-background/40 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-surface-strong"
+            >
+              <PlatformMark platform={p} size={36} />
+              <span className="line-clamp-1 text-[11px] text-muted-foreground group-hover:text-foreground">
+                {p.name}
+              </span>
             </button>
-          </li>
-        ))}
-        {links.length === 0 && (
-          <li className="rounded-2xl glass p-6 text-sm text-muted-foreground">
-            Aún no tienes links. Añade el primero arriba.
-          </li>
-        )}
-      </ul>
+          ))}
+          {results.length === 0 && (
+            <p className="col-span-full text-sm text-muted-foreground">Sin resultados.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">Tus links ({links.length})</h2>
+        <ul className="space-y-3">
+          {links.map((l, i) => {
+            const p = platformById(l.icon);
+            return (
+              <li key={l.id} className="flex flex-wrap items-center gap-3 rounded-2xl glass p-4">
+                <div className="flex flex-col gap-1">
+                  <button
+                    aria-label="Subir"
+                    disabled={i === 0}
+                    onClick={() => move(i, -1)}
+                    className="text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+                  >
+                    <ArrowUp className="size-4" />
+                  </button>
+                  <button
+                    aria-label="Bajar"
+                    disabled={i === links.length - 1}
+                    onClick={() => move(i, 1)}
+                    className="text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+                  >
+                    <ArrowDown className="size-4" />
+                  </button>
+                </div>
+                <PlatformMark platform={p} />
+                <Input
+                  className="w-36"
+                  maxLength={60}
+                  aria-label="Título del link"
+                  defaultValue={l.title}
+                  onBlur={(e) =>
+                    e.target.value !== l.title && update(l, { title: e.target.value.slice(0, 60) })
+                  }
+                />
+                <Input
+                  className="min-w-0 flex-1"
+                  maxLength={500}
+                  aria-label="URL del link"
+                  defaultValue={l.url}
+                  onBlur={(e) =>
+                    e.target.value !== l.url && update(l, { url: e.target.value.slice(0, 500) })
+                  }
+                />
+                <Switch
+                  checked={l.active}
+                  onCheckedChange={(v) => update(l, { active: v })}
+                  aria-label="Mostrar en el perfil"
+                />
+                <button
+                  aria-label="Eliminar"
+                  onClick={() => remove(l)}
+                  className="text-muted-foreground transition-colors hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              </li>
+            );
+          })}
+          {links.length === 0 && (
+            <li className="rounded-2xl glass p-6 text-sm text-muted-foreground">
+              Aún no tienes links. Elige una plataforma arriba para empezar.
+            </li>
+          )}
+        </ul>
+      </section>
+
+      <Dialog open={!!picked} onOpenChange={(o) => !o && setPicked(null)}>
+        <DialogContent className="sm:max-w-md">
+          {picked && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <PlatformMark platform={picked} />
+                  <div>
+                    <DialogTitle>Añadir {picked.name}</DialogTitle>
+                    <DialogDescription>
+                      {picked.base
+                        ? `Se guardará como ${picked.base}…`
+                        : "Pega la URL completa o el dato a mostrar."}
+                    </DialogDescription>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="value">{picked.kind === "text" ? "Valor" : "Enlace o usuario"}</Label>
+                  <Input
+                    id="value"
+                    autoFocus
+                    maxLength={400}
+                    value={value}
+                    placeholder={picked.placeholder}
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && add()}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="title">Título visible</Label>
+                  <Input
+                    id="title"
+                    maxLength={60}
+                    value={title}
+                    placeholder={picked.name}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="secondary" onClick={() => setPicked(null)}>
+                  Cancelar
+                </Button>
+                <Button onClick={add} disabled={saving || !profile}>
+                  <Plus className="size-4" /> {saving ? "Añadiendo…" : "Añadir link"}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
