@@ -352,39 +352,49 @@ function Landing() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Especificaciones */}
       <section id="features" className="relative mx-auto max-w-6xl px-4 py-24 text-center sm:px-6">
         <span className="inline-flex items-center gap-2 pill px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-primary" /> Todo incluido · 100% gratis
+          <span className="size-1.5 rounded-full bg-primary" /> Especificaciones · 100% gratis
         </span>
         <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-          Tu perfil.
+          La estructura
           <br />
-          <span className="text-gradient-violet">Sin límites.</span>
+          <span className="text-gradient-violet">definitiva.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
           Cada característica diseñada para que tu perfil destaque entre millones.
         </p>
 
-        <div className="mt-12 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] border border-border/70 bg-border/60 text-left sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f, i) => (
             <div
               key={f.title}
-              className="group relative overflow-hidden rounded-3xl border border-border/70 bg-card/50 p-6 backdrop-blur-xl lift hover:border-primary/50 hover:shadow-[0_50px_110px_-60px_var(--primary)]"
+              className="group relative overflow-hidden bg-card/60 p-7 backdrop-blur-xl transition-colors duration-500 hover:bg-card"
             >
               <div
                 aria-hidden
                 className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
               />
-              <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
-                <f.icon className="size-5" />
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="grid size-11 place-items-center rounded-2xl bg-primary/15 text-primary transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/25">
+                  <f.icon className="size-5" />
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground/60">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
               <h3 className="mt-5 text-lg font-semibold">{f.title}</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
+              <span
+                aria-hidden
+                className="mt-5 block h-px w-0 bg-gradient-to-r from-primary to-transparent transition-all duration-500 group-hover:w-full"
+              />
             </div>
           ))}
         </div>
       </section>
+
 
       {/* Módulos e integraciones */}
       <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
