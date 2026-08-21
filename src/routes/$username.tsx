@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { ProfileStage } from "@/components/qsy/profile-stage";
+import { ProfileWall } from "@/components/qsy/profile-wall";
+
 import { QsyLogo } from "@/components/qsy/logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
