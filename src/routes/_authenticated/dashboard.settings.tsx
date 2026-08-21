@@ -1,3 +1,4 @@
+import { profileHost } from "@/lib/domains";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -68,7 +69,7 @@ function SettingsPage() {
 
       <section className="space-y-3 rounded-2xl glass p-6">
         <p className="text-sm text-muted-foreground">
-          Tu link público: <span className="font-mono text-foreground">qsy.rip/{profile?.username ?? "…"}</span>
+          Tu link público: <span className="font-mono text-foreground">{profileHost(profile)}/{profile?.username ?? "…"}</span>
         </p>
         <Button variant="secondary" onClick={signOut}>
           Cerrar sesión

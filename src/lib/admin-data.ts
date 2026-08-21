@@ -49,7 +49,10 @@ export type AdminProfile = {
   created_at: string;
   user_id: string | null;
   bio: string;
+  rank?: string;
+  domain?: string;
 };
+
 
 export function useAdminUsers(search: string) {
   return useQuery({
@@ -58,7 +61,7 @@ export function useAdminUsers(search: string) {
       let query = supabase
         .from("profiles")
         .select(
-          "id, uid, username, display_name, avatar_url, banner_url, verified, featured, view_count, like_count, created_at, user_id, bio",
+          "id, uid, username, display_name, avatar_url, banner_url, verified, featured, view_count, like_count, created_at, user_id, bio, rank, domain",
         )
         .order("uid", { ascending: true })
         .limit(200);

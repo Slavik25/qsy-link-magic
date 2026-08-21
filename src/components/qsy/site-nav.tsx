@@ -1,3 +1,4 @@
+import { profileHost } from "@/lib/domains";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, User } from "lucide-react";
@@ -32,7 +33,13 @@ function Flag({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-type Profile = { username: string; display_name: string | null; avatar_url: string | null };
+type Profile = {
+  username: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  rank?: string | null;
+  domain?: string | null;
+};
 
 function useTheme() {
   const [dark, setDark] = useState(true);
@@ -74,7 +81,7 @@ export function SiteNav() {
       }
       const { data } = await supabase
         .from("profiles")
-        .select("username, display_name, avatar_url")
+        .select("username, display_name, avatar_url, rank, domain")
         .eq("user_id", userId)
         .maybeSingle();
       setProfile(data ?? null);
@@ -177,7 +184,7 @@ export function SiteNav() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-48">
                 <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  qsy.rip/{profile?.username ?? ""}
+                  {profileHost(profile)}/{profile?.username ?? ""}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="gap-2 text-xs">

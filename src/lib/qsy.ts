@@ -151,8 +151,12 @@ export type Profile = {
   theme: ThemeConfig;
   music: Record<string, unknown>;
   view_count: number;
+  like_count?: number;
+  rank?: string | null;
+  domain?: string | null;
   created_at: string;
 };
+
 
 export type ProfileLink = {
   id: string;

@@ -1,3 +1,4 @@
+import { profileHost } from "@/lib/domains";
 import { createFileRoute } from "@tanstack/react-router";
 import { Eye, Shield, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -172,7 +173,7 @@ function AdvancedSection() {
                   {draft.display_name || profile?.username || "qsy"}
                 </p>
                 <p className="text-[11px] text-muted-foreground">
-                  qsy.rip/{profile?.username ?? "qsy"}
+                  {profileHost(profile)}/{profile?.username ?? "qsy"}
                 </p>
               </div>
             </div>

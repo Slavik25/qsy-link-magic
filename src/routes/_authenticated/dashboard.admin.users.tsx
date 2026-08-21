@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { logAdminAction, useAdminUsers, type AdminProfile } from "@/lib/admin-data";
 import { BADGES } from "@/lib/badges";
+import { RANKS, RANK_LABEL, type QsyRank } from "@/lib/domains";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/users")({
   component: AdminUsers,
@@ -25,7 +27,21 @@ function AdminUsers() {
     await qc.invalidateQueries({ queryKey: ["admin-overview"] });
   }
 
+  async function setRank(p: AdminProfile, rank: QsyRank) {
+    const patch: { rank: QsyRank; domain?: string } = { rank };
+    if (rank !== "seraph") patch.domain = "qsy.rip";
+    const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
+    if (error) {
+      toast.error("No se pudo cambiar el rango", { description: error.message });
+      return;
+    }
+    await logAdminAction(`rank:${rank}`, p.username);
+    toast.success(`@${p.username} ahora es ${RANK_LABEL[rank]}`);
+    void refresh();
+  }
+
   async function toggleFlag(p: AdminProfile, field: "verified" | "featured") {
+
     const value = !p[field];
     const patch = field === "verified" ? { verified: value } : { featured: value };
     const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
@@ -137,11 +153,24 @@ function AdminUsers() {
                       </span>
                     </td>
                     <td className="py-2.5 pr-3">
-                      <div className="flex gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <select
+                          value={(p as { rank?: string }).rank ?? "free"}
+                          onChange={(e) => setRank(p, e.target.value as QsyRank)}
+                          className="rounded-lg border border-border/60 bg-card/50 px-2 py-1 text-[11px] outline-none focus:border-primary/60"
+                          title="Rango"
+                        >
+                          {RANKS.map((r) => (
+                            <option key={r} value={r}>
+                              {RANK_LABEL[r]}
+                            </option>
+                          ))}
+                        </select>
                         {p.verified && <Pill tone="ok">Verificado</Pill>}
                         {p.featured && <Pill>Destacado</Pill>}
                       </div>
                     </td>
+
                     <td className="py-2.5">
                       <div className="flex justify-end gap-1.5">
                         <button

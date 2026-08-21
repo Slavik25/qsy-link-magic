@@ -524,11 +524,13 @@ export type Database = {
           bio: string
           created_at: string
           display_name: string
+          domain: string
           featured: boolean
           id: string
           like_count: number
           location: string
           music: Json
+          rank: string
           theme: Json
           uid: number
           updated_at: string
@@ -543,11 +545,13 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          domain?: string
           featured?: boolean
           id?: string
           like_count?: number
           location?: string
           music?: Json
+          rank?: string
           theme?: Json
           uid?: number
           updated_at?: string
@@ -562,11 +566,13 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          domain?: string
           featured?: boolean
           id?: string
           like_count?: number
           location?: string
           music?: Json
+          rank?: string
           theme?: Json
           uid?: number
           updated_at?: string
