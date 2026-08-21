@@ -49,7 +49,10 @@ export type AdminProfile = {
   created_at: string;
   user_id: string | null;
   bio: string;
+  rank?: string;
+  domain?: string;
 };
+
 
 export function useAdminUsers(search: string) {
   return useQuery({
