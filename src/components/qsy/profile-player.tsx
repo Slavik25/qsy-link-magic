@@ -90,7 +90,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             : "fixed bottom-4 left-1/2 z-30 w-[min(26rem,92vw)] -translate-x-1/2"
     : "w-full max-w-md";
 
-  const PlayBtn = ({ size = "size-9" }: { size?: string }) => (
+  const playBtn = (size = "size-9") => (
     <button
       type="button"
       onClick={toggle}
@@ -112,8 +112,8 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     setMuted(v === 0);
   };
 
-  const MuteBtn = () => (
-    <div className="group/vol flex shrink-0 items-center gap-1.5">
+  const volCtl = (
+    <div className="flex shrink-0 items-center gap-1.5">
       <button
         type="button"
         onClick={() => setVol(muted || volume === 0 ? 0.4 : 0)}
@@ -130,13 +130,13 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
         value={volume}
         aria-label="Volumen"
         onChange={(e) => setVol(Number(e.target.value))}
-        className="h-1 w-0 cursor-pointer appearance-none rounded-full bg-white/20 opacity-0 transition-all duration-300 group-hover/vol:w-16 group-hover/vol:opacity-100 focus:w-16 focus:opacity-100"
+        className="h-1 w-14 cursor-pointer appearance-none rounded-full bg-white/20"
         style={{ accentColor: accent }}
       />
     </div>
   );
 
-  const Bar = () => (
+  const bar = (
     <button
       type="button"
       aria-label="Avanzar canción"
@@ -178,15 +178,15 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   if (type === "minimal") {
     body = (
       <div className={`flex items-center gap-3 rounded-full border px-3 py-2 ${shell}`}>
-        <PlayBtn size="size-7" />
-        <Bar />
-        <MuteBtn />
+        {playBtn("size-7")}
+        {bar}
+        {volCtl}
       </div>
     );
   } else if (type === "text") {
     body = (
       <div className={`flex items-center gap-3 overflow-hidden rounded-full border px-3 py-2 ${shell}`}>
-        <PlayBtn size="size-7" />
+        {playBtn("size-7")}
         <div className="min-w-0 flex-1 overflow-hidden">
           <p
             className="qsy-marquee-text whitespace-nowrap text-xs font-medium"
@@ -195,7 +195,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             ♫ {title} — {artist} &nbsp;&nbsp; ♫ {title} — {artist}
           </p>
         </div>
-        <MuteBtn />
+        {volCtl}
       </div>
     );
   } else if (type === "vinyl") {
@@ -220,17 +220,17 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
           <p className="truncate text-sm font-medium">{title}</p>
           <p className="truncate text-xs text-muted-foreground">{artist}</p>
           <div className="mt-2">
-            <Bar />
+            {bar}
           </div>
         </div>
-        <PlayBtn />
-        <MuteBtn />
+        {playBtn()}
+        {volCtl}
       </div>
     );
   } else if (type === "wave") {
     body = (
       <div className={`flex items-center gap-3 rounded-2xl border p-3 ${shell}`}>
-        <PlayBtn />
+        {playBtn()}
         <div className="flex min-w-0 flex-1 items-end gap-[3px]">
           {Array.from({ length: 22 }).map((_, i) => (
             <span
@@ -246,7 +246,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             />
           ))}
         </div>
-        <MuteBtn />
+        {volCtl}
       </div>
     );
   } else if (type === "cassette") {
@@ -267,11 +267,11 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             <p className="truncate font-mono text-xs">{title}</p>
             <p className="truncate font-mono text-[10px] text-muted-foreground">{artist}</p>
           </div>
-          <PlayBtn size="size-8" />
+          {playBtn("size-8")}
         </div>
         <div className="mt-2 flex items-center gap-2">
-          <Bar />
-          <MuteBtn />
+          {bar}
+          {volCtl}
         </div>
       </div>
     );
@@ -298,11 +298,11 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             <p className="truncate text-sm font-semibold">{title}</p>
             <p className="truncate text-xs text-muted-foreground">{artist}</p>
           </div>
-          <PlayBtn />
-          <MuteBtn />
+          {playBtn()}
+          {volCtl}
         </div>
         <div className="mt-3">
-          <Bar />
+          {bar}
         </div>
         <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
           <span>{fmt(time)}</span>
@@ -313,15 +313,15 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   } else if (type === "dock") {
     body = (
       <div className={`flex items-center gap-3 rounded-full border px-4 py-2.5 ${shell}`}>
-        <PlayBtn size="size-8" />
+        {playBtn("size-8")}
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium">{title}</p>
           <div className="mt-1.5">
-            <Bar />
+            {bar}
           </div>
         </div>
         <span className="shrink-0 text-[10px] text-muted-foreground">{fmt(time)}</span>
-        <MuteBtn />
+        {volCtl}
       </div>
     );
   } else {
@@ -339,11 +339,11 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
           <p className="truncate text-sm font-medium">{title}</p>
           <p className="truncate text-xs text-muted-foreground">{artist}</p>
           <div className="mt-2">
-            <Bar />
+            {bar}
           </div>
         </div>
-        <PlayBtn />
-        <MuteBtn />
+        {playBtn()}
+        {volCtl}
       </div>
     );
   }
