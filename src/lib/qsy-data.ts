@@ -203,7 +203,7 @@ export function useShowcaseProfiles(limit = 8) {
       const { data, error } = await supabase
         .from("profiles")
         .select("username, display_name, avatar_url, banner_url, verified, view_count, bio")
-        .not("user_id", "is", null)
+        .order("verified", { ascending: false })
         .order("view_count", { ascending: false })
         .limit(limit);
       if (error) throw error;
