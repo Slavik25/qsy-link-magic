@@ -21,6 +21,7 @@ export function ProfileView({
   profile,
   links,
   socials,
+  badges = [],
   views = 0,
   music,
   compact = false,
