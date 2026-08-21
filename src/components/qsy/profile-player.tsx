@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import type { ThemeConfig } from "@/lib/qsy";
+import { detectEmbed, prettyTrackName } from "@/lib/media";
 
 type Props = {
   theme: ThemeConfig;
@@ -30,17 +31,22 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [time, setTime] = useState(0);
+  const [volume, setVolume] = useState((theme.audio_volume ?? 40) / 100);
   const [dur, setDur] = useState(0);
 
   const accent = theme.accent;
   const type = theme.player_type || "default";
-  const title = music?.title || "QSY Radio";
-  const artist = music?.artist || "@" + (theme.template ?? "qsy");
+  const embed = detectEmbed(theme.audio_url);
+  const title =
+    theme.audio_title?.trim() ||
+    music?.title ||
+    (theme.audio_url ? prettyTrackName(theme.audio_url) : "QSY Radio");
+  const artist = theme.audio_artist?.trim() || music?.artist || "";
 
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
-    el.volume = 0.4;
+    el.volume = (theme.audio_volume ?? 40) / 100;
     void el
       .play()
       .then(() => setPlaying(true))
@@ -96,29 +102,76 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     </button>
   );
 
-  const MuteBtn = () => (
-    <button
-      type="button"
-      onClick={() => {
-        const el = audioRef.current;
-        if (el) el.muted = !el.muted;
-        setMuted((m) => !m);
-      }}
-      aria-label={muted ? "Activar sonido" : "Silenciar"}
-      className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
-    >
-      {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
-    </button>
-  );
+  const setVol = (v: number) => {
+    const el = audioRef.current;
+    setVolume(v);
+    if (el) {
+      el.volume = v;
+      el.muted = v === 0;
+    }
+    setMuted(v === 0);
+  };
 
-  const Bar = () => (
-    <div className="h-1 w-full overflow-hidden rounded-full bg-white/15">
-      <div
-        className="h-full rounded-full transition-[width] duration-500"
-        style={{ width: `${progress}%`, background: accent }}
+  const MuteBtn = () => (
+    <div className="group/vol flex shrink-0 items-center gap-1.5">
+      <button
+        type="button"
+        onClick={() => setVol(muted || volume === 0 ? 0.4 : 0)}
+        aria-label={muted ? "Activar sonido" : "Silenciar"}
+        className="text-muted-foreground transition-colors hover:text-foreground"
+      >
+        {muted || volume === 0 ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+      </button>
+      <input
+        type="range"
+        min={0}
+        max={1}
+        step={0.01}
+        value={volume}
+        aria-label="Volumen"
+        onChange={(e) => setVol(Number(e.target.value))}
+        className="h-1 w-0 cursor-pointer appearance-none rounded-full bg-white/20 opacity-0 transition-all duration-300 group-hover/vol:w-16 group-hover/vol:opacity-100 focus:w-16 focus:opacity-100"
+        style={{ accentColor: accent }}
       />
     </div>
   );
+
+  const Bar = () => (
+    <button
+      type="button"
+      aria-label="Avanzar canción"
+      onClick={(e) => {
+        const el = audioRef.current;
+        if (!el || !dur) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        el.currentTime = ((e.clientX - r.left) / r.width) * dur;
+      }}
+      className="block h-1.5 w-full overflow-hidden rounded-full bg-white/15"
+    >
+      <span
+        className="block h-full rounded-full transition-[width] duration-300"
+        style={{ width: `${progress}%`, background: accent }}
+      />
+    </button>
+  );
+
+  if (embed) {
+    return (
+      <div className={posClass}>
+        <div className={`overflow-hidden rounded-2xl border ${shell}`}>
+          <iframe
+            title={`Reproductor ${embed.provider}`}
+            src={embed.src}
+            height={embed.height}
+            loading="lazy"
+            allow="autoplay; encrypted-media; clipboard-write; picture-in-picture; fullscreen"
+            className="w-full border-0"
+            style={{ height: embed.height }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   let body: React.ReactNode = null;
 
