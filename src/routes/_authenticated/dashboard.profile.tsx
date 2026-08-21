@@ -11,7 +11,6 @@ import { AssetUploader } from "@/components/qsy/asset-uploader";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 
-type ProfileForm = z.infer<typeof schema>;
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
