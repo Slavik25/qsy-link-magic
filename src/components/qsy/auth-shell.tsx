@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, Check } from "lucide-react";
-import { Logo } from "@/components/qsy/logo";
+import { QsyLogo } from "@/components/qsy/logo";
 
 const perks = [
   "Perfiles con música de fondo",
@@ -36,7 +36,7 @@ export function AuthShell({
       >
         <section className="rise text-center lg:text-left">
           <Link to="/" className="inline-flex items-center gap-2">
-            <Logo className="size-8" />
+            <QsyLogo className="size-8" />
             <span className="text-lg font-semibold tracking-tight">
               QSY<span className="text-primary">.to</span>
             </span>
