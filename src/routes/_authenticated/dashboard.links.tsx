@@ -161,12 +161,20 @@ function LinksEditor() {
         title="¡Configura tus conexiones!"
         description="Añade aquí tus redes sociales y enlaces: aparecerán en tu perfil público QSY."
         tone="violet"
-        action={
-          profile
-            ? { label: "Ver perfil", href: `/${profile.username}` }
-            : undefined
-        }
       />
+
+      {profile && (
+        <div className="flex justify-end">
+          <a
+            href={`/${profile.username}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Ver mi página <ExternalLink className="size-3.5" />
+          </a>
+        </div>
+      )}
 
       <section className="rounded-2xl glass p-6">
         <div>

@@ -1,5 +1,6 @@
 import { BadgeCheck, Eye, MapPin, Play } from "lucide-react";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
+import { platformById } from "@/lib/link-platforms";
 
 type Props = {
   profile: Pick<
@@ -124,7 +125,7 @@ export function ProfileView({
 
         <div className="mt-6 w-full max-w-md space-y-3">
           {links.map((l) => {
-            const Icon = iconFor(l.icon);
+            const Icon = platformById(l.icon).Icon;
             return (
               <a
                 key={l.id}
