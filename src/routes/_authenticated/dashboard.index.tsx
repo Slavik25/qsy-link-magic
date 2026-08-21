@@ -4,30 +4,41 @@ import {
   AtSign,
   ChevronRight,
   Eye,
+  Gem,
   Hash,
   Image as ImageIcon,
   Link2,
+  Palette,
   Pencil,
-  Settings,
-  Share2,
+  Sparkles,
   Type as TypeIcon,
   UserRound,
 } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
-import { useAnalytics, useLinks, useMyProfile, useSocials } from "@/lib/qsy-data";
+import { DashBanner } from "@/components/qsy/dash-banner";
+import {
+  useAnalytics,
+  useLinks,
+  useMyProfile,
+  useShowcaseProfiles,
+  useSocials,
+} from "@/lib/qsy-data";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: Overview,
   head: () => ({
     meta: [
-      { title: "Overview · Dashboard QSY" },
-      { name: "description", content: "Resumen de tu cuenta QSY: visitas, progreso del perfil y accesos rápidos." },
+      { title: "Resumen · Dashboard QSY" },
+      {
+        name: "description",
+        content: "Resumen de tu cuenta QSY: visitas, progreso del perfil y accesos rápidos.",
+      },
     ],
   }),
 });
 
-function OverviewCard({
+function StatCard({
   label,
   value,
   hint,
@@ -39,13 +50,17 @@ function OverviewCard({
   icon: typeof Eye;
 }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-colors hover:border-primary/40">
-      <div className="flex items-start justify-between">
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <Icon className="size-4 text-muted-foreground" />
+    <div className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+      />
+      <div className="relative flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+        <Icon className="size-3.5" />
+        {label}
       </div>
-      <p className="mt-3 truncate text-2xl font-semibold">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+      <p className="relative mt-3 truncate text-2xl font-semibold">{value}</p>
+      <p className="relative mt-1 text-xs text-muted-foreground">{hint}</p>
     </div>
   );
 }
@@ -55,6 +70,7 @@ function Overview() {
   const { data: stats } = useAnalytics(profile?.id, 7);
   const { data: links = [] } = useLinks(profile?.id);
   const { data: socials = [] } = useSocials(profile?.id);
+  const { data: showcase = [] } = useShowcaseProfiles(16);
 
   const uid = profile ? parseInt(profile.id.replace(/\D/g, "").slice(0, 7) || "0", 10) : 0;
 
@@ -70,125 +86,152 @@ function Overview() {
   const completed = tasks.filter((t) => t.done).length;
   const percent = Math.round((completed / tasks.length) * 100);
 
+  const quick = [
+    {
+      to: "/dashboard/profile",
+      title: "Gestionar perfil",
+      desc: "Personaliza y actualiza tu página.",
+      icon: UserRound,
+      tone: "from-primary/25",
+    },
+    {
+      to: "/templates",
+      title: "Descubrir plantillas",
+      desc: "Encuentra el look perfecto.",
+      icon: Palette,
+      tone: "from-fuchsia-500/25",
+    },
+    {
+      to: "/dashboard/premium",
+      title: "Ver la tienda",
+      desc: "Obtén ítems y temas exclusivos.",
+      icon: Gem,
+      tone: "from-teal-400/25",
+    },
+  ] as const;
+
   return (
-    <div className="space-y-10">
-      <section>
-        <h1 className="text-xl font-semibold tracking-tight">Resumen de la cuenta</h1>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <OverviewCard
-            label="Username"
-            value={profile?.username ?? "…"}
-            hint="Puedes cambiarlo en Perfil"
-            icon={Pencil}
-          />
-          <OverviewCard
-            label="Links"
-            value={String(links.length)}
-            hint={`${socials.length} redes conectadas`}
-            icon={Link2}
-          />
-          <OverviewCard
-            label="UID"
-            value={uid.toLocaleString("es-ES")}
-            hint={`Miembro desde ${profile ? new Date(profile.created_at).toLocaleDateString("es-ES") : "—"}`}
-            icon={Hash}
-          />
-          <OverviewCard
-            label="Visitas al perfil"
-            value={(profile?.view_count ?? 0).toLocaleString("es-ES")}
-            hint={`+${stats?.views ?? 0} en los últimos 7 días`}
-            icon={Eye}
-          />
-        </div>
-      </section>
+    <div className="space-y-8">
+      <div className="grid gap-4 xl:grid-cols-[1fr_320px]">
+        <DashBanner
+          eyebrow="Resumen"
+          title={`¡Hola, ${profile?.display_name || profile?.username || "qsy"}!`}
+          description="Esta es una vista general de tu cuenta: estadísticas, progreso y accesos rápidos."
+        />
 
-      <section>
-        <h2 className="text-xl font-semibold tracking-tight">Estadísticas de la cuenta</h2>
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-          <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="text-base font-medium">Progreso del perfil</h3>
-              <span className="text-xs text-muted-foreground">{percent}% completado</span>
-            </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-strong">
-              <div
-                className="h-full rounded-full bg-primary transition-all duration-700"
-                style={{ width: `${percent}%` }}
-              />
-            </div>
-
-            {percent < 100 && (
-              <div className="mt-5 rounded-xl border border-border/60 bg-background/50 p-4">
-                <p className="flex items-center gap-2 text-sm font-medium">
-                  <AlertCircle className="size-4 text-primary" /> ¡Tu perfil aún no está completo!
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Complétalo para hacerlo más atractivo y fácil de descubrir.
-                </p>
-              </div>
-            )}
-
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              {tasks.map((t) => (
-                <Link
-                  key={t.label}
-                  to={t.to}
-                  className={`group flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors ${
-                    t.done
-                      ? "border-primary/40 bg-primary/10 text-foreground"
-                      : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                  }`}
-                >
-                  <t.icon className="size-4 shrink-0" />
-                  <span className="truncate">{t.label}</span>
-                  <ChevronRight className="ml-auto size-4 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              ))}
-            </div>
+        <aside className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-border/60 bg-card/40 p-6 text-center backdrop-blur-xl">
+          {profile?.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt={`Avatar de ${profile.username}`}
+              className="size-16 rounded-full object-cover ring-2 ring-primary/30"
+            />
+          ) : (
+            <span className="grid size-16 place-items-center rounded-full bg-surface-strong font-mono text-lg font-bold text-primary ring-2 ring-primary/30">
+              {(profile?.username ?? "qs").slice(0, 2).toUpperCase()}
+            </span>
+          )}
+          <div>
+            <p className="truncate text-sm font-semibold">{profile?.display_name || profile?.username}</p>
+            <span className="mt-1 inline-block rounded-md bg-surface-strong px-2 py-0.5 text-[10px] font-bold tracking-wider text-muted-foreground">
+              FREE
+            </span>
           </div>
-
-          <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
-            <h3 className="text-base font-medium">Gestiona tu cuenta</h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Cambia tu username, tu nombre y más.
-            </p>
-            <div className="mt-4 space-y-2">
-              {[
-                { to: "/dashboard/profile", label: "Cambiar username", icon: Pencil },
-                { to: "/dashboard/profile", label: "Cambiar nombre visible", icon: UserRound },
-                { to: "/dashboard/appearance", label: "Personalizar apariencia", icon: ImageIcon },
-                { to: "/dashboard/settings", label: "Ajustes de la cuenta", icon: Settings },
-              ].map((a) => (
-                <Button key={a.label} asChild variant="secondary" className="w-full justify-start rounded-xl">
-                  <Link to={a.to}>
-                    <a.icon className="size-4" /> {a.label}
-                  </Link>
-                </Button>
-              ))}
-            </div>
-
-            {profile && (
-              <Button asChild className="mt-4 w-full rounded-xl">
-                <Link to="/$username" params={{ username: profile.username }}>
-                  <Share2 className="size-4" /> Ver mi página
-                </Link>
-              </Button>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl font-semibold tracking-tight">Analytics de la cuenta</h2>
-          <Button asChild size="sm" variant="secondary" className="rounded-full text-xs">
-            <Link to="/dashboard/analytics">Ver más</Link>
+          <Button asChild className="w-full rounded-xl">
+            <Link to="/dashboard/premium">Mejorar plan</Link>
           </Button>
-        </div>
-        <div className="mt-4 rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
-          <h3 className="text-sm font-medium">
-            Visitas en los últimos <span className="text-primary">7 días</span>
-          </h3>
+        </aside>
+      </div>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          label="URL principal"
+          value={`@${profile?.username ?? "…"}`}
+          hint="Cámbiala desde Perfil"
+          icon={Pencil}
+        />
+        <StatCard
+          label="Conexiones"
+          value={String(links.length + socials.length)}
+          hint={`${links.length} links · ${socials.length} redes`}
+          icon={Link2}
+        />
+        <StatCard label="UID" value={uid.toLocaleString("es-ES")} hint="Identificador único" icon={Hash} />
+        <StatCard
+          label="Visitas únicas"
+          value={(profile?.view_count ?? 0).toLocaleString("es-ES")}
+          hint={
+            (stats?.views ?? 0) > 0 ? `+${stats?.views} en 7 días` : "Sin visitas aún"
+          }
+          icon={Eye}
+        />
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-3">
+        {quick.map((q) => (
+          <Link
+            key={q.title}
+            to={q.to}
+            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50"
+          >
+            <div className={`absolute inset-0 bg-gradient-to-r ${q.tone} to-transparent opacity-70`} aria-hidden />
+            <div className="relative flex items-center gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
+                <q.icon className="size-5" />
+              </span>
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold">{q.title}</span>
+                <span className="block truncate text-xs text-muted-foreground">{q.desc}</span>
+              </span>
+              <ChevronRight className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+            </div>
+          </Link>
+        ))}
+      </section>
+
+      {showcase.length > 0 && (
+        <section>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Explorar</p>
+          <div className="mt-3 flex gap-4 overflow-x-auto rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+            {showcase.map((p) => (
+              <Link
+                key={p.id}
+                to="/$username"
+                params={{ username: p.username }}
+                className="group flex w-16 shrink-0 flex-col items-center gap-2"
+              >
+                {p.avatar_url ? (
+                  <img
+                    src={p.avatar_url}
+                    alt={`Avatar de ${p.username}`}
+                    className="size-12 rounded-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  />
+                ) : (
+                  <span className="grid size-12 place-items-center rounded-full bg-surface-strong font-mono text-xs font-bold text-primary transition-transform duration-200 group-hover:scale-105">
+                    {p.username.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+                <span className="w-full truncate text-center text-[10px] text-muted-foreground group-hover:text-foreground">
+                  @{p.username}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="grid gap-4 lg:grid-cols-[1fr_340px]">
+        <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+            <div className="min-w-0">
+              <h2 className="truncate text-base font-medium">Visitas al perfil</h2>
+              <p className="truncate text-xs text-muted-foreground">Últimos 7 días de tu página pública.</p>
+            </div>
+            <Button asChild size="sm" variant="secondary" className="shrink-0 rounded-full text-xs">
+              <Link to="/dashboard/analytics">Ver más</Link>
+            </Button>
+          </div>
+
           <div className="mt-4 h-56">
             {(stats?.views ?? 0) === 0 ? (
               <div className="grid h-full place-items-center text-center">
@@ -235,6 +278,50 @@ function Overview() {
               </ResponsiveContainer>
             )}
           </div>
+        </div>
+
+        <div className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+            <h2 className="truncate text-base font-medium">Progreso del perfil</h2>
+            <span className="shrink-0 text-xs text-muted-foreground">{percent}%</span>
+          </div>
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-strong">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-700"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+
+          {percent < 100 && (
+            <p className="mt-4 flex items-start gap-2 rounded-xl border border-border/60 bg-background/50 p-3 text-xs text-muted-foreground">
+              <AlertCircle className="mt-0.5 size-4 shrink-0 text-primary" />
+              Completa tu perfil para que sea más atractivo y fácil de descubrir.
+            </p>
+          )}
+
+          <div className="mt-4 space-y-2">
+            {tasks.map((t) => (
+              <Link
+                key={t.label}
+                to={t.to}
+                className={`group flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm transition-colors ${
+                  t.done
+                    ? "border-primary/40 bg-primary/10 text-foreground"
+                    : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                <t.icon className="size-4 shrink-0" />
+                <span className="min-w-0 flex-1 truncate">{t.label}</span>
+                <ChevronRight className="size-4 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </div>
+
+          <Button asChild variant="secondary" className="mt-4 w-full rounded-xl">
+            <Link to="/dashboard/appearance">
+              <Sparkles className="size-4" /> Personalizar mi página
+            </Link>
+          </Button>
         </div>
       </section>
     </div>
