@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { ProfileStage } from "@/components/qsy/profile-stage";
 import { ProfileWall } from "@/components/qsy/profile-wall";
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import { detectBrowser, detectDevice } from "@/lib/qsy";
+import { hostDomain, profileHost, profileUrl } from "@/lib/domains";
+
 
 export const Route = createFileRoute("/$username")({
   head: ({ params }) => ({
@@ -28,10 +30,16 @@ function PublicProfile() {
   const { username } = Route.useParams();
   const { data, isLoading } = useProfileByUsername(username);
   const tracked = useRef(false);
+  const [host, setHost] = useState<string | null>(null);
+  useEffect(() => setHost(window.location.hostname), []);
+
+  const current = host ? hostDomain(host) : null;
+  const allowed = profileHost(data?.profile as { rank?: string | null; domain?: string | null });
+  const blocked = Boolean(data) && current !== null && current !== allowed;
 
   const profileId = data?.profile.id;
   useEffect(() => {
-    if (!profileId || tracked.current) return;
+    if (!profileId || tracked.current || blocked) return;
     tracked.current = true;
     void supabase.from("profile_views").insert({
       profile_id: profileId,
@@ -40,7 +48,8 @@ function PublicProfile() {
       referrer: document.referrer || "direct",
       country: null,
     });
-  }, [profileId]);
+  }, [profileId, blocked]);
+
 
   if (isLoading) {
     return (
@@ -66,6 +75,27 @@ function PublicProfile() {
       </div>
     );
   }
+
+  if (blocked) {
+    const real = profileUrl(username, allowed);
+    return (
+      <div className="grid min-h-screen place-items-center px-4 text-center">
+        <div>
+          <QsyLogo />
+          <h1 className="mt-6 text-2xl font-semibold">Perfil no disponible en {current}</h1>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Este perfil solo está publicado en <strong>{allowed}</strong>. Elegir otro dominio es
+            exclusivo del rango Seraph.
+          </p>
+          <Button asChild className="mt-6">
+            <a href={real}>Ir a {allowed}/{username}</a>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+
 
   const { profile, links, socials, badges, views, likes } = data;
   const music = profile.music as { title?: string; artist?: string };
