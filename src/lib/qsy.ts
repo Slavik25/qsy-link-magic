@@ -15,6 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export type MediaItem = { url: string; title?: string };
+
 export type ThemeConfig = {
   template: string;
   accent: string;
