@@ -328,12 +328,15 @@ export function ProfileView({
               {views.toLocaleString()} visitas
             </span>
           )}
-          {t.show_likes !== false && (
-            <span className="inline-flex items-center gap-1.5">
-              <Heart className="size-3" style={{ color: t.accent }} />
-              {likes.toLocaleString()} likes
-            </span>
-          )}
+          {t.show_likes !== false &&
+            (profileId && !compact ? (
+              <ProfileLikeButton profileId={profileId} accent={t.accent} initialLikes={likes} />
+            ) : (
+              <span className="inline-flex items-center gap-1.5">
+                <Heart className="size-3" style={{ color: t.accent }} />
+                {likes.toLocaleString()} likes
+              </span>
+            ))}
         </div>
       </div>
       </div>
