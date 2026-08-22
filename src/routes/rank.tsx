@@ -230,7 +230,7 @@ function RankPage() {
                 <ZoomOut className="size-4" />
               </button>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                <Move className="size-3.5 text-primary" /> Arrastra para explorar
+                <Move className="size-3.5 text-primary" /> Arrastra y usa el scroll
               </span>
               <button
                 type="button"
