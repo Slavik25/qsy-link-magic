@@ -49,7 +49,6 @@ export function BanGuard({ children }: { children: ReactNode }) {
 
     return () => {
       window.clearInterval(timer);
-      window.removeEventListener("qsy:banned", onBan);
     };
   }, []);
 
