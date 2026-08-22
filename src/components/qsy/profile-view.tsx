@@ -64,6 +64,8 @@ export function ProfileView({
       ? `color-mix(in oklab, ${t.color_icon_bg} 12%, transparent)`
       : "var(--p-surface)";
   const cardAlpha = cardBg === "transparent" ? 0 : Math.max(0, Math.min(100, t.card_alpha ?? 100));
+  const hoverEffect = t.hover_effect && t.hover_effect !== "none" ? t.hover_effect : null;
+  const hoverClass = hoverEffect ? `qsy-hover qsy-hover-${hoverEffect}` : "";
   const alphaStyle =
     cardAlpha < 100 ? ({ "--p-card-alpha": `${cardAlpha / 100}` } as React.CSSProperties) : {};
 
