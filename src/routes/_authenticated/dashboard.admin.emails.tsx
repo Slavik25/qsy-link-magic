@@ -91,6 +91,10 @@ function AdminEmailsPage() {
 
   const rows: EmailLogRow[] = logs.data && logs.data.ok ? logs.data.rows : [];
   const logsError = logs.data && !logs.data.ok ? logs.data.error : logs.error ? "No se pudieron cargar los logs." : null;
+  const st = status.data && status.data.ok ? status.data.status : null;
+  const statusError = status.data && !status.data.ok ? status.data.error : null;
+  const active = !!st && st.apiKeyConfigured && st.serviceReachable;
+
 
   return (
     <div className="space-y-6">
