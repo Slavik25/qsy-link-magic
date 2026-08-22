@@ -1,9 +1,23 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
-import type { EmailLogRow } from './email-ops.server'
+import type { EmailLogRow, EmailSetupStatus } from './email-ops.server'
 
-export type { EmailLogRow }
+export type { EmailLogRow, EmailSetupStatus }
+
+export const getEmailSetupStatus = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<
+    { ok: true; status: EmailSetupStatus } | { ok: false; error: string }
+  > => {
+    const { data: isAdmin } = await context.supabase.rpc('has_role', {
+      _user_id: context.userId,
+      _role: 'admin',
+    })
+    if (!isAdmin) return { ok: false, error: 'Acceso restringido' }
+    const { fetchEmailSetupStatus } = await import('./email-ops.server')
+    return { ok: true, status: await fetchEmailSetupStatus() }
+  })
 
 export const listEmailDeliveryLogs = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
@@ -41,7 +55,12 @@ export const listEmailDeliveryLogs = createServerFn({ method: 'POST' })
 export const sendConfirmationTestEmail = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) =>
-    z.object({ email: z.string().trim().email('Email inválido').max(255) }).parse(data)
+    z
+      .object({
+        email: z.string().trim().email('Email inválido').max(255),
+        kind: z.enum(['signup', 'magiclink']).default('signup'),
+      })
+      .parse(data)
   )
   .handler(async ({ context, data }): Promise<
     { ok: true; messageId: string | null } | { ok: false; error: string; code: string | null; retryable: boolean }
@@ -54,7 +73,7 @@ export const sendConfirmationTestEmail = createServerFn({ method: 'POST' })
 
     const { sendConfirmationTest, describeEmailError } = await import('./email-ops.server')
     try {
-      const res = await sendConfirmationTest(data.email)
+      const res = await sendConfirmationTest(data.email, data.kind)
       return { ok: true, messageId: res.messageId }
     } catch (err) {
       const info = describeEmailError(err)
