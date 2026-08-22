@@ -352,6 +352,27 @@ export type Database = {
           },
         ]
       }
+      login_codes: {
+        Row: {
+          code: string
+          created_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mission_claims: {
         Row: {
           created_at: string
@@ -1002,7 +1023,9 @@ export type Database = {
         Returns: boolean
       }
       mission_progress: { Args: { _key: string }; Returns: number }
+      new_login_code: { Args: never; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
+      rotate_login_code: { Args: never; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
