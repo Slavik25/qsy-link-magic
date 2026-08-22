@@ -121,7 +121,7 @@ export function ProfileView({
               alt=""
               src={deco.image}
               loading="lazy"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[152%] max-w-none -translate-x-1/2 -translate-y-1/2 select-none"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 aspect-square h-[150%] w-[150%] max-w-none -translate-x-1/2 -translate-y-1/2 select-none object-contain"
             />
           )}
           {profile.avatar_url ? (
