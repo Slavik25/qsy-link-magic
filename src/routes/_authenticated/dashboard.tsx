@@ -146,7 +146,7 @@ function DashboardLayout() {
 
         <div className="space-y-3 border-t border-border/60 p-3">
           <Link
-            to="/dashboard/premium"
+            to="/dashboard/gift"
             onClick={() => setOpen(false)}
             className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/50 p-3 transition-colors hover:border-primary/50"
           >
