@@ -1,6 +1,7 @@
 import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
+import { ProfileGaming } from "@/components/qsy/profile-gaming";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -204,6 +205,8 @@ export function ProfileView({
         )}
 
         <ProfileDiscord theme={t} />
+
+        <ProfileGaming theme={t} />
 
         {(socials.length > 0 || links.length > 0) && (
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
