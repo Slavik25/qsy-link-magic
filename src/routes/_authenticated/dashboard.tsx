@@ -30,6 +30,7 @@ import { LangSwitcher } from "@/components/qsy/lang-switcher";
 import { DashThemeToggle, useDashTheme } from "@/components/qsy/dash-theme-toggle";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useDashPref } from "@/lib/dash-prefs";
 import { useMyProfile } from "@/lib/qsy-data";
 import { useIsAdmin } from "@/lib/admin-data";
 
