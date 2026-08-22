@@ -73,6 +73,12 @@ export type ThemeConfig = {
   discord_decoration?: boolean;
 
   spotify_user?: string;
+  /* Gaming modules */
+  steam_id?: string;
+  twitch_user?: string;
+  roblox_user?: string;
+  gaming_enabled?: boolean;
+  gaming_transparent?: boolean;
   video_overlay?: string;
   /* Modules */
   show_views?: boolean;
