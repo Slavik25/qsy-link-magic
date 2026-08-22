@@ -1,5 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, Crown, Gem, Sparkles, X } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Check, Crown, Gem, Loader2, Sparkles, X } from "lucide-react";
+import { createDodoCheckout } from "@/lib/dodo.functions";
+import type { PaidRank } from "@/lib/payments";
 
 export const Route = createFileRoute("/_authenticated/dashboard/rank")({
   component: RankPage,
