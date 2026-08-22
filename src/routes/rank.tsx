@@ -155,6 +155,8 @@ function RankPage() {
           </header>
 
           <div
+            ref={viewportRef}
+            style={{ touchAction: "none" }}
             className="relative mt-8 h-[640px] w-full cursor-grab overflow-hidden active:cursor-grabbing"
             onPointerDown={(e) => {
               drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
