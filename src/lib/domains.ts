@@ -33,3 +33,10 @@ export function profileUrl(username: string, domain?: string | null) {
   return `https://${isDomain(domain) ? domain : DEFAULT_DOMAIN}/${username}`;
 }
 
+/** Dominio QSY correspondiente al host actual (null si no es un dominio QSY). */
+export function hostDomain(hostname: string): QsyDomain | null {
+  const h = hostname.toLowerCase().replace(/^www\./, "");
+  return QSY_DOMAINS.find((d) => d.key === h)?.key ?? null;
+}
+
+
