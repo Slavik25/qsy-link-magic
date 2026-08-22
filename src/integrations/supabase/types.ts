@@ -824,6 +824,51 @@ export type Database = {
         }
         Relationships: []
       }
+      site_bans: {
+        Row: {
+          active: boolean
+          created_at: string
+          evidence: Json
+          fingerprint: string | null
+          id: string
+          ip: string | null
+          lifted_at: string | null
+          lifted_by: string | null
+          profile_id: string | null
+          reason: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          evidence?: Json
+          fingerprint?: string | null
+          id?: string
+          ip?: string | null
+          lifted_at?: string | null
+          lifted_by?: string | null
+          profile_id?: string | null
+          reason?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          evidence?: Json
+          fingerprint?: string | null
+          id?: string
+          ip?: string | null
+          lifted_at?: string | null
+          lifted_by?: string | null
+          profile_id?: string | null
+          reason?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       socials: {
         Row: {
           created_at: string
@@ -1020,6 +1065,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_banned: {
+        Args: { _fingerprint: string; _user_id: string }
         Returns: boolean
       }
       mission_progress: { Args: { _key: string }; Returns: number }

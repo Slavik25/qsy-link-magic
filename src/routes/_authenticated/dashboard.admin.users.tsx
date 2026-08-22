@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { BadgeCheck, Ban, Check, Eye, Heart, Plus, Search, ShieldPlus, Star, X } from "lucide-react";
+import { BadgeCheck, Ban, Check, Eye, Heart, Plus, Search, ShieldPlus, ShieldMinus, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { AdminCard, Empty, Pill } from "@/components/qsy/admin-ui";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,15 @@ function AdminUsers() {
   const [selected, setSelected] = useState<AdminProfile | null>(null);
   const { data: users } = useAdminUsers(search);
   const qc = useQueryClient();
+  const { data: adminRows } = useQuery({
+    queryKey: ["admin-role-ids"],
+    queryFn: async () => {
+      const { data } = await supabase.from("user_roles").select("user_id").eq("role", "admin");
+      return (data ?? []).map((r) => r.user_id as string);
+    },
+  });
+  const adminIds = new Set(adminRows ?? []);
+
 
   async function refresh() {
     await qc.invalidateQueries({ queryKey: ["admin-users"] });
@@ -66,6 +75,27 @@ function AdminUsers() {
     }
     await logAdminAction("role:admin", p.username);
     toast.success(`@${p.username} ahora es admin`);
+    void qc.invalidateQueries({ queryKey: ["admin-role-ids"] });
+  }
+
+  async function revokeAdmin(p: AdminProfile) {
+    if (!p.user_id) {
+      toast.error("Perfil sin cuenta vinculada");
+      return;
+    }
+    if (!window.confirm(`¿Quitar el rol de admin a @${p.username}?`)) return;
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("user_id", p.user_id)
+      .eq("role", "admin");
+    if (error) {
+      toast.error("No se pudo quitar", { description: error.message });
+      return;
+    }
+    await logAdminAction("role:admin:revoke", p.username);
+    toast.success(`@${p.username} ya no es admin`);
+    void qc.invalidateQueries({ queryKey: ["admin-role-ids"] });
   }
 
   async function ban(p: AdminProfile) {
@@ -187,13 +217,23 @@ function AdminUsers() {
                         >
                           <Star className="size-3.5" />
                         </button>
-                        <button
-                          onClick={() => grantAdmin(p)}
-                          title="Otorgar admin"
-                          className="rounded-lg border border-border/60 p-1.5 text-muted-foreground hover:border-primary/50 hover:text-primary"
-                        >
-                          <ShieldPlus className="size-3.5" />
-                        </button>
+                        {p.user_id && adminIds.has(p.user_id) ? (
+                          <button
+                            onClick={() => revokeAdmin(p)}
+                            title="Quitar admin"
+                            className="rounded-lg border border-destructive/50 p-1.5 text-destructive hover:bg-destructive/10"
+                          >
+                            <ShieldMinus className="size-3.5" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => grantAdmin(p)}
+                            title="Otorgar admin"
+                            className="rounded-lg border border-border/60 p-1.5 text-muted-foreground hover:border-primary/50 hover:text-primary"
+                          >
+                            <ShieldPlus className="size-3.5" />
+                          </button>
+                        )}
                         <button
                           onClick={() => ban(p)}
                           title="Banear"
