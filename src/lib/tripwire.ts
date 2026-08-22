@@ -6,10 +6,7 @@
  * Los baneos se aplican únicamente desde el panel de administración.
  */
 
-import { reportConsoleAttack } from "./tripwire.functions";
-
 const FP_KEY = "qsy_fp";
-const BAN_KEY = "qsy_banned";
 
 function hash(input: string): string {
   let h1 = 0x811c9dc5;
