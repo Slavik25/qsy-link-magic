@@ -590,6 +590,7 @@ export type Database = {
           updated_at: string
           user_id: string | null
           username: string
+          username_set: boolean
           verified: boolean
           view_count: number
         }
@@ -611,6 +612,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           username: string
+          username_set?: boolean
           verified?: boolean
           view_count?: number
         }
@@ -632,6 +634,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
           username?: string
+          username_set?: boolean
           verified?: boolean
           view_count?: number
         }
