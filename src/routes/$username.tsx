@@ -101,28 +101,21 @@ function PublicProfile() {
     } catch {
       /* storage bloqueado: registramos igual */
     }
-    supabase
-      .from("profile_views")
-      .insert({
-        profile_id: profileId,
+    // El registro pasa por el servidor: así la visita queda ligada a la IP real
+    // y a los límites anti-spam, sin poder falsificarse desde el navegador.
+    void trackProfileView({
+      data: {
+        profileId,
         device: detectDevice(),
         browser: detectBrowser(),
         referrer: document.referrer || "direct",
-        country: null,
-      })
-      .then(({ error }) => {
-        if (error) {
-          // Si el registro falla no marcamos la visita, para reintentarlo luego.
-          try {
-            localStorage.removeItem(key);
-          } catch {
-            /* noop */
-          }
-          tracked.current = false;
-        }
-      });
-
+        fingerprint: deviceFingerprint(),
+      },
+    }).catch(() => {
+      tracked.current = false;
+    });
   }, [profileId]);
+
 
 
 
