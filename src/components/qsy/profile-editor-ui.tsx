@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import { defaultTheme, type ThemeConfig } from "@/lib/qsy";
+import { logProfileRejection } from "@/lib/profile-audit";
 
 export type Draft = {
   display_name: string;
@@ -74,6 +75,14 @@ export function useProfileDraft() {
       .eq("id", profile.id);
     setSaving(false);
     if (error) {
+      void logProfileRejection({
+        endpoint: "dashboard/profile:save",
+        action: "update",
+        targetId: profile.id,
+        targetUsername: profile.username,
+        error,
+        payload: { display_name: draft.display_name, bio: draft.bio, location: draft.location },
+      });
       toast.error(error.message);
       return;
     }

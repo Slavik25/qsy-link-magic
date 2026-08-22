@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { logAdminAction, useAdminUsers, type AdminProfile } from "@/lib/admin-data";
 import { BADGES } from "@/lib/badges";
 import { RANKS, RANK_LABEL, type QsyRank } from "@/lib/domains";
+import { logProfileRejection } from "@/lib/profile-audit";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/users")({
@@ -41,6 +42,14 @@ function AdminUsers() {
     if (rank !== "seraph") patch.domain = "qsy.rip";
     const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
     if (error) {
+      void logProfileRejection({
+        endpoint: "admin/users:setRank",
+        action: "update",
+        targetId: p.id,
+        targetUsername: p.username,
+        error,
+        payload: patch as Record<string, unknown>,
+      });
       toast.error("No se pudo cambiar el rango", { description: error.message });
       return;
     }
@@ -55,6 +64,14 @@ function AdminUsers() {
     const patch = field === "verified" ? { verified: value } : { featured: value };
     const { error } = await supabase.from("profiles").update(patch).eq("id", p.id);
     if (error) {
+      void logProfileRejection({
+        endpoint: "admin/users:toggleFlag",
+        action: "update",
+        targetId: p.id,
+        targetUsername: p.username,
+        error,
+        payload: patch as Record<string, unknown>,
+      });
       toast.error("No se pudo actualizar", { description: error.message });
       return;
     }

@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import { RankBadge } from "@/components/qsy/rank-badge";
 import { DEFAULT_DOMAIN, DOMAINS_MAINTENANCE, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
+import { logProfileRejection } from "@/lib/profile-audit";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/share")({
   component: ShareSection,
@@ -60,6 +61,14 @@ function ShareSection() {
     const { error } = await supabase.from("profiles").update({ domain: next }).eq("id", profile.id);
     setSaving(null);
     if (error) {
+      void logProfileRejection({
+        endpoint: "dashboard/profile/share:domain",
+        action: "update",
+        targetId: profile.id,
+        targetUsername: profile.username,
+        error,
+        payload: { domain: next },
+      });
       toast.error("No se pudo cambiar el dominio", { description: error.message });
       return;
     }
