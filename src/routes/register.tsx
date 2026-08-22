@@ -66,9 +66,9 @@ function RegisterPage() {
       return;
     }
     if (!data.session) {
-      setStep("code");
-      toast.success("Te enviamos un código", {
-        description: "Revisa tu correo e introduce el código de 6 dígitos.",
+      setStep("sent");
+      toast.success("Te enviamos un enlace de verificación", {
+        description: "Abrí el correo y tocá el botón para activar tu cuenta.",
       });
       return;
     }
@@ -76,81 +76,58 @@ function RegisterPage() {
     await navigate({ to: "/dashboard" });
   }
 
-  async function verify(e: React.FormEvent) {
-    e.preventDefault();
-    const token = code.trim();
-    if (token.length !== 6) {
-      toast.error("El código debe tener 6 dígitos");
-      return;
-    }
-    setLoading(true);
-    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
-    setLoading(false);
-    if (error || !data.session) {
-      toast.error(error?.message ?? "Código inválido o expirado");
-      return;
-    }
-    toast.success("Cuenta verificada. Bienvenido a QSY.");
-    await navigate({ to: "/dashboard" });
-  }
-
   async function resend() {
     setLoading(true);
-    const { error } = await supabase.auth.resend({ type: "signup", email });
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+    });
     setLoading(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    toast.success("Código reenviado");
+    toast.success("Enlace reenviado");
   }
 
-  if (step === "code") {
+  if (step === "sent") {
     return (
       <AuthShell
         side="left"
         eyebrow="Verifica tu correo"
-        title="Introduce tu código"
-        subtitle={`Enviamos un código de 6 dígitos a ${email}`}
+        title="Revisa tu bandeja"
+        subtitle={`Enviamos un enlace de verificación a ${email}`}
       >
-        <form onSubmit={verify} className="space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="code" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              Código de verificación
-            </Label>
-            <Input
-              id="code"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              value={code}
-              maxLength={6}
-              placeholder="000000"
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              className="h-14 rounded-xl bg-background/60 text-center font-mono text-2xl tracking-[0.5em]"
-            />
-          </div>
+        <div className="space-y-5">
+          <p className="text-sm text-muted-foreground">
+            Abrí el correo y tocá <strong>Verificar email</strong>. Al confirmarlo entrarás
+            automáticamente a tu dashboard. Si no lo ves, revisá spam o promociones.
+          </p>
 
           <Button
-            type="submit"
+            type="button"
+            onClick={resend}
             disabled={loading}
             className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
           >
-            {loading ? "Verificando…" : "Verificar y entrar"}
+            {loading ? "Enviando…" : "Reenviar enlace"}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </Button>
 
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <button type="button" onClick={resend} disabled={loading} className="font-semibold text-primary hover:underline">
-              Reenviar código
-            </button>
             <button type="button" onClick={() => setStep("form")} className="hover:underline">
               Cambiar correo
             </button>
+            <Link to="/login" className="font-semibold text-primary hover:underline">
+              Ya verifiqué, iniciar sesión
+            </Link>
           </div>
-        </form>
+        </div>
       </AuthShell>
     );
   }
+
 
   async function google() {
     const result = await lovable.auth.signInWithOAuth("google", {
