@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import qsyLogoAsset from "@/assets/qsy-logo.png.asset.json";
+import qsyLogoLightAsset from "@/assets/qsy-logo-dark.png.asset.json";
 import { DashBackground } from "@/components/qsy/dash-background";
 import { LangSwitcher } from "@/components/qsy/lang-switcher";
 import { DashThemeToggle, useDashTheme } from "@/components/qsy/dash-theme-toggle";
@@ -229,7 +230,12 @@ function DashboardLayout() {
             <img
               src={qsyLogoAsset.url}
               alt="Logo de QSY"
-              className="size-9 qsy-logo-img object-contain"
+              className="size-9 qsy-logo-on-dark object-contain"
+            />
+            <img
+              src={qsyLogoLightAsset.url}
+              alt="Logo de QSY"
+              className="size-9 qsy-logo-on-light object-contain"
             />
           </Link>
 
