@@ -246,6 +246,32 @@ function LoginPage() {
           Entrar con código
         </Button>
 
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={resending}
+          onClick={resendConfirmation}
+          className="h-11 w-full rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          <MailCheck className="size-4" />
+          {resending ? "Reenviando…" : "Reenviar confirmación"}
+        </Button>
+
+        {resendError ? (
+          <div className="flex flex-col gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-3">
+            <p className="text-xs text-destructive">{resendError}</p>
+            <button
+              type="button"
+              onClick={resendConfirmation}
+              className="self-start text-[11px] font-semibold uppercase tracking-[0.14em] text-primary hover:underline"
+            >
+              Reintentar envío
+            </button>
+          </div>
+        ) : null}
+
+
+
 
 
         <p className="pt-2 text-center text-xs text-muted-foreground">
