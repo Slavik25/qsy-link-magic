@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { QsyLogo } from "@/components/qsy/logo";
 import { DashBackground } from "@/components/qsy/dash-background";
 import { LangSwitcher } from "@/components/qsy/lang-switcher";
+import { DashThemeToggle, useDashTheme } from "@/components/qsy/dash-theme-toggle";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
@@ -86,7 +87,9 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="dash-theme min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[252px_1fr]">
+    <div
+      className={`dash-theme ${theme === "dark" ? "dash-dark" : ""} min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[252px_1fr]`}
+    >
       <DashBackground />
       {/* Sidebar */}
       <aside
@@ -224,6 +227,7 @@ function DashboardLayout() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 md:ml-4">
+            <DashThemeToggle />
             <LangSwitcher />
             {profile && (
               <Button asChild size="sm" className="rounded-full">
