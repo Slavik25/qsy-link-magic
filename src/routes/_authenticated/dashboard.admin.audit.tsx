@@ -35,19 +35,39 @@ const FILTERS = [
 ] as const;
 
 
+const STATUSES = [
+  { key: "all", label: "Todos" },
+  { key: "alert", label: "Fallidos / bloqueados" },
+  { key: "ok", label: "Correctos" },
+] as const;
+
+function isAlert(action: string) {
+  return (
+    action.includes("blocked") ||
+    action.includes("rejected") ||
+    action.includes("tamper") ||
+    action === "price_mismatch_detected"
+  );
+}
+
 function AdminAudit() {
   const [kind, setKind] = useState<(typeof FILTERS)[number]["key"]>("all");
+  const [status, setStatus] = useState<(typeof STATUSES)[number]["key"]>("all");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [q, setQ] = useState("");
 
   const { data: rows, isLoading } = useQuery({
-    queryKey: ["audit-events", kind],
+    queryKey: ["audit-events", kind, from, to],
     queryFn: async () => {
       let query = supabase
         .from("audit_events")
         .select("id, kind, action, actor_name, actor_user_id, source, ip, user_agent, detail, created_at")
         .order("created_at", { ascending: false })
-        .limit(200);
+        .limit(1000);
       if (kind !== "all") query = query.eq("kind", kind);
+      if (from) query = query.gte("created_at", new Date(from).toISOString());
+      if (to) query = query.lte("created_at", new Date(`${to}T23:59:59`).toISOString());
       const { data, error } = await query;
       if (error) throw error;
       return (data ?? []) as AuditRow[];
@@ -56,6 +76,8 @@ function AdminAudit() {
   });
 
   const filtered = (rows ?? []).filter((r) => {
+    if (status === "alert" && !isAlert(r.action)) return false;
+    if (status === "ok" && isAlert(r.action)) return false;
     const needle = q.trim().toLowerCase();
     if (!needle) return true;
     return (
@@ -65,10 +87,65 @@ function AdminAudit() {
     );
   });
 
+  const exportCsv = () => {
+    const head = ["fecha", "tipo", "accion", "estado", "usuario", "origen", "ip", "detalle"];
+    const lines = filtered.map((r) =>
+      [
+        new Date(r.created_at).toISOString(),
+        r.kind,
+        r.action,
+        isAlert(r.action) ? "bloqueado/fallido" : "ok",
+        r.actor_name,
+        r.source,
+        r.ip ?? "",
+        JSON.stringify(r.detail ?? {}),
+      ]
+        .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+        .join(","),
+    );
+    const blob = new Blob([[head.join(","), ...lines].join("\n")], {
+      type: "text/csv;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `qsy-auditoria-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportPdf = () => {
+    const win = window.open("", "_blank", "width=1000,height=800");
+    if (!win) return;
+    const rowsHtml = filtered
+      .map(
+        (r) => `<tr${isAlert(r.action) ? ' class="alert"' : ""}>
+          <td>${new Date(r.created_at).toLocaleString("es-ES")}</td>
+          <td>${r.kind}</td><td>${r.action}</td>
+          <td>${isAlert(r.action) ? "bloqueado/fallido" : "ok"}</td>
+          <td>@${r.actor_name}</td><td>${r.source}</td><td>${r.ip ?? ""}</td>
+        </tr>`,
+      )
+      .join("");
+    win.document.write(`<html><head><title>Auditoría QSY</title><style>
+      body{font-family:system-ui,sans-serif;padding:24px;color:#111}
+      h1{font-size:18px} table{width:100%;border-collapse:collapse;font-size:11px}
+      th,td{border:1px solid #ddd;padding:4px 6px;text-align:left}
+      tr.alert{background:#fdecec}
+    </style></head><body>
+      <h1>Auditoría QSY · ${filtered.length} registros</h1>
+      <p style="font-size:11px">Generado ${new Date().toLocaleString("es-ES")}</p>
+      <table><thead><tr><th>Fecha</th><th>Tipo</th><th>Acción</th><th>Estado</th><th>Usuario</th><th>Origen</th><th>IP</th></tr></thead>
+      <tbody>${rowsHtml}</tbody></table></body></html>`);
+    win.document.close();
+    win.focus();
+    win.print();
+  };
+
   return (
     <AdminCard
       title="Historial de auditoría"
-      desc="Cada visita registrada y cada mensaje del chat, con fecha, origen y usuario"
+      desc="Cada visita, mensaje, cambio de precio o intento bloqueado, con fecha, origen y usuario"
       action={
         <Input
           value={q}
@@ -78,7 +155,7 @@ function AdminAudit() {
         />
       }
     >
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <button
             key={f.key}
@@ -93,6 +170,42 @@ function AdminAudit() {
           </button>
         ))}
       </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {STATUSES.map((s) => (
+          <button
+            key={s.key}
+            onClick={() => setStatus(s.key)}
+            className={`rounded-full border px-3 py-1 text-[11px] font-medium transition-colors ${
+              status === s.key
+                ? "border-primary/60 bg-primary/15 text-primary"
+                : "border-border/60 text-muted-foreground hover:border-primary/40"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+        <Input
+          type="date"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          className="h-9 w-40"
+        />
+        <Input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="h-9 w-40" />
+        <button
+          onClick={exportCsv}
+          className="rounded-full border border-border/60 px-3 py-1 text-[11px] font-medium hover:border-primary/50"
+        >
+          Exportar CSV
+        </button>
+        <button
+          onClick={exportPdf}
+          className="rounded-full border border-border/60 px-3 py-1 text-[11px] font-medium hover:border-primary/50"
+        >
+          Exportar PDF
+        </button>
+      </div>
+
 
       {(() => {
         const alerts = (rows ?? []).filter(
