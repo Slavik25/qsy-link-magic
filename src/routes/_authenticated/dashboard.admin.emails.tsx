@@ -41,9 +41,17 @@ function fmt(ts: string) {
 function AdminEmailsPage() {
   const listLogs = useServerFn(listEmailDeliveryLogs);
   const sendTest = useServerFn(sendConfirmationTestEmail);
+  const fetchStatus = useServerFn(getEmailSetupStatus);
   const [recipient, setRecipient] = useState("");
   const [testEmail, setTestEmail] = useState("");
+  const [testKind, setTestKind] = useState<"signup" | "magiclink">("signup");
   const [lastError, setLastError] = useState<string | null>(null);
+
+  const status = useQuery({
+    queryKey: ["admin-email-status"],
+    queryFn: () => fetchStatus({ data: {} }),
+    refetchOnWindowFocus: false,
+  });
 
   const logs = useQuery({
     queryKey: ["admin-email-logs", recipient],
@@ -52,7 +60,8 @@ function AdminEmailsPage() {
   });
 
   const test = useMutation({
-    mutationFn: (email: string) => sendTest({ data: { email } }),
+    mutationFn: (email: string) => sendTest({ data: { email, kind: testKind } }),
+
     onSuccess: (res) => {
       if (res.ok) {
         setLastError(null);
