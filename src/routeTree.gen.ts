@@ -47,6 +47,7 @@ import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from '
 import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
 import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
 import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
+import { Route as ApiPublicWebhooksDodoRouteImport } from './routes/api/public/webhooks/dodo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -266,6 +267,11 @@ const AuthenticatedDashboardProfileShareRoute =
     path: '/share',
     getParentRoute: () => AuthenticatedDashboardProfileRoute,
   } as any)
+const ApiPublicWebhooksDodoRoute = ApiPublicWebhooksDodoRouteImport.update({
+  id: '/api/public/webhooks/dodo',
+  path: '/api/public/webhooks/dodo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -339,6 +346,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -380,6 +388,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -421,6 +430,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/api/public/webhooks/dodo'
     | '/dashboard/admin/'
     | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
@@ -457,6 +467,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/api/public/webhooks/dodo'
     | '/dashboard/admin'
     | '/dashboard/profile'
   id:
@@ -497,6 +508,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile/effects'
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
+    | '/api/public/webhooks/dodo'
     | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
@@ -510,6 +522,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   TemplatesRoute: typeof TemplatesRoute
+  ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -780,6 +793,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileShareRouteImport
       parentRoute: typeof AuthenticatedDashboardProfileRoute
     }
+    '/api/public/webhooks/dodo': {
+      id: '/api/public/webhooks/dodo'
+      path: '/api/public/webhooks/dodo'
+      fullPath: '/api/public/webhooks/dodo'
+      preLoaderRoute: typeof ApiPublicWebhooksDodoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -914,6 +934,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   TemplatesRoute: TemplatesRoute,
+  ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

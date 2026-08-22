@@ -42,7 +42,7 @@ export const Route = createFileRoute("/api/public/webhooks/dodo")({
         if (event.type === "payment.succeeded") {
           const { error } = await supabaseAdmin.rpc("complete_payment_order", {
             _order_id: orderId,
-            _payment_id: event.data?.payment_id ?? null,
+            _payment_id: event.data?.payment_id ?? "",
           });
           if (error) {
             console.error("complete_payment_order failed", error.message);
