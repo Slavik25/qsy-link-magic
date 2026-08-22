@@ -699,6 +699,8 @@ function Landing() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <SiteNav />
+      <HomeMascot />
+
 
       <section className="relative overflow-hidden aurora">
         <div aria-hidden className="pointer-events-none absolute inset-0 starfield drift opacity-70" />
