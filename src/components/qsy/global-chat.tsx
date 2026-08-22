@@ -63,24 +63,33 @@ export function GlobalChat() {
     bottom.current?.scrollIntoView({ block: "nearest" });
   }, [messages?.length]);
 
+  const postMessage = useServerFn(sendChatMessage);
+  const postReport = useServerFn(reportChatMessage);
+
   const send = useMutation({
     mutationFn: async (message: string) => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) throw new Error("Necesitas iniciar sesión");
-      const { error } = await supabase.from("global_chat_messages").insert({
-        user_id: auth.user.id,
-        profile_id: profile?.id ?? null,
-        author_name: profile?.username ?? "anon",
-        author_avatar: profile?.avatar_url ?? null,
-        message,
-      });
-      if (error) throw error;
+      await postMessage({ data: { message, fingerprint: deviceFingerprint() } });
     },
     onSuccess: () => {
       setText("");
       void qc.invalidateQueries({ queryKey: ["global-chat"] });
     },
     onError: (e: Error) => toast.error("No se pudo enviar", { description: e.message }),
+  });
+
+  const report = useMutation({
+    mutationFn: async (messageId: string) => {
+      const reason = window.prompt("¿Por qué reportas este mensaje? (spam, insultos, enlaces, etc.)");
+      if (!reason || !reason.trim()) return false;
+      await postReport({ data: { messageId, reason: reason.trim() } });
+      return true;
+    },
+    onSuccess: (sent) => {
+      if (sent) toast.success("Reporte enviado al equipo de moderación");
+    },
+    onError: (e: Error) => toast.error("No se pudo reportar", { description: e.message }),
   });
 
   async function remove(id: string) {
@@ -91,6 +100,7 @@ export function GlobalChat() {
     }
     void qc.invalidateQueries({ queryKey: ["global-chat"] });
   }
+
 
   return (
     <div className="pop-in flex h-full flex-col rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
