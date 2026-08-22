@@ -37,7 +37,8 @@ export function AuthShell({
       >
         <section className="rise text-center lg:text-left">
           <Link to="/" className="inline-flex items-center">
-            <img src={qsyLogo.url} alt="QSY" className="h-11 w-auto object-contain" />
+            <img src={qsyLogo.url} alt="QSY" className="h-11 w-auto object-contain qsy-logo-on-dark" />
+            <img src={qsyLogoLight.url} alt="QSY" className="h-11 w-auto object-contain qsy-logo-on-light" />
           </Link>
 
           <h2 className="mt-8 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
