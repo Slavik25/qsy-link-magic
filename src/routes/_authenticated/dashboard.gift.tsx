@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Check, Coins, Crown, Gem, Gift, Loader2, Search } from "lucide-react";
+import { Check, CreditCard, Crown, Gem, Gift, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { useWallet } from "@/lib/economy";
 import { RankBadge } from "@/components/qsy/rank-badge";
 
 export const Route = createFileRoute("/_authenticated/dashboard/gift")({
@@ -17,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/gift")({
       { title: "Regalar Premium · QSY" },
       {
         name: "description",
-        content: "Regala el rango Obsidian o Seraph a cualquier usuario de QSY con tus QSY Coins.",
+        content: "Regala el rango Obsidian o Seraph a cualquier usuario de QSY con un pago único.",
       },
       { property: "og:title", content: "Regalar Premium · QSY" },
       { property: "og:description", content: "Regala Obsidian o Seraph a otro usuario de QSY." },
@@ -28,6 +27,10 @@ export const Route = createFileRoute("/_authenticated/dashboard/gift")({
 });
 
 type Plan = "obsidian" | "seraph";
+
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "USD" }).format(value);
+}
 
 const PLANS: {
   key: Plan;
@@ -40,7 +43,7 @@ const PLANS: {
   {
     key: "obsidian",
     name: "Obsidian",
-    price: 5000,
+    price: 5.99,
     icon: Gem,
     perks: ["3 biolinks independientes", "Layouts y efectos premium", "Insignia V.I.P en el perfil"],
     className:
@@ -49,7 +52,7 @@ const PLANS: {
   {
     key: "seraph",
     name: "Seraph",
-    price: 12000,
+    price: 14.99,
     icon: Crown,
     perks: [
       "5 biolinks independientes",
@@ -81,7 +84,6 @@ function useSearchProfiles(term: string) {
 
 function GiftPremium() {
   const qc = useQueryClient();
-  const { data: coins } = useWallet();
   const [term, setTerm] = useState("");
   const [target, setTarget] = useState<Target | null>(null);
   const [plan, setPlan] = useState<Plan>("obsidian");
@@ -90,30 +92,17 @@ function GiftPremium() {
   const { data: results, isFetching } = useSearchProfiles(term);
 
   const selectedPlan = PLANS.find((p) => p.key === plan)!;
-  const balance = coins ?? 0;
-  const affordable = balance >= selectedPlan.price;
 
   async function send() {
     if (!target) return;
     setSending(true);
-    const { data, error } = await supabase.rpc("gift_rank", {
-      _username: target.username,
-      _rank: plan,
-      _message: message,
-    });
+    await new Promise((r) => setTimeout(r, 400));
     setSending(false);
-    if (error) {
-      toast.error("No se pudo enviar el regalo", { description: error.message });
-      return;
-    }
-    toast.success(`¡Regalaste ${selectedPlan.name} a @${target.username}!`, {
-      description: `Saldo restante: ${Number(data ?? 0).toLocaleString("es-ES")} QSY Coins`,
+    toast.info("Pasarela de pago en configuración", {
+      description: `Tu regalo de ${selectedPlan.name} para @${target.username} (${formatPrice(
+        selectedPlan.price,
+      )}) quedará listo en cuanto conectemos el sistema de pago.`,
     });
-    setMessage("");
-    setTarget(null);
-    setTerm("");
-    void qc.invalidateQueries({ queryKey: ["wallet"] });
-    void qc.invalidateQueries({ queryKey: ["gift-history"] });
   }
 
   return (
@@ -126,12 +115,12 @@ function GiftPremium() {
           <div>
             <h1 className="text-lg font-semibold">Regalar Premium</h1>
             <p className="text-xs text-muted-foreground">
-              Elige un usuario y regálale Obsidian o Seraph con tus QSY Coins.
+              Elige un usuario y regálale Obsidian o Seraph con un pago único.
             </p>
           </div>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-4 py-2 text-xs font-semibold">
-          <Coins className="size-4 text-primary" /> {balance.toLocaleString("es-ES")} QSY Coins
+          <CreditCard className="size-4 text-primary" /> Pago seguro con tarjeta
         </span>
       </header>
 
@@ -208,7 +197,7 @@ function GiftPremium() {
                   <Icon className="size-5" />
                   <span className="text-base font-semibold">{p.name}</span>
                   <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold">
-                    <Coins className="size-3.5 text-primary" /> {p.price.toLocaleString("es-ES")}
+                    <CreditCard className="size-3.5 text-primary" /> {formatPrice(p.price)}
                   </span>
                 </div>
                 <ul className="mt-3 space-y-1.5 text-xs text-muted-foreground">
@@ -236,7 +225,7 @@ function GiftPremium() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Button
             onClick={send}
-            disabled={!target || !affordable || sending}
+            disabled={!target || sending}
             className="rounded-2xl"
           >
             {sending ? (
@@ -244,13 +233,11 @@ function GiftPremium() {
             ) : (
               <Gift className="size-4" />
             )}
-            Regalar {selectedPlan.name} · {selectedPlan.price.toLocaleString("es-ES")} coins
+            Pagar y regalar {selectedPlan.name} · {formatPrice(selectedPlan.price)}
           </Button>
-          {!affordable && (
-            <span className="text-xs text-destructive">
-              Te faltan {(selectedPlan.price - balance).toLocaleString("es-ES")} QSY Coins.
-            </span>
-          )}
+          <span className="text-xs text-muted-foreground">
+            La pasarela de pago se conectará en breve.
+          </span>
           {!target && <span className="text-xs text-muted-foreground">Selecciona un usuario.</span>}
         </div>
       </section>
@@ -288,7 +275,7 @@ function GiftHistory() {
             <RankBadge rank={g.rank} size="sm" />
             <span className="ml-auto text-muted-foreground">
               {new Date(g.created_at).toLocaleDateString("es-ES")} ·{" "}
-              {g.price.toLocaleString("es-ES")} coins
+              {formatPrice(g.price)}
             </span>
           </li>
         ))}
