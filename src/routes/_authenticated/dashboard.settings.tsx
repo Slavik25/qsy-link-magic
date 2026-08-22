@@ -1,4 +1,6 @@
 import { profileHost } from "@/lib/domains";
+import { Copy, Eye, EyeOff, KeyRound, RefreshCw } from "lucide-react";
+
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
