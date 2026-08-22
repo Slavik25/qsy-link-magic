@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { isDisposableEmail, DISPOSABLE_EMAIL_MESSAGE } from "@/lib/disposable-emails";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -36,8 +35,7 @@ const schema = z.object({
     .string()
     .trim()
     .email("Email inválido")
-    .max(255)
-    .refine((v) => !isDisposableEmail(v), DISPOSABLE_EMAIL_MESSAGE),
+    .max(255),
   password: z.string().min(6, "Mínimo 6 caracteres").max(72),
 });
 
