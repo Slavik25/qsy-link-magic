@@ -244,12 +244,15 @@ function RankPage() {
               </p>
             ) : (
               <button
-                className={`mt-6 w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+                onClick={() => upgrade(t.key as PaidRank)}
+                disabled={busy !== null}
+                className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
                   t.key === "seraph"
                     ? "bg-amber-300 text-black hover:bg-amber-200"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
+                {busy === t.key && <Loader2 className="size-4 animate-spin" />}
                 Subir a {t.name}
               </button>
             )}
