@@ -47,12 +47,18 @@ function useTheme() {
     const saved = localStorage.getItem("qsy-theme");
     const isDark = saved !== "light";
     setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
+    apply(isDark);
   }, []);
+  function apply(isDark: boolean) {
+    const root = document.documentElement;
+    root.classList.toggle("dark", isDark);
+    root.classList.toggle("qsy-dark", isDark);
+    root.classList.toggle("qsy-light", !isDark);
+  }
   function toggle() {
     setDark((prev) => {
       const next = !prev;
-      document.documentElement.classList.toggle("dark", next);
+      apply(next);
       localStorage.setItem("qsy-theme", next ? "dark" : "light");
       return next;
     });
