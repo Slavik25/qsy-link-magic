@@ -16,7 +16,7 @@ export function HomeMascot() {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem(KEY)) return;
     sessionStorage.setItem(KEY, "1");
-    const src = MASCOTS[Math.floor(Math.random() * MASCOTS.length)];
+    const src = MASCOTS[Math.floor(Math.random() * MASCOTS.length)] ?? MASCOTS[0]!;
     const side = Math.random() < 0.5 ? "left" : "right";
     setState({ src, side });
     const t = setTimeout(() => setVisible(true), 400);
