@@ -1,14 +1,5 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# que haces pendejo virgo
+# no hay nada para ti aca. anda a laburar.
 
 User-agent: *
-Allow: /
+Disallow: /
