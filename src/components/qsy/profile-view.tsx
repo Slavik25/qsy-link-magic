@@ -12,7 +12,7 @@ type Props = {
   >;
   links: Pick<ProfileLink, "id" | "title" | "url" | "icon">[];
   socials: Pick<Social, "id" | "platform" | "url">[];
-  badges?: string[];
+  badges?: (string | { key: string; obtained_at?: string | null })[];
   views?: number;
   likes?: number;
   music?: { title?: string; artist?: string } | null;
