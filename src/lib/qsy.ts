@@ -103,6 +103,8 @@ export type ThemeConfig = {
   show_views?: boolean;
   show_likes?: boolean;
   typewriter?: string[];
+  /** Bloques de música/vídeo por enlace (YouTube, Spotify, SoundCloud, Apple Music) */
+  media?: MediaItem[];
   /* Advanced */
   profile_mode?: "public" | "unlisted" | "private";
   show_bio?: boolean;
