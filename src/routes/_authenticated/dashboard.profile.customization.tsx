@@ -235,10 +235,16 @@ function CustomizationSection() {
             min={0}
             max={100}
             step={1}
-            disabled={t.card_bg_type === "transparent" || t.show_card === false}
             value={t.card_bg_type === "transparent" ? 0 : (t.card_alpha ?? 100)}
-            onChange={(e) => setTheme("card_alpha", Number(e.target.value))}
-            className="mt-4 w-full accent-[var(--primary)] disabled:opacity-40"
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              setThemeMany({
+                card_alpha: v,
+                card_bg_type: v === 0 ? "transparent" : t.card_bg_type === "transparent" ? "solid" : t.card_bg_type,
+                ...(t.show_card === false ? { show_card: true } : {}),
+              });
+            }}
+            className="relative z-10 mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/15 accent-[var(--primary)]"
             aria-label="Opacidad del fondo del layout"
           />
           <div className="mt-2 flex justify-between text-[11px] text-muted-foreground">
