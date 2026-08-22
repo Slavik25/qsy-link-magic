@@ -95,13 +95,22 @@ function GiftPremium() {
   async function send() {
     if (!target) return;
     setSending(true);
-    await new Promise((r) => setTimeout(r, 400));
-    setSending(false);
-    toast.info("Pasarela de pago en configuración", {
-      description: `Tu regalo de ${selectedPlan.name} para @${target.username} (${formatPrice(
-        selectedPlan.price,
-      )}) quedará listo en cuanto conectemos el sistema de pago.`,
-    });
+    try {
+      const { url } = await checkout({
+        data: {
+          rank: plan,
+          username: target.username,
+          message,
+          returnUrl: `${window.location.origin}/dashboard/gift`,
+        },
+      });
+      window.location.href = url;
+    } catch (e) {
+      setSending(false);
+      toast.error("No se pudo abrir el pago", {
+        description: e instanceof Error ? e.message : "Intenta de nuevo en unos minutos.",
+      });
+    }
   }
 
   return (
