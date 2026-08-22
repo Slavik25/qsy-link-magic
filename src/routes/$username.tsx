@@ -156,11 +156,14 @@ function PublicProfile() {
 
   // CSS personalizado: exclusivo de Obsidian y Seraph.
   const premium = profile.rank === "obsidian" || profile.rank === "seraph";
-  const customCss = premium ? (profile.theme.custom_css ?? "").trim() : "";
+  const customCss = premium ? sanitizeCss(profile.theme.custom_css ?? "") : "";
 
   return (
     <ProfileStage theme={profile.theme} music={music}>
-      {customCss ? <style dangerouslySetInnerHTML={{ __html: customCss }} /> : null}
+      {customCss ? (
+        <style data-qsy-custom-css="" dangerouslySetInnerHTML={{ __html: customCss }} />
+      ) : null}
+
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
       <main
         className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
