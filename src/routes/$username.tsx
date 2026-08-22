@@ -25,7 +25,8 @@ export const Route = createFileRoute("/$username")({
     const name = m?.display_name || handle;
 
     // Embed por defecto de QSY; los rangos Obsidian y Seraph pueden sobrescribirlo.
-    const title = m?.meta_title ?? `${name} (${handle}) · qsy.rip`;
+    const title =
+      m?.meta_title ?? (name === handle ? `${handle} · qsy.rip` : `${name} (${handle}) · qsy.rip`);
     const description =
       m?.meta_description ??
       (m?.bio?.trim() ? m.bio.trim() : `${handle} en QSY — links, redes y música en un solo perfil.`);
