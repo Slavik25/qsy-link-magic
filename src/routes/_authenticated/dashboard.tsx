@@ -86,7 +86,7 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[252px_1fr]">
+    <div className="dash-theme min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[252px_1fr]">
       <DashBackground />
       {/* Sidebar */}
       <aside
