@@ -15,15 +15,46 @@ type ReportInput = { messageId: string; reason: string; note?: string };
 
 async function requestContext() {
   const { getRequestHeader } = await import("@tanstack/react-start/server");
+  // cf-connecting-ip / x-real-ip los pone el edge y no se pueden falsificar
+  // desde el cliente; x-forwarded-for solo como último recurso.
   const forwarded = getRequestHeader("x-forwarded-for") ?? "";
   const ip =
-    forwarded.split(",")[0]?.trim() ||
     getRequestHeader("cf-connecting-ip") ||
     getRequestHeader("x-real-ip") ||
+    forwarded.split(",").pop()?.trim() ||
     null;
   const userAgent = getRequestHeader("user-agent") ?? null;
-  return { ip, userAgent };
+  const origin = getRequestHeader("origin") ?? "";
+  const referer = getRequestHeader("referer") ?? "";
+  const host = getRequestHeader("host") ?? "";
+  const secFetchSite = getRequestHeader("sec-fetch-site") ?? "";
+  const secFetchMode = getRequestHeader("sec-fetch-mode") ?? "";
+  return { ip, userAgent, origin, referer, host, secFetchSite, secFetchMode };
 }
+
+const BOT_UA =
+  /(powershell|curl|wget|python|httpie|postman|insomnia|axios|node-fetch|go-http|java|libwww|okhttp|scrapy|httpclient|restsharp|winhttp|bot|spider|headless)/i;
+
+/** Verifica que la petición venga de un navegador real en el mismo sitio. */
+function isBrowserRequest(ctx: Awaited<ReturnType<typeof requestContext>>) {
+  const ua = ctx.userAgent ?? "";
+  if (!ua || ua.length < 20 || BOT_UA.test(ua)) return false;
+  if (!/mozilla\//i.test(ua)) return false;
+  // Los navegadores mandan sec-fetch-* en peticiones fetch/XHR.
+  if (!ctx.secFetchSite || !ctx.secFetchMode) return false;
+  if (ctx.secFetchSite !== "same-origin") return false;
+  const sameHost = (value: string) => {
+    if (!value) return false;
+    try {
+      return new URL(value).host === ctx.host;
+    } catch {
+      return false;
+    }
+  };
+  if (!sameHost(ctx.origin) && !sameHost(ctx.referer)) return false;
+  return true;
+}
+
 
 /** Registra una visita de perfil con IP real y deja rastro en la auditoría. */
 export const trackProfileView = createServerFn({ method: "POST" })
