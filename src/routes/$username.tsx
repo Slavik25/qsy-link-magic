@@ -30,16 +30,10 @@ function PublicProfile() {
   const { username } = Route.useParams();
   const { data, isLoading } = useProfileByUsername(username);
   const tracked = useRef(false);
-  const [host, setHost] = useState<string | null>(null);
-  useEffect(() => setHost(window.location.hostname), []);
-
-  const current = host ? hostDomain(host) : null;
-  const allowed = profileHost(data?.profile as { rank?: string | null; domain?: string | null });
-  const blocked = Boolean(data) && current !== null && current !== allowed;
 
   const profileId = data?.profile.id;
   useEffect(() => {
-    if (!profileId || tracked.current || blocked) return;
+    if (!profileId || tracked.current) return;
     tracked.current = true;
     void supabase.from("profile_views").insert({
       profile_id: profileId,
@@ -48,7 +42,8 @@ function PublicProfile() {
       referrer: document.referrer || "direct",
       country: null,
     });
-  }, [profileId, blocked]);
+  }, [profileId]);
+
 
 
   if (isLoading) {
