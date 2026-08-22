@@ -70,7 +70,7 @@ export function ProfileView({
   return (
     <div
       style={{ ...style, ...alphaStyle }}
-      className={`relative w-full overflow-hidden ${
+      className={`relative w-full overflow-hidden ${hoverClass} ${
         showCard
           ? `qsy-tpl qsy-tpl-${template} ${cardAlpha < 100 ? "qsy-tpl-alpha" : ""}`
           : "border-0 bg-transparent"
