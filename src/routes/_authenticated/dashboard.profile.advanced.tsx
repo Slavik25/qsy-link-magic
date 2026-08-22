@@ -1,12 +1,13 @@
 import { profileHost } from "@/lib/domains";
 import { createFileRoute } from "@tanstack/react-router";
-import { Eye, Shield, Sparkles } from "lucide-react";
+import { Crown, Eye, Shield, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { AssetUploader } from "@/components/qsy/asset-uploader";
 import { Panel, SaveBar, ToggleRow, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 import type { ThemeConfig } from "@/lib/qsy";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/advanced")({
   component: AdvancedSection,
@@ -34,9 +35,31 @@ const BG_EFFECTS = [
   { id: "dither", label: "Dither", pro: true },
 ];
 
+/** Aviso de bloqueo para funciones exclusivas de Obsidian y Seraph. */
+function PremiumLock({ title }: { title: string }) {
+  return (
+    <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+      <p className="flex items-center gap-2 text-sm font-semibold">
+        <Crown className="size-4 text-primary" /> {title} — Obsidian o Seraph
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Esta función es exclusiva de los planes Obsidian y Seraph. Mejora tu plan para
+        personalizar tu embed de Twitter/Discord y usar CSS propio.
+      </p>
+      <Link
+        to="/dashboard/rank"
+        className="mt-4 inline-flex h-9 items-center rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground"
+      >
+        Ver planes
+      </Link>
+    </div>
+  );
+}
+
 function AdvancedSection() {
   const { profile, draft, setTheme, save, saving } = useProfileDraft();
   const t = draft.theme;
+  const premium = profile?.rank === "obsidian" || profile?.rank === "seraph";
 
   return (
     <Panel
@@ -105,9 +128,20 @@ function AdvancedSection() {
         </div>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
+      {!premium && <PremiumLock title="Embed personalizado y CSS" />}
+
+      <section
+        className={`space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
+          premium ? "" : "pointer-events-none select-none opacity-50"
+        }`}
+        aria-disabled={!premium}
+      >
         <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
-          <Eye className="size-3.5 text-primary" /> Metadatos del perfil
+          <Eye className="size-3.5 text-primary" /> Metadatos del perfil (embed)
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Si lo dejas vacío se usa el embed por defecto de QSY con tu avatar, tu nombre, tu
+          @usuario y tu bio.
         </p>
         <div className="grid gap-5 lg:grid-cols-2">
           <div className="space-y-4">
@@ -181,7 +215,12 @@ function AdvancedSection() {
         </div>
       </section>
 
-      <section className="space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
+      <section
+        className={`space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
+          premium ? "" : "pointer-events-none select-none opacity-50"
+        }`}
+        aria-disabled={!premium}
+      >
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">CSS personalizado</p>
         <p className="text-xs text-muted-foreground">
           Inyecta CSS personalizado en tu perfil público. Solo para usuarios avanzados.
