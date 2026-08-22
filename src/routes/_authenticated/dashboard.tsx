@@ -104,7 +104,12 @@ function DashboardLayout() {
               <img
                 src={qsyLogoAsset.url}
                 alt="Logo de QSY"
-                className="size-10 qsy-logo-img object-contain"
+                className="size-10 qsy-logo-on-dark object-contain"
+              />
+              <img
+                src={qsyLogoLightAsset.url}
+                alt="Logo de QSY"
+                className="size-10 qsy-logo-on-light object-contain"
               />
             </span>
             <span className="text-sm font-semibold tracking-[0.22em] uppercase text-foreground/80">
