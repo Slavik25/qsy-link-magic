@@ -72,7 +72,7 @@ export const checkBanStatus = createServerFn({ method: "POST" })
     if (!data.fingerprint && !data.userId) return { banned: false };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: banned } = await supabaseAdmin.rpc("is_banned", {
-      _user_id: data.userId,
+      _user_id: data.userId ?? undefined,
       _fingerprint: data.fingerprint,
     });
     return { banned: !!banned };
