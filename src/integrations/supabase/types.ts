@@ -1202,6 +1202,7 @@ export type Database = {
       mission_progress: { Args: { _key: string }; Returns: number }
       new_login_code: { Args: never; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
+      reconcile_shop: { Args: never; Returns: Json }
       rotate_login_code: { Args: never; Returns: string }
     }
     Enums: {
