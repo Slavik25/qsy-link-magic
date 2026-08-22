@@ -92,6 +92,79 @@ const TIERS: Tier[] = [
   },
 ];
 
+type Row = { feature: string; free: string; obsidian: string; seraph: string };
+
+const FEATURES: Row[] = [
+  { feature: "Precio", free: "GRATIS", obsidian: "4,99 € / mes", seraph: "9,99 € / mes" },
+  { feature: "QSY Coins de bienvenida", free: "0", obsidian: "500", seraph: "2.000" },
+  { feature: "Perfiles", free: "2", obsidian: "6", seraph: "Ilimitados" },
+  { feature: "Dominios (qsy.rip / .es / .bio)", free: "1 base", obsidian: "qsy.rip", seraph: "Los 3 + dominio propio" },
+  { feature: "Insignia exclusiva", free: "—", obsidian: "Insignia Obsidian + V.I.P", seraph: "Insignia Seraph animada + V.I.P" },
+  { feature: "Decoraciones de perfil", free: "Limitadas", obsidian: "Todas", seraph: "Todas" },
+  { feature: "Efectos y fondos", free: "—", obsidian: "✓", seraph: "✓" },
+  { feature: "Layouts y reproductores", free: "Básicos", obsidian: "Todos", seraph: "Todos" },
+  { feature: "Personalización avanzada", free: "—", obsidian: "✓", seraph: "✓" },
+  { feature: "Analíticas", free: "7 días", obsidian: "90 días + países", seraph: "Tiempo real + CSV" },
+  { feature: "Límite de subida", free: "25 MB", obsidian: "40 MB", seraph: "100 MB" },
+  { feature: "Sin marca QSY", free: "—", obsidian: "✓", seraph: "✓" },
+  { feature: "Soporte prioritario", free: "—", obsidian: "—", seraph: "✓ Discord" },
+];
+
+function Cell({ value, tone }: { value: string; tone: "free" | "obsidian" | "seraph" }) {
+  const muted = value === "—" || value === "0" || value === "GRATIS" || value === "Limitadas";
+  const color =
+    tone === "seraph"
+      ? "text-amber-200"
+      : tone === "obsidian"
+        ? "text-violet-300"
+        : "text-foreground";
+  if (value === "✓" || value.startsWith("✓")) {
+    return <span className="text-emerald-400">{value}</span>;
+  }
+  return (
+    <span className={muted ? "text-muted-foreground/60" : tone === "free" ? "" : `${color} font-medium`}>
+      {value}
+    </span>
+  );
+}
+
+function FeatureTable() {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        Precios y características
+      </h2>
+      <div className="overflow-x-auto rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl">
+        <table className="w-full min-w-[640px] text-sm">
+          <thead>
+            <tr className="border-b border-border/60 text-[11px] uppercase tracking-[0.14em]">
+              <th className="px-5 py-4 text-left font-semibold">Característica</th>
+              <th className="px-5 py-4 text-left font-semibold text-muted-foreground">Free</th>
+              <th className="px-5 py-4 text-left font-semibold text-violet-300">Obsidian</th>
+              <th className="px-5 py-4 text-left font-semibold text-amber-200">Seraph</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FEATURES.map((r) => (
+              <tr key={r.feature} className="border-b border-border/40 last:border-0 hover:bg-primary/5">
+                <td className="px-5 py-3.5 font-medium">{r.feature}</td>
+                <td className="px-5 py-3.5"><Cell value={r.free} tone="free" /></td>
+                <td className="px-5 py-3.5"><Cell value={r.obsidian} tone="obsidian" /></td>
+                <td className="px-5 py-3.5"><Cell value={r.seraph} tone="seraph" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="rounded-2xl border border-border/60 bg-card/40 px-5 py-4 text-xs text-muted-foreground">
+        <strong className="text-foreground">¿Cómo comprar?</strong> Pulsa en «Subir a Obsidian» o «Subir a
+        Seraph» para generar tu pedido. El pago es único y sin suscripciones; tu rango se activa en menos de
+        24 horas.
+      </p>
+    </section>
+  );
+}
+
 function RankPage() {
   return (
     <div className="space-y-8">
@@ -160,6 +233,8 @@ function RankPage() {
           </article>
         ))}
       </section>
+
+      <FeatureTable />
 
       <section className="rounded-3xl border border-border/60 bg-card/40 p-6">
         <h2 className="text-sm font-semibold">¿Prefieres no pagar?</h2>
