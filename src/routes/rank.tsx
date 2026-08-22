@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Crown, Move, ZoomIn, ZoomOut } from "lucide-react";
 import { SiteNav } from "@/components/qsy/site-nav";
 import { SiteFooter } from "@/components/qsy/site-footer";
