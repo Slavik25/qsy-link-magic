@@ -17,13 +17,37 @@ const SCANNER_PATHS = [
 
 /** Payloads clásicos de inyección / traversal en la URL. */
 const MALICIOUS_QUERY = [
-  /(\.\.\/|\.\.%2f|%2e%2e%2f)/i,
-  /<script\b|%3cscript|javascript:/i,
-  /\bunion\s+(all\s+)?select\b|\bselect\b.+\bfrom\b.+\bwhere\b|\bdrop\s+table\b|\bsleep\s*\(/i,
+  /(\.\.\/|\.\.%2f|%2e%2e%2f|\.\.\\|%5c\.\.)/i,
+  /<script\b|%3cscript|javascript:|data:text\/html/i,
+  /\bunion\s+(all\s+)?select\b|\bselect\b.+\bfrom\b.+\bwhere\b|\bdrop\s+table\b|\bsleep\s*\(|\bbenchmark\s*\(|\bxp_cmdshell\b|\bwaitfor\s+delay\b/i,
   /\b(or|and)\s+1\s*=\s*1\b/i,
-  /\$\{jndi:/i,
-  /\bonerror\s*=|\bonload\s*=/i,
+  /\$\{jndi:|\$\{\s*(env|sys|lower|upper)\s*:/i,
+  /\bon(error|load|click|mouseover)\s*=/i,
+  /\{\{.*(constructor|__proto__|process|require).*\}\}/i,
+  /__proto__|constructor\[?['"]?prototype/i,
 ];
+
+/**
+ * Ejecución remota de comandos: PowerShell, cmd.exe, bash y descargas remotas.
+ * Se evalúa sobre la query, headers y cuerpos crudos, nunca sobre el pathname
+ * limpio, para no bloquear nombres de usuario legítimos.
+ */
+const COMMAND_INJECTION = [
+  /\bpowershell(\.exe)?\b|\bpwsh\b|\bcmd(\.exe)?\s*\/c\b/i,
+  /-(enc|encodedcommand|nop|noprofile|noni|noninteractive|w\s+hidden|windowstyle\s+hidden|exec\s+bypass)\b/i,
+  /\b(iex|invoke-expression|invoke-webrequest|invoke-shellcode|downloadstring|downloadfile|start-process|new-object\s+net\.webclient|frombase64string)\b/i,
+  /\b(certutil|bitsadmin|mshta|regsvr32|rundll32|wmic|schtasks|net\s+user|vssadmin)\b/i,
+  /\b(wget|curl)\s+(https?|ftp):\/\//i,
+  /\b(bash|sh|zsh)\s+-c\b|\/bin\/(ba)?sh\b|\bnc\s+-e\b|\bchmod\s+\+x\b/i,
+  /[;|&`]\s*(cat|ls|id|whoami|uname|ping|nslookup|curl|wget)\b/i,
+  /\$\(.*\)|`[^`]{2,}`/,
+  /%0a|%0d|\r\n/i,
+];
+
+/** User-agents de herramientas de escaneo/explotación conocidas. */
+const BAD_AGENTS =
+  /(sqlmap|nikto|nmap|masscan|acunetix|nessus|openvas|zgrab|dirbuster|gobuster|feroxbuster|wpscan|hydra|metasploit|nuclei|havij|xsser|commix|whatweb|joomscan|arachni|zaproxy|burpsuite|python-requests\/|curl\/7\.(1|2)\d|libwww-perl|go-http-client)/i;
+
 
 /** Ventana simple en memoria por IP (best-effort, por instancia). */
 const WINDOW_MS = 10_000;
