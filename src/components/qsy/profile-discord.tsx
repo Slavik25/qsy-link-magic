@@ -26,6 +26,14 @@ type Widget = {
   members?: { id: string; username: string; avatar_url?: string; status?: string }[];
 };
 
+type GuildMeta = {
+  icon?: string | null;
+  banner?: string | null;
+  approximate_member_count?: number;
+  approximate_presence_count?: number;
+  name?: string;
+};
+
 const STATUS: Record<string, { label: string; color: string }> = {
   online: { label: "En línea", color: "#23a55a" },
   idle: { label: "Ausente", color: "#f0b232" },
@@ -37,6 +45,12 @@ function avatarUrl(u: DUser | null | undefined) {
   if (!u?.avatar) return null;
   const ext = u.avatar.startsWith("a_") ? "gif" : "png";
   return `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=160`;
+}
+
+function guildIconUrl(id: string, icon?: string | null) {
+  if (!icon) return null;
+  const ext = icon.startsWith("a_") ? "gif" : "png";
+  return `https://cdn.discordapp.com/icons/${id}/${icon}.${ext}?size=128`;
 }
 
 function Shell({
@@ -107,10 +121,29 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
       try {
         const r = await fetch(`https://dcdn.dstn.to/profile/${userId}`);
         const j = r.ok ? await r.json() : null;
-        if (alive && j?.user) setUser(j.user as DUser);
+        if (alive && j?.user) {
+          setUser(j.user as DUser);
+          return;
+        }
       } catch {
-        if (alive) setUser(null);
+        /* ignore */
       }
+      try {
+        const r = await fetch(`https://discordlookup.mesalytic.moe/v1/user/${userId}`);
+        const j = r.ok ? await r.json() : null;
+        if (alive && j?.id) {
+          setUser({
+            id: j.id,
+            username: j.username,
+            global_name: j.global_name ?? null,
+            avatar: j.avatar?.id ?? null,
+          });
+          return;
+        }
+      } catch {
+        /* ignore */
+      }
+      if (alive) setUser((prev) => prev ?? { id: userId, username: "discord", avatar: null });
     };
     void load();
     const id = window.setInterval(load, 60_000);
@@ -120,13 +153,62 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
     };
   }, [showUser, userId]);
 
+  const [guildMeta, setGuildMeta] = useState<GuildMeta | null>(null);
+
   useEffect(() => {
-    if (!showGuild) return setGuild(null);
+    if (!showGuild) {
+      setGuild(null);
+      setGuildMeta(null);
+      return;
+    }
     let alive = true;
-    fetch(`https://discord.com/api/guilds/${guildId}/widget.json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => alive && setGuild(j ?? null))
-      .catch(() => alive && setGuild(null));
+    const run = async () => {
+      let w: Widget | null = null;
+      try {
+        const r = await fetch(`https://discord.com/api/guilds/${guildId}/widget.json`);
+        w = r.ok ? ((await r.json()) as Widget) : null;
+      } catch {
+        w = null;
+      }
+      if (!alive) return;
+      setGuild(w);
+
+      const code = w?.instant_invite?.split("/").pop();
+      if (code) {
+        try {
+          const r = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`);
+          const j = r.ok ? await r.json() : null;
+          if (alive && j?.guild) {
+            setGuildMeta({
+              icon: j.guild.icon ?? null,
+              banner: j.guild.banner ?? null,
+              name: j.guild.name,
+              approximate_member_count: j.approximate_member_count,
+              approximate_presence_count: j.approximate_presence_count,
+            });
+            return;
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      try {
+        const r = await fetch(`https://discordlookup.mesalytic.moe/v1/guild/${guildId}`);
+        const j = r.ok ? await r.json() : null;
+        if (alive && j?.id) {
+          setGuildMeta({
+            icon: j.icon?.id ?? null,
+            banner: j.banner?.id ?? null,
+            name: j.name,
+            approximate_member_count: j.approximate_member_count,
+            approximate_presence_count: j.approximate_presence_count,
+          });
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    void run();
     return () => {
       alive = false;
     };
@@ -138,10 +220,12 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const activity = presence?.activities?.find((a) => a.type !== 4);
   const avatar = avatarUrl(user);
   const name = user?.global_name || user?.username || "Discord";
+  const guildIcon = guildIconUrl(guildId, guildMeta?.icon);
+  const memberCount = guildMeta?.approximate_member_count ?? guild?.members?.length ?? 0;
 
   return (
     <div className="mt-6 grid w-full max-w-md items-stretch gap-3 sm:grid-cols-2">
-      {showUser && user && (
+      {showUser && (
         <Shell accent={accent} className="p-4">
           <div className="relative flex items-center gap-3.5">
             <span className="relative shrink-0">
@@ -174,7 +258,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
 
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold leading-tight">{name}</p>
-              <p className="truncate text-xs text-muted-foreground">@{user.username}</p>
+              <p className="truncate text-xs text-muted-foreground">@{user?.username ?? "discord"}</p>
               <p className="mt-1 inline-flex max-w-full items-center gap-1.5 truncate text-[11px]">
                 {presence ? (
                   <>
@@ -200,26 +284,35 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
         </Shell>
       )}
 
-      {showGuild && guild && (
+      {showGuild && (guild || guildMeta) && (
         <Shell accent={accent} className="flex flex-col p-4">
           <div className="relative flex items-center gap-3">
-            <span
-              className="grid size-11 shrink-0 place-items-center rounded-xl"
-              style={{ background: `color-mix(in oklab, ${accent} 18%, transparent)` }}
-            >
-              <SiDiscord className="size-5" style={{ color: accent }} />
-            </span>
+            {guildIcon ? (
+              <img
+                src={guildIcon}
+                alt=""
+                loading="lazy"
+                className="size-11 shrink-0 rounded-xl object-cover ring-1 ring-white/10"
+              />
+            ) : (
+              <span
+                className="grid size-11 shrink-0 place-items-center rounded-xl"
+                style={{ background: `color-mix(in oklab, ${accent} 18%, transparent)` }}
+              >
+                <SiDiscord className="size-5" style={{ color: accent }} />
+              </span>
+            )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold leading-tight">{guild.name}</p>
+                <p className="truncate text-sm font-semibold leading-tight">{guild?.name ?? guildMeta?.name ?? "Discord"}</p>
               <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-muted-foreground">
                 <span className="inline-flex items-center gap-1">
                   <span className="size-1.5 rounded-full bg-[#23a55a]" aria-hidden />
-                  {guild.presence_count ?? 0} Online
+                  {guild?.presence_count ?? guildMeta?.approximate_presence_count ?? 0} Online
                 </span>
-                {!!guild.members?.length && (
+                {!!memberCount && (
                   <span className="inline-flex items-center gap-1">
                     <Users className="size-3" />
-                    {guild.members.length}+ Miembros
+                    {memberCount}+ Miembros
                   </span>
                 )}
               </p>
@@ -231,7 +324,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
           </div>
 
           <a
-            href={guild.instant_invite ?? "#"}
+            href={guild?.instant_invite ?? `https://discord.gg/${guildId}`}
             target="_blank"
             rel="noreferrer noopener"
             className="relative mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-transform duration-300 hover:scale-[1.02]"
