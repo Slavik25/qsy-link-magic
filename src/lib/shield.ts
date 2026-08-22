@@ -13,7 +13,10 @@ const SCANNER_PATHS = [
   /^\/(phpmyadmin|pma|adminer|myadmin|mysql|cgi-bin|vendor|config\.json|backup|dump\.sql)/i,
   /\.(php|asp|aspx|jsp|cgi|sh|bak|old|sql|env)$/i,
   /^\/actuator|^\/solr|^\/druid|^\/telescope|^\/debug\b/i,
+  // Rutas reservadas que jamás son usuarios ni páginas reales.
+  /^\/(shell|cmd|console|config|configs|logs|log|temp|tmp|uploads|upload|files|server-status|webshell|c99|r57|admin\.php)(\/|$)/i,
 ];
+
 
 /** Payloads clásicos de inyección / traversal en la URL. */
 const MALICIOUS_QUERY = [
