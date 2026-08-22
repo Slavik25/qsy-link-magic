@@ -4,6 +4,7 @@ import { z } from "zod";
 const schema = z.object({
   userId: z.string().trim().max(32).optional(),
   guildId: z.string().trim().max(32).optional(),
+  invite: z.string().trim().max(120).optional(),
 });
 
 export type DiscordLookup = {
@@ -34,6 +35,20 @@ export const lookupDiscord = createServerFn({ method: "GET" })
       data.guildId && /^\d{5,25}$/.test(data.guildId) ? get(`/guilds/${data.guildId}`) : null,
     ]);
 
+    let guild = g;
+    if (!guild && data.invite) {
+      const code = data.invite.split("?")[0]!.split("/").filter(Boolean).pop();
+      if (code && /^[\w-]{2,32}$/.test(code)) {
+        try {
+          const r = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`);
+          const j = r.ok ? ((await r.json()) as Record<string, unknown>) : null;
+          if (j?.["guild"]) guild = j["guild"] as Record<string, unknown>;
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+
     return {
       configured: true,
       user: u
@@ -45,12 +60,12 @@ export const lookupDiscord = createServerFn({ method: "GET" })
             banner: (u["banner"] as string | null) ?? null,
           }
         : null,
-      guild: g
+      guild: guild
         ? {
-            id: String(g["id"]),
-            name: String(g["name"] ?? ""),
-            icon: (g["icon"] as string | null) ?? null,
-            banner: (g["banner"] as string | null) ?? null,
+            id: String(guild["id"]),
+            name: String(guild["name"] ?? ""),
+            icon: (guild["icon"] as string | null) ?? null,
+            banner: (guild["banner"] as string | null) ?? null,
           }
         : null,
     };

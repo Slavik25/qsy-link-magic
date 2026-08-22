@@ -314,6 +314,20 @@ function CustomizationSection() {
               Muestra nombre, miembros en línea y botón para unirse (activa el widget del servidor en Discord).
             </p>
           </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Invitación del servidor (para mostrar el logo)
+            </Label>
+            <Input
+              maxLength={80}
+              placeholder="Ej. https://discord.gg/qsy"
+              value={t.discord_invite ?? ""}
+              onChange={(e) => setTheme("discord_invite", e.target.value.trim())}
+            />
+            <p className="text-[11px] text-muted-foreground">
+              Pega un enlace de invitación permanente: de ahí obtenemos el icono real del servidor.
+            </p>
+          </div>
           <ToggleRow
             title="Mostrar mi servidor"
             description="Tarjeta de invitación al servidor en el biolink."

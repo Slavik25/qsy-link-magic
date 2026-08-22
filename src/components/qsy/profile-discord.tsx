@@ -30,6 +30,7 @@ type Widget = {
 };
 
 type GuildMeta = {
+  id?: string;
   icon?: string | null;
   banner?: string | null;
   approximate_member_count?: number;
@@ -95,6 +96,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const accent = theme.accent;
   const userId = (theme.discord_id ?? "").trim();
   const guildId = (theme.discord_server_id ?? "").trim();
+  const invite = (theme.discord_invite ?? "").trim();
   const showUser = userId.length > 5 && theme.discord_show_profile !== false;
   const showGuild = guildId.length > 5 && theme.discord_show_server !== false;
 
@@ -219,8 +221,15 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
 
   const doLookup = useServerFn(lookupDiscord);
   const { data: bot } = useQuery({
-    queryKey: ["discord-lookup", userId, guildId],
-    queryFn: () => doLookup({ data: { userId: showUser ? userId : undefined, guildId: showGuild ? guildId : undefined } }),
+    queryKey: ["discord-lookup", userId, guildId, invite],
+    queryFn: () =>
+      doLookup({
+        data: {
+          userId: showUser ? userId : undefined,
+          guildId: showGuild ? guildId : undefined,
+          invite: showGuild ? invite || undefined : undefined,
+        },
+      }),
     enabled: showUser || showGuild,
     staleTime: 5 * 60_000,
   });
@@ -230,6 +239,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
     if (bot?.guild)
       setGuildMeta((prev) => ({
         ...prev,
+        id: bot.guild!.id,
         icon: bot.guild!.icon,
         banner: bot.guild!.banner,
         name: bot.guild!.name,
@@ -242,7 +252,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const activity = presence?.activities?.find((a) => a.type !== 4);
   const avatar = avatarUrl(user);
   const name = user?.global_name || user?.username || "Discord";
-  const guildIcon = guildIconUrl(guildId, guildMeta?.icon);
+  const guildIcon = guildIconUrl(guildMeta?.id ?? guildId, guildMeta?.icon);
   const memberCount = guildMeta?.approximate_member_count ?? guild?.members?.length ?? 0;
 
   return (
@@ -346,7 +356,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
           </div>
 
           <a
-            href={guild?.instant_invite ?? `https://discord.gg/${guildId}`}
+            href={guild?.instant_invite ?? invite ?? `https://discord.gg/${guildId}`}
             target="_blank"
             rel="noreferrer noopener"
             className="relative mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-transform duration-300 hover:scale-[1.02]"
