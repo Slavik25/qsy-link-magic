@@ -18,10 +18,10 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { DashBanner } from "@/components/qsy/dash-banner";
 import { GlobalChat } from "@/components/qsy/global-chat";
-import dashBanner from "@/assets/dash-banner.png.asset.json";
-import cardProfile from "@/assets/card-32.png.asset.json";
-import cardTemplates from "@/assets/card-33.png.asset.json";
-import cardShop from "@/assets/card-34.png.asset.json";
+import dashBanner from "@/assets/dash-banner.webp.asset.json";
+import cardProfile from "@/assets/card-32.webp.asset.json";
+import cardTemplates from "@/assets/card-33.webp.asset.json";
+import cardShop from "@/assets/card-34.webp.asset.json";
 import {
   useAnalytics,
   useLinks,
