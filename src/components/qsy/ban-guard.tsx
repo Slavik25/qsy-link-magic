@@ -32,20 +32,30 @@ export function BanGuard({ children }: { children: ReactNode }) {
       /* noop */
     }
 
-    void checkBanStatus({ data: { fingerprint: deviceFingerprint(), userId } })
-      .then((res) => {
-        if (res?.banned) setBanned(true);
-        else {
-          try {
-            localStorage.removeItem("qsy_banned");
-          } catch {
-            /* noop */
+    const verify = () =>
+      void checkBanStatus({ data: { fingerprint: deviceFingerprint(), userId } })
+        .then((res) => {
+          // El servidor manda: si dice baneado, se banea (aunque borren el flag local).
+          if (res?.banned) {
+            setBanned(true);
+            try {
+              localStorage.setItem("qsy_banned", "1");
+            } catch {
+              /* noop */
+            }
+          } else if (!localBanFlag()) {
+            setBanned(false);
           }
-        }
-      })
-      .catch(() => undefined);
+        })
+        .catch(() => undefined);
 
-    return () => window.removeEventListener("qsy:banned", onBan);
+    verify();
+    const timer = window.setInterval(verify, 20000);
+
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("qsy:banned", onBan);
+    };
   }, []);
 
   if (banned) return <BannedScreen />;
