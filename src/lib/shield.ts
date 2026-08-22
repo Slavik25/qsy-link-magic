@@ -199,7 +199,7 @@ export function withSecurityHeaders(response: Response, request?: Request): Resp
   headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
   headers.set("cross-origin-resource-policy", "cross-origin");
 
-  headers.set("content-security-policy", CSP);
+  headers.set("content-security-policy", buildCsp(strictHost(request)));
   headers.delete("x-powered-by");
 
   return new Response(response.body, {
