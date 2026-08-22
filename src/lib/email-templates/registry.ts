@@ -1,4 +1,6 @@
 import type { ComponentType } from 'react'
+import { template as securityAlertTemplate } from './security-alert'
+
 
 export interface TemplateEntry {
   component: ComponentType<any>
