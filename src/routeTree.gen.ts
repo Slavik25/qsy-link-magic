@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as RankRouteImport } from './routes/rank'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -76,6 +77,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankRoute = RankRouteImport.update({
+  id: '/rank',
+  path: '/rank',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -279,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -319,6 +326,7 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -358,6 +366,7 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot-password'
     | '/login'
+    | '/rank'
     | '/register'
     | '/templates'
     | '/dashboard'
@@ -440,6 +450,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot-password'
     | '/login'
+    | '/rank'
     | '/register'
     | '/templates'
     | '/dashboard/analytics'
@@ -478,6 +489,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot-password'
     | '/login'
+    | '/rank'
     | '/register'
     | '/templates'
     | '/_authenticated/dashboard'
@@ -520,6 +532,7 @@ export interface RootRouteChildren {
   ExploreRoute: typeof ExploreRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  RankRoute: typeof RankRoute
   RegisterRoute: typeof RegisterRoute
   TemplatesRoute: typeof TemplatesRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
@@ -567,6 +580,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rank': {
+      id: '/rank'
+      path: '/rank'
+      fullPath: '/rank'
+      preLoaderRoute: typeof RankRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -932,6 +952,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExploreRoute: ExploreRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  RankRoute: RankRoute,
   RegisterRoute: RegisterRoute,
   TemplatesRoute: TemplatesRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,

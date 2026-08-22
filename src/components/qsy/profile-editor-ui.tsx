@@ -199,6 +199,63 @@ export function ToggleRow({
   );
 }
 
+/** Color picker with an optional 2-stop gradient for a single biolink element. */
+export function PaintField({
+  label,
+  color,
+  color2,
+  gradient,
+  onColor,
+  onColor2,
+  onGradient,
+  sample = "Aa",
+  angle = 90,
+}: {
+  label: string;
+  color: string;
+  color2: string;
+  gradient: boolean;
+  onColor: (v: string) => void;
+  onColor2: (v: string) => void;
+  onGradient: (v: boolean) => void;
+  sample?: string;
+  angle?: number;
+}) {
+  return (
+    <div className="space-y-3 rounded-xl border border-border/60 bg-surface-strong/30 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</Label>
+        <span
+          aria-hidden
+          className="text-sm font-semibold"
+          style={
+            gradient
+              ? {
+                  backgroundImage: `linear-gradient(${angle}deg, ${color}, ${color2})`,
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }
+              : { color }
+          }
+        >
+          {sample}
+        </span>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <ColorField label={gradient ? "Color 1" : "Color"} value={color} onChange={onColor} />
+        {gradient && <ColorField label="Color 2" value={color2} onChange={onColor2} />}
+      </div>
+      <ToggleRow
+        title="Usar degradado"
+        description="Mezcla dos colores en este elemento."
+        checked={gradient}
+        onChange={onGradient}
+      />
+    </div>
+  );
+}
+
 export function ColorField({
   label,
   value,

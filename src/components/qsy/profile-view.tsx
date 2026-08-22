@@ -2,7 +2,7 @@ import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { ProfileGaming } from "@/components/qsy/profile-gaming";
-import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
+import { iconFor, labelFor, textPaint, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
 import { decorationByKey } from "@/lib/shop";
@@ -48,6 +48,17 @@ export function ProfileView({
   const shape = t.avatar_shape ?? "circle";
   const shapeClass = `qsy-shape-${shape}`;
   const cardBg = t.card_bg_type ?? "solid";
+  const ang = t.grad_angle ?? 90;
+  const namePaint = textPaint(t.color_name ?? t.color_text, t.color_name_2, t.grad_name, ang);
+  const userPaint = textPaint(t.color_username ?? "#a1a1aa", t.color_username_2, t.grad_username, ang, "#a1a1aa");
+  const bioPaint = textPaint(t.color_bio ?? "#e4e4e7", t.color_bio_2, t.grad_bio, ang, "#e4e4e7");
+  const statsPaint = textPaint(t.color_stats ?? "#a1a1aa", t.color_stats_2, t.grad_stats, ang, "#a1a1aa");
+  const iconStyle: React.CSSProperties = { color: t.color_icon ?? "#ffffff" };
+  const iconChipBg = t.grad_icon
+    ? `linear-gradient(${ang}deg, color-mix(in oklab, ${t.color_icon ?? "#ffffff"} 22%, transparent), color-mix(in oklab, ${t.color_icon_2 ?? t.accent} 22%, transparent))`
+    : t.color_icon_bg
+      ? `color-mix(in oklab, ${t.color_icon_bg} 12%, transparent)`
+      : "var(--p-surface)";
   const cardAlpha = cardBg === "transparent" ? 0 : Math.max(0, Math.min(100, t.card_alpha ?? 100));
   const alphaStyle =
     cardAlpha < 100 ? ({ "--p-card-alpha": `${cardAlpha / 100}` } as React.CSSProperties) : {};
@@ -144,6 +155,7 @@ export function ProfileView({
                 ? `qsy-name-${t.username_effect}`
                 : ""
             }`}
+            style={namePaint}
           >
             {profile.display_name}
           </h1>
@@ -151,7 +163,7 @@ export function ProfileView({
             <BadgeCheck className="size-5" style={{ color: t.accent }} aria-label="Verificado" />
           )}
         </div>
-        <p className="text-sm text-muted-foreground">@{profile.username}</p>
+        <p className="text-sm" style={userPaint}>@{profile.username}</p>
 
         {badges.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
@@ -164,7 +176,8 @@ export function ProfileView({
                 <span
                   key={key}
                   aria-label={b.name}
-                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 bg-white/5 transition-transform hover:-translate-y-0.5"
+                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 transition-transform hover:-translate-y-0.5"
+                  style={{ background: iconChipBg }}
                 >
                   {b.img ? (
                     <img src={b.img} alt={b.name} className="size-5" loading="lazy" />
@@ -201,7 +214,7 @@ export function ProfileView({
         )}
 
         {profile.bio && (
-          <p className="mt-3 max-w-md text-sm text-foreground/80">&ldquo;{profile.bio}&rdquo;</p>
+          <p className="mt-3 max-w-md text-sm" style={bioPaint}>&ldquo;{profile.bio}&rdquo;</p>
         )}
 
         <ProfileDiscord theme={t} />
@@ -223,14 +236,14 @@ export function ProfileView({
                   className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
                     borderRadius: "999px",
-                    background: "var(--p-surface)",
+                    background: iconChipBg,
                     backdropFilter: `blur(var(--p-blur))`,
                     borderColor: `color-mix(in oklab, ${t.accent} 28%, transparent)`,
                   }}
                 >
                   <Icon
                     className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
-                    style={{ color: t.color_icon ?? "#ffffff" }}
+                    style={iconStyle}
                   />
                   <span
                     className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
@@ -256,14 +269,14 @@ export function ProfileView({
                   className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
                     borderRadius: "999px",
-                    background: "var(--p-surface)",
+                    background: iconChipBg,
                     backdropFilter: `blur(var(--p-blur))`,
                     borderColor: `color-mix(in oklab, ${t.accent} 28%, transparent)`,
                   }}
                 >
                   <Icon
                     className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
-                    style={{ color: t.color_icon ?? "#ffffff" }}
+                    style={iconStyle}
                   />
                   <span
                     className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
@@ -288,7 +301,7 @@ export function ProfileView({
             className="mt-6 flex w-full max-w-md items-center gap-3 border px-4 py-3 text-left"
             style={{
               borderRadius: "var(--p-radius)",
-              background: "var(--p-surface)",
+              background: iconChipBg,
               borderColor: `color-mix(in oklab, ${t.accent} 25%, transparent)`,
             }}
           >
@@ -305,7 +318,7 @@ export function ProfileView({
           </div>
         )}
 
-        <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+        <div className="mt-6 flex items-center justify-center gap-4 text-xs" style={statsPaint}>
           {t.show_views !== false && (
             <span className="inline-flex items-center gap-1.5">
               <Eye className="size-3" />

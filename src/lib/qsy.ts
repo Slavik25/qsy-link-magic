@@ -1,3 +1,4 @@
+import type React from "react";
 import {
   Github,
   Globe,
@@ -46,6 +47,24 @@ export type ThemeConfig = {
   color_text?: string;
   color_icon?: string;
   color_border?: string;
+  /* Per-element colors + optional gradients */
+  color_name?: string;
+  color_name_2?: string;
+  grad_name?: boolean;
+  color_username?: string;
+  color_username_2?: string;
+  grad_username?: boolean;
+  color_bio?: string;
+  color_bio_2?: string;
+  grad_bio?: boolean;
+  color_stats?: string;
+  color_stats_2?: string;
+  grad_stats?: boolean;
+  color_icon_2?: string;
+  grad_icon?: boolean;
+  color_icon_bg?: string;
+  color_badge_bg?: string;
+  grad_angle?: number;
   /* Effects & media */
   player_type?: string;
   layout_key?: string;
@@ -125,6 +144,21 @@ export const defaultTheme: ThemeConfig = {
   color_text: "#ffffff",
   color_icon: "#ffffff",
   color_border: "#ffffff",
+  color_name: "#ffffff",
+  color_name_2: "#c6f24e",
+  grad_name: false,
+  color_username: "#a1a1aa",
+  color_username_2: "#ffffff",
+  grad_username: false,
+  color_bio: "#e4e4e7",
+  color_bio_2: "#ffffff",
+  grad_bio: false,
+  color_stats: "#a1a1aa",
+  color_stats_2: "#ffffff",
+  grad_stats: false,
+  color_icon_2: "#c6f24e",
+  grad_icon: false,
+  grad_angle: 90,
   player_type: "default",
   layout_key: "layout-glass",
   player_key: "player-default",
@@ -260,3 +294,23 @@ export const TEMPLATES = [
   { id: "creator", name: "Creator", accent: "#ffb347", desc: "Pensado para contenido y comunidad." },
   { id: "developer", name: "Developer", accent: "#22d3ee", desc: "Monoespaciado, técnico, directo." },
 ];
+
+/** Builds a CSS style for text that can be a solid color or a 2-stop gradient. */
+export function textPaint(
+  color: string | undefined,
+  color2: string | undefined,
+  gradient: boolean | undefined,
+  angle = 90,
+  fallback = "#ffffff",
+): React.CSSProperties {
+  const a = color || fallback;
+  if (!gradient) return { color: a };
+  const b = color2 || a;
+  return {
+    backgroundImage: `linear-gradient(${angle}deg, ${a}, ${b})`,
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text",
+    color: "transparent",
+    WebkitTextFillColor: "transparent",
+  } as React.CSSProperties;
+}
