@@ -13,7 +13,7 @@ const shieldMiddleware = createMiddleware().server(async ({ next, request }) => 
   const result = await next();
   const response = (result as { response?: Response }).response;
   if (response instanceof Response) {
-    (result as { response: Response }).response = withSecurityHeaders(response);
+    (result as { response: Response }).response = withSecurityHeaders(response, request);
   }
   return result;
 });
