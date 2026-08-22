@@ -1,4 +1,6 @@
 /** Dominios QSY disponibles. Solo el rango Seraph puede elegir. */
+/** Selector de dominios Seraph temporalmente en mantenimiento. */
+export const DOMAINS_MAINTENANCE = true;
 export const QSY_DOMAINS = [
   { key: "qsy.rip", label: "qsy.rip", description: "El clásico. Corto, oscuro y directo." },
   { key: "qsy.es", label: "qsy.es", description: "Ideal para la comunidad hispana." },
@@ -24,6 +26,7 @@ export function isDomain(value: unknown): value is QsyDomain {
 
 /** Host visible del perfil (solo Seraph puede cambiarlo). */
 export function profileHost(profile?: { rank?: string | null; domain?: string | null } | null) {
+  if (DOMAINS_MAINTENANCE) return DEFAULT_DOMAIN;
   if (profile?.rank === "seraph" && isDomain(profile.domain)) return profile.domain;
   return DEFAULT_DOMAIN;
 }

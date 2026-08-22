@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Check, Copy, Crown, Download, ExternalLink, Globe, ImageIcon, Lock, QrCode } from "lucide-react";
+import { Check, Copy, Crown, Download, ExternalLink, Globe, ImageIcon, Lock, QrCode, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Panel, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import { RankBadge } from "@/components/qsy/rank-badge";
-import { DEFAULT_DOMAIN, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
+import { DEFAULT_DOMAIN, DOMAINS_MAINTENANCE, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/share")({
   component: ShareSection,
@@ -29,7 +29,7 @@ function ShareSection() {
   const username = profile?.username ?? "qsy";
   const rank = (profile as { rank?: string } | undefined)?.rank ?? "free";
   const isSeraph = rank === "seraph";
-  const domain: QsyDomain = isSeraph && isDomain((profile as { domain?: string } | undefined)?.domain)
+  const domain: QsyDomain = !DOMAINS_MAINTENANCE && isSeraph && isDomain((profile as { domain?: string } | undefined)?.domain)
     ? ((profile as { domain?: string }).domain as QsyDomain)
     : DEFAULT_DOMAIN;
   const url = profileUrl(username, domain);
@@ -46,6 +46,12 @@ function ShareSection() {
 
   async function chooseDomain(next: QsyDomain) {
     if (!profile || next === domain) return;
+    if (DOMAINS_MAINTENANCE) {
+      toast.info("Dominios en mantenimiento", {
+        description: "Estamos migrando la infraestructura. Por ahora todos los perfiles viven en qsy.rip.",
+      });
+      return;
+    }
     if (!isSeraph) {
       toast.error("Dominios exclusivos de Seraph", { description: "Sube de rango para elegir tu dominio." });
       return;
@@ -71,10 +77,20 @@ function ShareSection() {
           <RankBadge rank={rank} size="sm" />
         </div>
 
+        {DOMAINS_MAINTENANCE && (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-amber-300/30 bg-amber-300/5 p-3">
+            <Wrench className="size-4 text-amber-400" />
+            <p className="text-xs text-muted-foreground">
+              El sistema de dominios Seraph está <span className="font-semibold text-foreground">en mantenimiento</span>.
+              Mientras tanto todos los perfiles se sirven desde {DEFAULT_DOMAIN}.
+            </p>
+          </div>
+        )}
+
         <div className="grid gap-2 sm:grid-cols-3">
           {QSY_DOMAINS.map((d) => {
             const active = d.key === domain;
-            const locked = !isSeraph && d.key !== DEFAULT_DOMAIN;
+            const locked = DOMAINS_MAINTENANCE ? d.key !== DEFAULT_DOMAIN : !isSeraph && d.key !== DEFAULT_DOMAIN;
             return (
               <button
                 key={d.key}
@@ -92,10 +108,16 @@ function ShareSection() {
                   {active ? (
                     <Check className="size-4 text-primary" />
                   ) : locked ? (
-                    <Lock className="size-3.5 text-muted-foreground" />
+                    DOMAINS_MAINTENANCE ? (
+                      <Wrench className="size-3.5 text-amber-400" />
+                    ) : (
+                      <Lock className="size-3.5 text-muted-foreground" />
+                    )
                   ) : null}
                 </span>
-                <span className="mt-1 block text-xs text-muted-foreground">{d.description}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  {DOMAINS_MAINTENANCE && d.key !== DEFAULT_DOMAIN ? "En mantenimiento" : d.description}
+                </span>
                 <span className="mt-2 block truncate text-[11px] text-muted-foreground/80">
                   {d.key}/{username}
                 </span>
@@ -104,7 +126,7 @@ function ShareSection() {
           })}
         </div>
 
-        {!isSeraph && (
+        {!isSeraph && !DOMAINS_MAINTENANCE && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300/30 bg-amber-300/5 p-3">
             <p className="text-xs text-muted-foreground">
               Elegir entre qsy.rip, qsy.es y qsy.bio es exclusivo del rango Seraph.
