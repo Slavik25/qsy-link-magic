@@ -19,6 +19,7 @@ type Props = {
   badges?: (string | { key: string; obtained_at?: string | null })[];
   views?: number;
   likes?: number;
+  profileId?: string;
   music?: { title?: string; artist?: string } | null;
   compact?: boolean;
   onLinkClick?: (link: { id: string; title: string; url: string }) => void;
@@ -31,6 +32,7 @@ export function ProfileView({
   badges = [],
   views = 0,
   likes = 0,
+  profileId,
   music,
   compact = false,
   onLinkClick,
