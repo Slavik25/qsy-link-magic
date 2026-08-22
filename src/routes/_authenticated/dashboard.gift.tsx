@@ -91,6 +91,7 @@ function GiftPremium() {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const { data: results, isFetching } = useSearchProfiles(term);
+  const checkout = useServerFn(createDodoCheckout);
 
   const selectedPlan = PLANS.find((p) => p.key === plan)!;
 
