@@ -48,13 +48,13 @@ export function HomeMascot() {
       >
         <div
           aria-hidden
-          className="absolute inset-x-4 bottom-0 h-40 rounded-full bg-primary/20 blur-3xl"
+          className="absolute inset-x-4 bottom-0 h-40 rounded-full bg-primary/15 blur-3xl"
         />
         <img
           src={state.src}
           alt=""
           aria-hidden
-          className="relative h-[clamp(220px,32vw,380px)] w-auto object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+          className="relative h-[clamp(220px,32vw,380px)] w-auto object-contain [filter:drop-shadow(0_18px_38px_color-mix(in_oklch,var(--primary)_35%,transparent))]"
           style={{
             maskImage: "linear-gradient(to bottom, black 74%, transparent 100%)",
             WebkitMaskImage: "linear-gradient(to bottom, black 74%, transparent 100%)",
