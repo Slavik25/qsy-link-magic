@@ -61,7 +61,14 @@ export const trackProfileView = createServerFn({ method: "POST" })
   .inputValidator((input: ViewInput) => input)
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { ip, userAgent } = await requestContext();
+    const ctx = await requestContext();
+    const { ip, userAgent } = ctx;
+
+    // Solo navegadores reales en el mismo origen: bloquea curl/PowerShell/scripts.
+    if (!isBrowserRequest(ctx)) {
+      return { ok: false as const, reason: "blocked" };
+    }
+    if (!ip) return { ok: false as const, reason: "blocked" };
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
@@ -69,6 +76,26 @@ export const trackProfileView = createServerFn({ method: "POST" })
       .eq("id", data.profileId)
       .maybeSingle();
     if (!profile) return { ok: false as const, reason: "not_found" };
+
+    const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
+
+    // Una visita por IP y perfil cada 6 horas.
+    const { count: recentSame } = await supabaseAdmin
+      .from("profile_views")
+      .select("id", { count: "exact", head: true })
+      .eq("profile_id", profile.id)
+      .eq("ip", ip)
+      .gte("created_at", sixHoursAgo);
+    if ((recentSame ?? 0) > 0) return { ok: false as const, reason: "duplicate" };
+
+    // Tope global por IP para evitar barridos automáticos.
+    const { count: burst } = await supabaseAdmin
+      .from("profile_views")
+      .select("id", { count: "exact", head: true })
+      .eq("ip", ip)
+      .gte("created_at", oneMinuteAgo);
+    if ((burst ?? 0) >= 5) return { ok: false as const, reason: "rate_limited" };
 
     const { error } = await supabaseAdmin.from("profile_views").insert({
       profile_id: profile.id,
@@ -83,6 +110,7 @@ export const trackProfileView = createServerFn({ method: "POST" })
     if (error) {
       return { ok: false as const, reason: "rate_limited" };
     }
+
 
     await supabaseAdmin.from("audit_events").insert({
       kind: "view",
