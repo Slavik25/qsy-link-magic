@@ -3,16 +3,18 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, Loader2, Mail, RefreshCw, Send } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock, Loader2, Mail, RefreshCw, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  getEmailSetupStatus,
   listEmailDeliveryLogs,
   sendConfirmationTestEmail,
   type EmailLogRow,
 } from "@/lib/email-ops.functions";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/emails")({
   component: AdminEmailsPage,
