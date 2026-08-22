@@ -41,13 +41,27 @@ function PublicProfile() {
     } catch {
       /* storage bloqueado: registramos igual */
     }
-    void supabase.from("profile_views").insert({
-      profile_id: profileId,
-      device: detectDevice(),
-      browser: detectBrowser(),
-      referrer: document.referrer || "direct",
-      country: null,
-    });
+    supabase
+      .from("profile_views")
+      .insert({
+        profile_id: profileId,
+        device: detectDevice(),
+        browser: detectBrowser(),
+        referrer: document.referrer || "direct",
+        country: null,
+      })
+      .then(({ error }) => {
+        if (error) {
+          // Si el registro falla no marcamos la visita, para reintentarlo luego.
+          try {
+            localStorage.removeItem(key);
+          } catch {
+            /* noop */
+          }
+          tracked.current = false;
+        }
+      });
+
   }, [profileId]);
 
 
