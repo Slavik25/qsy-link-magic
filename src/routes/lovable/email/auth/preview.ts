@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Quick Bio Link"
+const SITE_NAME = "Qsy Biolink"
 const ROOT_DOMAIN = "qsy.rip"
 
 // Sample data for preview mode ONLY (not used in actual email sending).
