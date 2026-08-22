@@ -30,9 +30,10 @@ export const Route = createFileRoute("/$username")({
     const description =
       m?.meta_description ??
       (m?.bio?.trim() ? m.bio.trim() : `${handle} en QSY — links, redes y música en un solo perfil.`);
-    // Tarjeta generada por QSY (avatar, nombre, @usuario y bio) salvo override premium.
-    const image =
-      m?.meta_image ?? `https://qsy.rip/api/public/og/${m?.username ?? params.username}`;
+    // Imagen del embed: override premium → avatar del perfil → tarjeta QSY por defecto.
+    const image = m?.meta_image ?? m?.avatar_url ?? "https://qsy.rip/og-default.png";
+    const largeCard = !m?.meta_image && !m?.avatar_url;
+
 
     return {
       meta: [
