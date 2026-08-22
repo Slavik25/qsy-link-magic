@@ -217,6 +217,37 @@ function CustomizationSection() {
         />
       </Group>
 
+      <Group label="Transparencia del layout">
+        <div className="rounded-xl border border-border bg-card/40 p-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium">Opacidad del fondo del layout</p>
+              <p className="text-xs text-muted-foreground">
+                Baja el valor para que el layout se vuelva transparente y se vea el fondo del perfil.
+              </p>
+            </div>
+            <span className="rounded-md border border-border px-2 py-1 font-mono text-xs">
+              {t.card_bg_type === "transparent" ? 0 : (t.card_alpha ?? 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            disabled={t.card_bg_type === "transparent" || t.show_card === false}
+            value={t.card_bg_type === "transparent" ? 0 : (t.card_alpha ?? 100)}
+            onChange={(e) => setTheme("card_alpha", Number(e.target.value))}
+            className="mt-4 w-full accent-[var(--primary)] disabled:opacity-40"
+            aria-label="Opacidad del fondo del layout"
+          />
+          <div className="mt-2 flex justify-between text-[11px] text-muted-foreground">
+            <span>Transparente</span>
+            <span>Sólido</span>
+          </div>
+        </div>
+      </Group>
+
       <Group label="Colores de tarjeta">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <ColorField
