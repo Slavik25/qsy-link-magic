@@ -141,7 +141,9 @@ export const sendChatMessage = createServerFn({ method: "POST" })
     if (message.length > 500) throw new Error("Máximo 500 caracteres");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { ip, userAgent } = await requestContext();
+    const chatCtx = await requestContext();
+    if (!isBrowserRequest(chatCtx)) throw new Error("Petición no permitida");
+    const { ip, userAgent } = chatCtx;
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
