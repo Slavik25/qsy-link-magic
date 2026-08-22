@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Check, CreditCard, Crown, Gem, Gift, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { createDodoCheckout } from "@/lib/dodo.functions";
 import { RankBadge } from "@/components/qsy/rank-badge";
 
 export const Route = createFileRoute("/_authenticated/dashboard/gift")({
@@ -89,19 +91,29 @@ function GiftPremium() {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const { data: results, isFetching } = useSearchProfiles(term);
+  const checkout = useServerFn(createDodoCheckout);
 
   const selectedPlan = PLANS.find((p) => p.key === plan)!;
 
   async function send() {
     if (!target) return;
     setSending(true);
-    await new Promise((r) => setTimeout(r, 400));
-    setSending(false);
-    toast.info("Pasarela de pago en configuración", {
-      description: `Tu regalo de ${selectedPlan.name} para @${target.username} (${formatPrice(
-        selectedPlan.price,
-      )}) quedará listo en cuanto conectemos el sistema de pago.`,
-    });
+    try {
+      const { url } = await checkout({
+        data: {
+          rank: plan,
+          username: target.username,
+          message,
+          returnUrl: `${window.location.origin}/dashboard/gift`,
+        },
+      });
+      window.location.href = url;
+    } catch (e) {
+      setSending(false);
+      toast.error("No se pudo abrir el pago", {
+        description: e instanceof Error ? e.message : "Intenta de nuevo en unos minutos.",
+      });
+    }
   }
 
   return (
@@ -235,7 +247,7 @@ function GiftPremium() {
             Pagar y regalar {selectedPlan.name} · {formatPrice(selectedPlan.price)}
           </Button>
           <span className="text-xs text-muted-foreground">
-            La pasarela de pago se conectará en breve.
+            Pago seguro con Dodo Payments · el rango se aplica al confirmarse.
           </span>
           {!target && <span className="text-xs text-muted-foreground">Selecciona un usuario.</span>}
         </div>

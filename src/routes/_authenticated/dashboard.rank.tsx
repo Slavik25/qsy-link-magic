@@ -1,5 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, Crown, Gem, Sparkles, X } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Check, Crown, Gem, Loader2, Sparkles, X } from "lucide-react";
+import { createDodoCheckout } from "@/lib/dodo.functions";
+import type { PaidRank } from "@/lib/payments";
 
 export const Route = createFileRoute("/_authenticated/dashboard/rank")({
   component: RankPage,
@@ -158,14 +163,32 @@ function FeatureTable() {
       </div>
       <p className="rounded-2xl border border-border/60 bg-card/40 px-5 py-4 text-xs text-muted-foreground">
         <strong className="text-foreground">¿Cómo comprar?</strong> Pulsa en «Subir a Obsidian» o «Subir a
-        Seraph» para generar tu pedido. El pago es único y sin suscripciones; tu rango se activa en menos de
-        24 horas.
+        Seraph» y completa el pago con Dodo Payments (tarjeta y métodos locales). El pago es único y tu rango
+        se activa automáticamente al confirmarse.
       </p>
     </section>
   );
 }
 
 function RankPage() {
+  const checkout = useServerFn(createDodoCheckout);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function upgrade(rank: PaidRank) {
+    setBusy(rank);
+    try {
+      const { url } = await checkout({
+        data: { rank, returnUrl: `${window.location.origin}/dashboard/rank` },
+      });
+      window.location.href = url;
+    } catch (e) {
+      setBusy(null);
+      toast.error("No se pudo abrir el pago", {
+        description: e instanceof Error ? e.message : "Intenta de nuevo en unos minutos.",
+      });
+    }
+  }
+
   return (
     <div className="space-y-8">
       <header>
@@ -221,12 +244,15 @@ function RankPage() {
               </p>
             ) : (
               <button
-                className={`mt-6 w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+                onClick={() => upgrade(t.key as PaidRank)}
+                disabled={busy !== null}
+                className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
                   t.key === "seraph"
                     ? "bg-amber-300 text-black hover:bg-amber-200"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
               >
+                {busy === t.key && <Loader2 className="size-4 animate-spin" />}
                 Subir a {t.name}
               </button>
             )}
