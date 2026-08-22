@@ -789,6 +789,7 @@
 }
 
 /* Dashboard: lighter violet theme */
+:root.qsy-light,
 .dash-theme {
   --background: oklch(0.975 0.012 40);
   --foreground: oklch(0.30 0.045 350);
@@ -816,6 +817,7 @@
 }
 
 /* Dashboard dark: black + pastel pink */
+:root.qsy-dark,
 .dash-theme.dash-dark {
   --background: oklch(0.13 0.014 350);
   --foreground: oklch(0.97 0.012 350);
