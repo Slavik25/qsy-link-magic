@@ -6,6 +6,7 @@ import {
   ColorField,
   Group,
   OptionGrid,
+  PaintField,
   Panel,
   Pills,
   SaveBar,
