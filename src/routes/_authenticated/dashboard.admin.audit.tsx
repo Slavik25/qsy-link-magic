@@ -105,7 +105,8 @@ function AdminAudit() {
         return (
           <div className="mb-4 rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-xs text-destructive">
             <strong>{alerts.length}</strong> alerta(s) de manipulación detectadas (precios, monedas o
-            permisos). Último intento: {alerts[0].actor_name} — {alerts[0].action}.
+            permisos). Último intento: {alerts[0]?.actor_name ?? "—"} — {alerts[0]?.action ?? "—"}.
+
           </div>
         );
       })()}
