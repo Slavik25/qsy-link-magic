@@ -26,9 +26,14 @@ type AuditRow = {
 
 const FILTERS = [
   { key: "all", label: "Todo" },
+  { key: "shop", label: "Tienda" },
+  { key: "role", label: "Roles" },
+  { key: "counter", label: "Contadores" },
+  { key: "like", label: "Likes" },
   { key: "view", label: "Visitas" },
   { key: "chat", label: "Chat" },
 ] as const;
+
 
 function AdminAudit() {
   const [kind, setKind] = useState<(typeof FILTERS)[number]["key"]>("all");
@@ -89,9 +94,27 @@ function AdminAudit() {
         ))}
       </div>
 
+      {(() => {
+        const alerts = (rows ?? []).filter(
+          (r) =>
+            r.action.includes("blocked") ||
+            r.action.includes("rejected") ||
+            r.action === "price_mismatch_detected",
+        );
+        if (!alerts.length) return null;
+        return (
+          <div className="mb-4 rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-xs text-destructive">
+            <strong>{alerts.length}</strong> alerta(s) de manipulación detectadas (precios, monedas o
+            permisos). Último intento: {alerts[0]?.actor_name ?? "—"} — {alerts[0]?.action ?? "—"}.
+
+          </div>
+        );
+      })()}
+
       {isLoading ? (
         <p className="text-xs text-muted-foreground">Cargando historial…</p>
       ) : filtered.length ? (
+
         <div className="space-y-2">
           {filtered.map((r) => (
             <div
