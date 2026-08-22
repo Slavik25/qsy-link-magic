@@ -27,6 +27,7 @@ import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_auth
 import { Route as AuthenticatedDashboardGiftRouteImport } from './routes/_authenticated/dashboard.gift'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardMissionsRouteImport } from './routes/_authenticated/dashboard.missions'
+import { Route as AuthenticatedDashboardOgRouteImport } from './routes/_authenticated/dashboard.og'
 import { Route as AuthenticatedDashboardPremiumRouteImport } from './routes/_authenticated/dashboard.premium'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
@@ -148,6 +149,12 @@ const AuthenticatedDashboardMissionsRoute =
   AuthenticatedDashboardMissionsRouteImport.update({
     id: '/missions',
     path: '/missions',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardOgRoute =
+  AuthenticatedDashboardOgRouteImport.update({
+    id: '/og',
+    path: '/og',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardPremiumRoute =
@@ -321,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
+  '/dashboard/og': typeof AuthenticatedDashboardOgRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
@@ -364,6 +372,7 @@ export interface FileRoutesByTo {
   '/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
+  '/dashboard/og': typeof AuthenticatedDashboardOgRoute
   '/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
@@ -410,6 +419,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
+  '/_authenticated/dashboard/og': typeof AuthenticatedDashboardOgRoute
   '/_authenticated/dashboard/premium': typeof AuthenticatedDashboardPremiumRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRouteWithChildren
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
@@ -457,6 +467,7 @@ export interface FileRouteTypes {
     | '/dashboard/gift'
     | '/dashboard/links'
     | '/dashboard/missions'
+    | '/dashboard/og'
     | '/dashboard/premium'
     | '/dashboard/profile'
     | '/dashboard/profiles'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/dashboard/gift'
     | '/dashboard/links'
     | '/dashboard/missions'
+    | '/dashboard/og'
     | '/dashboard/premium'
     | '/dashboard/profiles'
     | '/dashboard/rank'
@@ -545,6 +557,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/gift'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/missions'
+    | '/_authenticated/dashboard/og'
     | '/_authenticated/dashboard/premium'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/profiles'
@@ -716,6 +729,13 @@ declare module '@tanstack/react-router' {
       path: '/missions'
       fullPath: '/dashboard/missions'
       preLoaderRoute: typeof AuthenticatedDashboardMissionsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/og': {
+      id: '/_authenticated/dashboard/og'
+      path: '/og'
+      fullPath: '/dashboard/og'
+      preLoaderRoute: typeof AuthenticatedDashboardOgRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/premium': {
@@ -983,6 +1003,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardGiftRoute: typeof AuthenticatedDashboardGiftRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMissionsRoute: typeof AuthenticatedDashboardMissionsRoute
+  AuthenticatedDashboardOgRoute: typeof AuthenticatedDashboardOgRoute
   AuthenticatedDashboardPremiumRoute: typeof AuthenticatedDashboardPremiumRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRouteWithChildren
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
@@ -1000,6 +1021,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardGiftRoute: AuthenticatedDashboardGiftRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMissionsRoute: AuthenticatedDashboardMissionsRoute,
+    AuthenticatedDashboardOgRoute: AuthenticatedDashboardOgRoute,
     AuthenticatedDashboardPremiumRoute: AuthenticatedDashboardPremiumRoute,
     AuthenticatedDashboardProfileRoute:
       AuthenticatedDashboardProfileRouteWithChildren,
