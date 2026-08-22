@@ -5,8 +5,8 @@ import { SignupEmail } from './email-templates/signup'
 import { MagicLinkEmail } from './email-templates/magic-link'
 
 const SITE_NAME = 'QSY'
-const SENDER_DOMAIN = 'notify.mail.qsy.es'
-const FROM_DOMAIN = 'mail.qsy.es'
+const SENDER_DOMAIN = 'notify.qsy.bio'
+const FROM_DOMAIN = 'qsy.bio'
 const SITE_URL = 'https://qsy.rip'
 
 export type EmailLogRow = {
