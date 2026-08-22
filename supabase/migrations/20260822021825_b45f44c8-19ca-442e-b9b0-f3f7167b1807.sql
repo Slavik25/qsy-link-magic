@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.grant_early_supporter() FROM PUBLIC, anon, authenticated;
