@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ArrowRight, KeyRound, Lock, Mail } from "lucide-react";
+import { ArrowRight, KeyRound, Lock, Mail, MailCheck } from "lucide-react";
 import { signInWithLoginCode } from "@/lib/login-code.functions";
 
 import { AuthShell } from "@/components/qsy/auth-shell";
@@ -40,6 +40,48 @@ function LoginPage() {
   const [mode, setMode] = useState<"password" | "code">("password");
   const [code, setCode] = useState("");
   const codeSignIn = useServerFn(signInWithLoginCode);
+  const [resending, setResending] = useState(false);
+  const [resendError, setResendError] = useState<string | null>(null);
+
+  async function resendConfirmation() {
+    const clean = email.trim();
+    if (!z.string().email().safeParse(clean).success) {
+      setResendError("Escribí tu email arriba para poder reenviar la confirmación.");
+      return;
+    }
+    setResending(true);
+    setResendError(null);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: clean,
+        options: { emailRedirectTo: `${window.location.origin}/login` },
+      });
+      setResending(false);
+      if (error) {
+        const msg = /rate|limit|429/i.test(error.message)
+          ? "Se alcanzó el límite de envíos. Esperá un minuto y volvé a intentar."
+          : `No se pudo reenviar el correo: ${error.message}`;
+        setResendError(msg);
+        toast.error("No se pudo reenviar la confirmación", {
+          description: msg,
+          action: { label: "Reintentar", onClick: () => void resendConfirmation() },
+        });
+        return;
+      }
+      toast.success("Correo de confirmación reenviado", {
+        description: `Revisá la bandeja de ${clean} (y la carpeta de spam).`,
+      });
+    } catch (err) {
+      setResending(false);
+      const msg = err instanceof Error ? err.message : "Error inesperado al reenviar el correo.";
+      setResendError(msg);
+      toast.error("No se pudo reenviar la confirmación", {
+        description: msg,
+        action: { label: "Reintentar", onClick: () => void resendConfirmation() },
+      });
+    }
+  }
 
   async function onCodeSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -84,6 +126,14 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
     if (error) {
+      if (/confirm/i.test(error.message)) {
+        setResendError("Tu email todavía no está confirmado. Podés pedir otro correo de confirmación.");
+        toast.error("Email sin confirmar", {
+          description: "Reenviá el correo de confirmación para activar tu cuenta.",
+          action: { label: "Reenviar", onClick: () => void resendConfirmation() },
+        });
+        return;
+      }
       toast.error(error.message);
       return;
     }
@@ -245,6 +295,32 @@ function LoginPage() {
           <KeyRound className="size-4" />
           Entrar con código
         </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={resending}
+          onClick={resendConfirmation}
+          className="h-11 w-full rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          <MailCheck className="size-4" />
+          {resending ? "Reenviando…" : "Reenviar confirmación"}
+        </Button>
+
+        {resendError ? (
+          <div className="flex flex-col gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-3">
+            <p className="text-xs text-destructive">{resendError}</p>
+            <button
+              type="button"
+              onClick={resendConfirmation}
+              className="self-start text-[11px] font-semibold uppercase tracking-[0.14em] text-primary hover:underline"
+            >
+              Reintentar envío
+            </button>
+          </div>
+        ) : null}
+
+
 
 
 

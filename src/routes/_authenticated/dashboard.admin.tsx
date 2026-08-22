@@ -8,6 +8,7 @@ import {
   Gift,
   Image as ImageIcon,
   KeyRound,
+  Mail,
   MessageSquareWarning,
   Rocket,
   ShieldAlert,
@@ -33,6 +34,7 @@ const TABS = [
   { to: "/dashboard/admin/status", label: "Servicios", icon: Activity },
   { to: "/dashboard/admin/boosts", label: "Boosts", icon: Rocket },
   { to: "/dashboard/admin/shop", label: "Tienda", icon: Gift },
+  { to: "/dashboard/admin/emails", label: "Emails", icon: Mail },
   { to: "/dashboard/admin/integrations", label: "Integraciones", icon: KeyRound },
 ] as const;
 
