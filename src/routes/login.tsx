@@ -34,6 +34,41 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"password" | "code">("password");
+  const [code, setCode] = useState("");
+  const codeSignIn = useServerFn(signInWithLoginCode);
+
+  async function onCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const clean = code.trim().toUpperCase();
+    if (!/^QSY-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(clean)) {
+      toast.error("Formato inválido", { description: "Debe ser QSY-XXXX-XXXX-XXXX" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await codeSignIn({ data: { code: clean } });
+      if (!res.ok) {
+        setLoading(false);
+        toast.error(res.error);
+        return;
+      }
+      const { error } = await supabase.auth.verifyOtp({
+        type: "magiclink",
+        token_hash: res.tokenHash,
+      });
+      setLoading(false);
+      if (error) {
+        toast.error("No se pudo iniciar sesión", { description: error.message });
+        return;
+      }
+      await navigate({ to: "/dashboard" });
+    } catch {
+      setLoading(false);
+      toast.error("No se pudo iniciar sesión con el código");
+    }
+  }
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
