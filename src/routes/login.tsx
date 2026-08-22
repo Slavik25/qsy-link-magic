@@ -1,8 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ArrowRight, Lock, Mail } from "lucide-react";
+import { ArrowRight, KeyRound, Lock, Mail } from "lucide-react";
+import { signInWithLoginCode } from "@/lib/login-code.functions";
+
 import { AuthShell } from "@/components/qsy/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +37,41 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"password" | "code">("password");
+  const [code, setCode] = useState("");
+  const codeSignIn = useServerFn(signInWithLoginCode);
+
+  async function onCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const clean = code.trim().toUpperCase();
+    if (!/^QSY-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(clean)) {
+      toast.error("Formato inválido", { description: "Debe ser QSY-XXXX-XXXX-XXXX" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await codeSignIn({ data: { code: clean } });
+      if (!res.ok) {
+        setLoading(false);
+        toast.error(res.error);
+        return;
+      }
+      const { error } = await supabase.auth.verifyOtp({
+        type: "magiclink",
+        token_hash: res.tokenHash,
+      });
+      setLoading(false);
+      if (error) {
+        toast.error("No se pudo iniciar sesión", { description: error.message });
+        return;
+      }
+      await navigate({ to: "/dashboard" });
+    } catch {
+      setLoading(false);
+      toast.error("No se pudo iniciar sesión con el código");
+    }
+  }
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -64,6 +102,56 @@ function LoginPage() {
     navigate({ to: "/dashboard" });
   }
 
+  if (mode === "code") {
+    return (
+      <AuthShell
+        eyebrow="Iniciar sesión en QSY"
+        title="Entrar con código"
+        subtitle="Usa tu código de acceso personal"
+      >
+        <form onSubmit={onCodeSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="code" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              Código de acceso
+            </Label>
+            <div className="relative">
+              <KeyRound className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="code"
+                value={code}
+                maxLength={18}
+                autoComplete="off"
+                placeholder="QSY-XXXX-XXXX-XXXX"
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                className="h-12 rounded-xl bg-background/60 pl-10 font-mono tracking-[0.14em]"
+              />
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Encontrás tu código en Dashboard → Ajustes.
+            </p>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
+          >
+            {loading ? "Entrando…" : "Entrar con código"}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+
+          <button
+            type="button"
+            onClick={() => setMode("password")}
+            className="w-full text-center text-xs text-muted-foreground hover:text-primary"
+          >
+            Volver a email y contraseña
+          </button>
+        </form>
+      </AuthShell>
+    );
+  }
+
   return (
     <AuthShell
       eyebrow="Iniciar sesión en QSY"
@@ -71,6 +159,7 @@ function LoginPage() {
       subtitle="Inicia sesión en tu cuenta"
     >
       <form onSubmit={onSubmit} className="space-y-5">
+
         <div className="space-y-2">
           <Label htmlFor="email" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
             Email
@@ -140,6 +229,18 @@ function LoginPage() {
         >
           Google
         </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setMode("code")}
+          className="h-12 w-full rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          <KeyRound className="size-4" />
+          Entrar con código
+        </Button>
+
+
 
         <p className="pt-2 text-center text-xs text-muted-foreground">
           ¿Sin cuenta?{" "}

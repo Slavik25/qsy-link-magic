@@ -1,4 +1,6 @@
 import { profileHost } from "@/lib/domains";
+import { Copy, Eye, EyeOff, KeyRound, RefreshCw } from "lucide-react";
+
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -19,10 +21,34 @@ function SettingsPage() {
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginCode, setLoginCode] = useState<string | null>(null);
+  const [showCode, setShowCode] = useState(false);
+  const [rotating, setRotating] = useState(false);
 
   useEffect(() => {
     void supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ""));
   }, []);
+
+  useEffect(() => {
+    void (async () => {
+      const { data } = await supabase.from("login_codes").select("code").maybeSingle();
+      setLoginCode((data as { code?: string } | null)?.code ?? null);
+    })();
+  }, []);
+
+  async function rotateCode() {
+    setRotating(true);
+    const { data, error } = await supabase.rpc("rotate_login_code");
+    setRotating(false);
+    if (error) {
+      toast.error("No se pudo generar el código", { description: error.message });
+      return;
+    }
+    setLoginCode(data as unknown as string);
+    setShowCode(true);
+    toast.success("Nuevo código generado");
+  }
+
 
   async function changePassword() {
     if (password.length < 6) {
@@ -66,6 +92,43 @@ function SettingsPage() {
         </div>
         <Button onClick={changePassword}>Actualizar contraseña</Button>
       </section>
+
+      <section className="space-y-3 rounded-2xl glass p-6">
+        <div className="flex items-center gap-2">
+          <KeyRound className="size-4 text-primary" />
+          <h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Código de acceso</h2>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Podés iniciar sesión con este código en vez de tu contraseña. No lo compartas con nadie.
+        </p>
+        <div className="flex items-center gap-2">
+          <Input
+            readOnly
+            value={showCode ? (loginCode ?? "…") : "QSY-••••-••••-••••"}
+            className="font-mono tracking-[0.14em]"
+          />
+          <Button type="button" variant="secondary" size="icon" onClick={() => setShowCode((v) => !v)}>
+            {showCode ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            onClick={() => {
+              if (!loginCode) return;
+              void navigator.clipboard.writeText(loginCode);
+              toast.success("Código copiado");
+            }}
+          >
+            <Copy className="size-4" />
+          </Button>
+        </div>
+        <Button variant="outline" onClick={rotateCode} disabled={rotating}>
+          <RefreshCw className={`size-4 ${rotating ? "animate-spin" : ""}`} />
+          {rotating ? "Generando…" : "Generar código nuevo"}
+        </Button>
+      </section>
+
 
       <section className="space-y-3 rounded-2xl glass p-6">
         <p className="text-sm text-muted-foreground">
