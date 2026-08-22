@@ -9,21 +9,68 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import { detectBrowser, detectDevice } from "@/lib/qsy";
-
+import { getProfileMeta } from "@/lib/profile-meta.functions";
 
 export const Route = createFileRoute("/$username")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `@${params.username} — QSY` },
-      { name: "description", content: `Perfil QSY de @${params.username}: links, redes y música.` },
-      { property: "og:title", content: `@${params.username} — QSY` },
-      { property: "og:description", content: `Perfil QSY de @${params.username}.` },
-      { property: "og:type", content: "profile" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  loader: async ({ params }) => {
+    try {
+      return { meta: await getProfileMeta({ data: { username: params.username } }) };
+    } catch {
+      return { meta: null };
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const m = loaderData?.meta ?? null;
+    const handle = `@${m?.username ?? params.username}`;
+    const name = m?.display_name || handle;
+
+    // Embed por defecto de QSY; los rangos Obsidian y Seraph pueden sobrescribirlo.
+    const title =
+      m?.meta_title ?? (name === handle ? `${handle} · qsy.rip` : `${name} (${handle}) · qsy.rip`);
+    const description =
+      m?.meta_description ??
+      (m?.bio?.trim() ? m.bio.trim() : `${handle} en QSY — links, redes y música en un solo perfil.`);
+    const image = m?.meta_image ?? m?.avatar_url ?? null;
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:site_name", content: "qsy.rip · perfil de usuario" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "profile" },
+        { property: "og:url", content: `https://qsy.rip/${m?.username ?? params.username}` },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "theme-color", content: "#7c5cff" },
+        ...(image
+          ? [
+              { property: "og:image", content: image },
+              { name: "twitter:image", content: image },
+              {
+                name: "twitter:card",
+                content: m?.meta_image ? "summary_large_image" : "summary",
+              },
+            ]
+          : [{ name: "twitter:card", content: "summary" }]),
+      ],
+      links: m?.meta_favicon ? [{ rel: "icon", href: m.meta_favicon }] : [],
+    };
+  },
+  errorComponent: () => (
+    <div className="grid min-h-screen place-items-center px-4 text-center text-sm text-muted-foreground">
+      No pudimos cargar este perfil. Vuelve a intentarlo en unos segundos.
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="grid min-h-screen place-items-center px-4 text-center text-sm text-muted-foreground">
+      Este perfil no existe.
+    </div>
+  ),
   component: PublicProfile,
 });
+
 
 function PublicProfile() {
   const { username } = Route.useParams();
@@ -103,8 +150,13 @@ function PublicProfile() {
         ? "max-w-3xl"
         : "max-w-xl";
 
+  // CSS personalizado: exclusivo de Obsidian y Seraph.
+  const premium = profile.rank === "obsidian" || profile.rank === "seraph";
+  const customCss = premium ? (profile.theme.custom_css ?? "").trim() : "";
+
   return (
     <ProfileStage theme={profile.theme} music={music}>
+      {customCss ? <style dangerouslySetInnerHTML={{ __html: customCss }} /> : null}
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
       <main
         className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
