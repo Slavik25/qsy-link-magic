@@ -31,7 +31,12 @@ const schema = z.object({
     .min(3, "Mínimo 3 caracteres")
     .max(24, "Máximo 24 caracteres")
     .regex(/^[a-z0-9_]+$/, "Solo minúsculas, números y guion bajo"),
-  email: z.string().trim().email("Email inválido").max(255),
+  email: z
+    .string()
+    .trim()
+    .email("Email inválido")
+    .max(255)
+    .refine((v) => !isDisposableEmail(v), DISPOSABLE_EMAIL_MESSAGE),
   password: z.string().min(6, "Mínimo 6 caracteres").max(72),
 });
 
