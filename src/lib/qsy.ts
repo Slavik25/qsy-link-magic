@@ -64,6 +64,9 @@ export type ThemeConfig = {
   vfx_volume_control?: boolean;
   /* Connections */
   discord_id?: string;
+  discord_server_id?: string;
+  discord_show_profile?: boolean;
+  discord_show_server?: boolean;
   discord_avatar?: boolean;
   discord_decoration?: boolean;
   spotify_user?: string;

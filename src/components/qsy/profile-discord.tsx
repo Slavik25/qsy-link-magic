@@ -83,7 +83,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   if (!showUser && !showGuild) return null;
 
   const du = user?.discord_user;
-  const status = STATUS[user?.discord_status ?? "offline"];
+  const status = STATUS[user?.discord_status ?? "offline"] ?? STATUS.offline!;
   const activity = user?.activities?.find((a) => a.type !== 4);
   const avatar = du?.avatar
     ? `https://cdn.discordapp.com/avatars/${du.id}/${du.avatar}.${du.avatar.startsWith("a_") ? "gif" : "png"}?size=128`
