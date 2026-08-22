@@ -69,7 +69,9 @@ export type ThemeConfig = {
   discord_show_profile?: boolean;
   discord_show_server?: boolean;
   discord_avatar?: boolean;
+  discord_transparent?: boolean;
   discord_decoration?: boolean;
+
   spotify_user?: string;
   video_overlay?: string;
   /* Modules */
