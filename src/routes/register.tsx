@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { isDisposableEmail, DISPOSABLE_EMAIL_MESSAGE } from "@/lib/disposable-emails";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -31,7 +32,12 @@ const schema = z.object({
     .min(3, "Mínimo 3 caracteres")
     .max(24, "Máximo 24 caracteres")
     .regex(/^[a-z0-9_]+$/, "Solo minúsculas, números y guion bajo"),
-  email: z.string().trim().email("Email inválido").max(255),
+  email: z
+    .string()
+    .trim()
+    .email("Email inválido")
+    .max(255)
+    .refine((v) => !isDisposableEmail(v), DISPOSABLE_EMAIL_MESSAGE),
   password: z.string().min(6, "Mínimo 6 caracteres").max(72),
 });
 
