@@ -15,6 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export type MediaItem = { url: string; title?: string };
+
 export type ThemeConfig = {
   template: string;
   accent: string;
@@ -103,6 +105,8 @@ export type ThemeConfig = {
   show_views?: boolean;
   show_likes?: boolean;
   typewriter?: string[];
+  /** Bloques de música/vídeo por enlace (YouTube, Spotify, SoundCloud, Apple Music) */
+  media?: MediaItem[];
   /* Advanced */
   profile_mode?: "public" | "unlisted" | "private";
   show_bio?: boolean;

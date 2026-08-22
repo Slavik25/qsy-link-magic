@@ -18,7 +18,6 @@ import { LANGS, useI18n } from "@/lib/i18n";
 import { useActiveProfileId } from "@/lib/qsy-data";
 
 const items = [
-  { label: "Explore", to: "/explore" as const },
   { label: "Templates", to: "/templates" as const },
   { label: "Rank", to: "/rank" as const },
 ];

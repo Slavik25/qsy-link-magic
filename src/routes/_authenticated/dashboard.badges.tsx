@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMyProfile, useProfileBadges } from "@/lib/qsy-data";
@@ -64,9 +64,17 @@ function BadgesPage() {
                   Activo
                 </span>
               ) : b.action ? (
-                <Button size="sm" variant="secondary" className="rounded-lg text-xs">
-                  {b.action}
-                </Button>
+                b.href?.startsWith("http") ? (
+                  <Button asChild size="sm" variant="secondary" className="rounded-lg text-xs">
+                    <a href={b.href} target="_blank" rel="noreferrer">
+                      {b.action}
+                    </a>
+                  </Button>
+                ) : (
+                  <Button asChild size="sm" variant="secondary" className="rounded-lg text-xs">
+                    <Link to={b.href ?? "/dashboard/premium"}>{b.action}</Link>
+                  </Button>
+                )
               ) : null}
             </div>
           );
@@ -80,7 +88,9 @@ function BadgesPage() {
         <p className="mt-1 max-w-xl text-sm text-muted-foreground">
           Con QSY Premium puedes reordenar, recolorear y activar cada badge de forma individual.
         </p>
-        <Button className="mt-4 rounded-xl">Mejorar ahora</Button>
+        <Button asChild className="mt-4 rounded-xl">
+          <Link to="/dashboard/premium">Mejorar ahora</Link>
+        </Button>
       </section>
     </div>
   );

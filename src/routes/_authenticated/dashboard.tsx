@@ -50,7 +50,7 @@ const NAV: NavItem[] = [
   { to: "/dashboard/premium", label: "Tienda", icon: Gem },
   { to: "/dashboard/rank", label: "Subir de rango", icon: Crown },
   { to: "/templates", label: "Plantillas", icon: ImageIcon },
-  { to: "/explore", label: "Explorar", icon: Sparkles },
+  { to: "/rank", label: "Ranking", icon: Sparkles },
   { to: "/dashboard/settings", label: "Configuración", icon: Settings },
 ];
 
@@ -257,8 +257,8 @@ function DashboardLayout() {
             <Link to="/" className="transition-colors hover:text-foreground">
               Home
             </Link>
-            <Link to="/explore" className="transition-colors hover:text-foreground">
-              Explorar
+            <Link to="/rank" className="transition-colors hover:text-foreground">
+              Ranking
             </Link>
             <Link to="/templates" className="transition-colors hover:text-foreground">
               Plantillas
