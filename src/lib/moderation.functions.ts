@@ -159,21 +159,19 @@ export const sendChatMessage = createServerFn({ method: "POST" })
     });
     if (banned) throw new Error("Tu cuenta está suspendida");
 
-    const { data: row, error } = await supabaseAdmin
-      .from("global_chat_messages")
-      .insert({
-        user_id: context.userId,
-        profile_id: profile?.id ?? null,
-        author_name: profile?.username ?? "anon",
-        author_avatar: profile?.avatar_url ?? null,
-        message,
-        ip,
-        fingerprint: data.fingerprint ?? null,
-      })
-      .select("id")
-      .single();
+    // La IP y la huella se guardan en una tabla privada (solo servidor) vía RPC.
+    const { data: newId, error } = await supabaseAdmin.rpc("post_chat_message", {
+      _user_id: context.userId,
+      _profile_id: (profile?.id ?? null) as unknown as string,
+      _author_name: profile?.username ?? "anon",
+      _author_avatar: (profile?.avatar_url ?? null) as unknown as string,
+      _message: message,
+      _ip: ip ?? "",
+      _fingerprint: data.fingerprint ?? "",
+    });
 
     if (error) throw new Error(error.message);
+    const row = { id: newId as string };
 
     await supabaseAdmin.from("audit_events").insert({
       kind: "chat",
