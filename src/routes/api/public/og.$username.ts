@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ImageResponse, loadGoogleFont } from "workers-og";
+import { ImageResponse } from "workers-og";
 import { getProfileMeta } from "@/lib/profile-meta.functions";
 
 /** Nodo satori sin JSX (este archivo es .ts y corre en el edge). */
@@ -128,6 +128,25 @@ function card(m: {
   );
 }
 
+/** Descarga una fuente de Google en formato TTF (satori no soporta woff2). */
+const fontCache = new Map<string, ArrayBuffer>();
+async function googleFont(family: string, weight: number): Promise<ArrayBuffer> {
+  const key = `${family}:${weight}`;
+  const cached = fontCache.get(key);
+  if (cached) return cached;
+  const cssUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+    family,
+  )}:wght@${weight}`;
+  const css = await fetch(cssUrl, {
+    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" },
+  }).then((r) => r.text());
+  const url = /src:\s*url\((https:[^)]+)\)/.exec(css)?.[1];
+  if (!url) throw new Error(`font not found: ${key}`);
+  const buf = await fetch(url).then((r) => r.arrayBuffer());
+  fontCache.set(key, buf);
+  return buf;
+}
+
 export const Route = createFileRoute("/api/public/og/$username")({
   server: {
     handlers: {
@@ -148,10 +167,9 @@ export const Route = createFileRoute("/api/public/og/$username")({
         };
 
         try {
-          const text = `${data.display_name}@${data.username}${data.bio}qsy.rip perfil de usuario`;
           const [regular, bold] = await Promise.all([
-            loadGoogleFont({ family: "Inter", weight: 400, text }),
-            loadGoogleFont({ family: "Inter", weight: 700, text }),
+            googleFont("Inter", 400),
+            googleFont("Inter", 700),
           ]);
 
           return new ImageResponse(card(data) as unknown as React.ReactNode, {
