@@ -61,20 +61,22 @@ function Shell({
   accent,
   children,
   className = "",
+  transparent = false,
 }: {
   accent: string;
   children: React.ReactNode;
   className?: string;
+  transparent?: boolean;
 }) {
   return (
     <div
       className={`group relative overflow-hidden border transition-all duration-300 ${className}`}
       style={{
         borderRadius: "var(--p-radius)",
-        background: "var(--p-surface)",
-        backdropFilter: "blur(var(--p-blur))",
-        borderColor: `color-mix(in oklab, ${accent} 28%, transparent)`,
-        boxShadow: `0 10px 30px -18px ${accent}`,
+        background: transparent ? "transparent" : "var(--p-surface)",
+        backdropFilter: transparent ? "none" : "blur(var(--p-blur))",
+        borderColor: `color-mix(in oklab, ${accent} ${transparent ? 18 : 28}%, transparent)`,
+        boxShadow: transparent ? "none" : `0 10px 30px -18px ${accent}`,
       }}
     >
       <span
@@ -94,6 +96,7 @@ function Shell({
 
 export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const accent = theme.accent;
+  const transparent = theme.discord_transparent === true;
   const userId = (theme.discord_id ?? "").trim();
   const guildId = (theme.discord_server_id ?? "").trim();
   const invite = (theme.discord_invite ?? "").trim();
@@ -258,7 +261,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   return (
     <div className="mx-auto mt-6 grid w-full max-w-md items-stretch justify-center gap-3 sm:grid-cols-2">
       {showUser && (
-        <Shell accent={accent} className="flex flex-col justify-center p-4">
+        <Shell accent={accent} transparent={transparent} className="flex flex-col justify-center p-4">
           <div className="relative flex items-center gap-3.5">
             <span className="relative shrink-0">
               <span
@@ -317,7 +320,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
       )}
 
       {showGuild && (guild || guildMeta) && (
-        <Shell accent={accent} className="flex flex-col p-4">
+        <Shell accent={accent} transparent={transparent} className="flex flex-col p-4">
           <div className="relative flex items-center gap-3">
             {guildIcon ? (
               <img
