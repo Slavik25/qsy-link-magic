@@ -247,7 +247,7 @@ function GiftPremium() {
             Pagar y regalar {selectedPlan.name} · {formatPrice(selectedPlan.price)}
           </Button>
           <span className="text-xs text-muted-foreground">
-            La pasarela de pago se conectará en breve.
+            Pago seguro con Dodo Payments · el rango se aplica al confirmarse.
           </span>
           {!target && <span className="text-xs text-muted-foreground">Selecciona un usuario.</span>}
         </div>
