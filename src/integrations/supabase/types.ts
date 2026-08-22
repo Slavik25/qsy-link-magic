@@ -1176,6 +1176,11 @@ export type Database = {
         Args: { _fingerprint: string; _user_id: string }
         Returns: boolean
       }
+      is_banned_ctx: {
+        Args: { _fingerprint: string; _ip: string; _user_id: string }
+        Returns: boolean
+      }
+      is_site_owner: { Args: { _user_id: string }; Returns: boolean }
       mission_progress: { Args: { _key: string }; Returns: number }
       new_login_code: { Args: never; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
