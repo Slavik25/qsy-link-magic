@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.is_banned(uuid, text) FROM anon, authenticated, public;
