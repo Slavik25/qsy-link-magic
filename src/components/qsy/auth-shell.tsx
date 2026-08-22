@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, Check } from "lucide-react";
 import qsyLogo from "@/assets/qsy-logo.png.asset.json";
+import qsyLogoLight from "@/assets/qsy-logo-dark.png.asset.json";
 
 const perks = [
   "Perfiles con música de fondo",
