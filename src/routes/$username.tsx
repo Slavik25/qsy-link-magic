@@ -34,6 +34,13 @@ function PublicProfile() {
   useEffect(() => {
     if (!profileId || tracked.current) return;
     tracked.current = true;
+    const key = `qsy_viewed_${profileId}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, String(Date.now()));
+    } catch {
+      /* storage bloqueado: registramos igual */
+    }
     void supabase.from("profile_views").insert({
       profile_id: profileId,
       device: detectDevice(),
@@ -92,6 +99,7 @@ function PublicProfile() {
 
 
         <ProfileView
+          profileId={profile.id}
           profile={profile}
           links={links}
           socials={socials}
