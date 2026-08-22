@@ -65,6 +65,7 @@ export type ThemeConfig = {
   /* Connections */
   discord_id?: string;
   discord_server_id?: string;
+  discord_invite?: string;
   discord_show_profile?: boolean;
   discord_show_server?: boolean;
   discord_avatar?: boolean;
