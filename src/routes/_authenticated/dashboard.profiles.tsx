@@ -56,9 +56,10 @@ function ProfilesPage() {
         .select("id")
         .single();
       if (error) {
-        throw new Error(
-          error.code === "23505" ? "Ese usuario ya está en uso." : error.message,
-        );
+        if (error.code === "23505") throw new Error("Ese usuario ya está en uso.");
+        if (error.message.includes("profile limit reached"))
+          throw new Error("Has alcanzado el límite de perfiles de tu plan.");
+        throw new Error(error.message);
       }
       return data.id as string;
     },
