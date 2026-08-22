@@ -13,12 +13,25 @@ import { getProfileMeta } from "@/lib/profile-meta.functions";
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
+    let meta: Awaited<ReturnType<typeof getProfileMeta>> | null = null;
     try {
-      return { meta: await getProfileMeta({ data: { username: params.username } }) };
+      meta = await getProfileMeta({ data: { username: params.username } });
     } catch {
-      return { meta: null };
+      meta = null;
     }
+    // Un perfil inexistente debe responder 404 real, no 200 (evita que los
+    // escáneres marquen cualquier ruta como "directorio expuesto").
+    if (!meta && typeof window === "undefined") {
+      try {
+        const { setResponseStatus } = await import("@tanstack/react-start/server");
+        setResponseStatus(404);
+      } catch {
+        /* noop */
+      }
+    }
+    return { meta };
   },
+
   head: ({ params, loaderData }) => {
     const m = loaderData?.meta ?? null;
     const handle = `@${m?.username ?? params.username}`;
