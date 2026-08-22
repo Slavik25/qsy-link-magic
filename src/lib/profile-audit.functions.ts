@@ -62,7 +62,7 @@ export const reportProfileWriteRejection = createServerFn({ method: "POST" })
         reason: data.reason,
         code: data.code,
         payload: data.payload,
-      },
+      } as never,
     });
 
     return { logged: true };
