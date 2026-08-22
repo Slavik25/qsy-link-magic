@@ -112,6 +112,7 @@ export type ThemeConfig = {
   show_bio?: boolean;
   show_socials?: boolean;
   bg_effect?: string;
+  hover_effect?: string;
   meta_title?: string;
   meta_description?: string;
   meta_image?: string;
@@ -185,6 +186,7 @@ export const defaultTheme: ThemeConfig = {
   show_bio: true,
   show_socials: true,
   bg_effect: "none",
+  hover_effect: "none",
   custom_css: "",
 
 };

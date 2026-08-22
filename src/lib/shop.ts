@@ -403,6 +403,22 @@ export const SHOP_BG_EFFECTS: BgEffectDef[] = [
   { key: "bg-nebula", name: "Nebulosa", description: "Nube estelar en rotación permanente.", price: 500, premium: true, effect: "nebula", preview: "linear-gradient(140deg,#4338ca,#a21caf,#0b0b12)" },
 ];
 
+/** Animaciones al pasar el ratón sobre la tarjeta del biolink (theme.hover_effect) */
+export type HoverEffectDef = ShopItem & { effect: string; preview: string };
+
+export const SHOP_HOVER_EFFECTS: HoverEffectDef[] = [
+  { key: "hover-none", name: "Ninguna", description: "Sin animación al pasar el ratón.", price: 0, effect: "none", preview: "linear-gradient(140deg,#111,#0b0b12)" },
+  { key: "hover-lift", name: "Lift", description: "La tarjeta se eleva con una sombra suave.", price: 0, effect: "lift", preview: "linear-gradient(140deg,#1c1c28,#0b0b12)" },
+  { key: "hover-zoom", name: "Zoom", description: "Acercamiento sutil de todo el layout.", price: 200, effect: "zoom", preview: "linear-gradient(140deg,#123,#0b0b12)" },
+  { key: "hover-tilt", name: "Tilt 3D", description: "Inclinación en perspectiva estilo 3D.", price: 200, effect: "tilt", preview: "linear-gradient(140deg,#2b1d4d,#0b0b12)" },
+  { key: "hover-glow", name: "Neon Glow", description: "Halo de neón con tu color de acento.", price: 250, effect: "glow", preview: "linear-gradient(140deg,#3b0d5e,#0b0b12)" },
+  { key: "hover-float", name: "Float", description: "Flotación continua mientras apuntas.", price: 300, effect: "float", preview: "linear-gradient(140deg,#0f3d4d,#0b0b12)" },
+  { key: "hover-shine", name: "Shine", description: "Destello diagonal que recorre la tarjeta.", price: 300, premium: true, effect: "shine", preview: "linear-gradient(140deg,#4d1d3a,#0b0b12)" },
+  { key: "hover-jelly", name: "Jelly", description: "Rebote elástico al entrar el cursor.", price: 350, premium: true, effect: "jelly", preview: "linear-gradient(140deg,#1d2b12,#0b0b12)" },
+  { key: "hover-rgb", name: "RGB Border", description: "Borde arcoíris girando sin parar.", price: 400, premium: true, effect: "rgb", preview: "linear-gradient(140deg,#7c1d6f,#1d4d7c,#0b0b12)" },
+  { key: "hover-scan", name: "Scanline", description: "Línea de escaneo cyberpunk de arriba abajo.", price: 450, premium: true, effect: "scan", preview: "linear-gradient(140deg,#052b16,#0b0b12)" },
+];
+
 /** Decoraciones de avatar estilo Discord (theme.avatar_decoration) */
 export type DecorationDef = ShopItem & { image: string | null };
 
@@ -576,6 +592,10 @@ export function playerByKey(key?: string) {
 
 export function nameStyleByEffect(effect?: string) {
   return SHOP_NAME_STYLES.find((n) => n.effect === (effect ?? "none"));
+}
+
+export function hoverEffectByEffect(effect?: string) {
+  return SHOP_HOVER_EFFECTS.find((h) => h.effect === (effect ?? "none"));
 }
 
 export function bgEffectByEffect(effect?: string) {
