@@ -91,6 +91,7 @@ function RankPage() {
   const [active, setActive] = useState<Soul | null>(null);
   const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const movedRef = useRef(false);
 
   const top = useMemo(() => souls.slice(0, 10), [souls]);
 
@@ -160,12 +161,15 @@ function RankPage() {
             className="relative mt-8 h-[640px] w-full cursor-grab overflow-hidden active:cursor-grabbing"
             onPointerDown={(e) => {
               drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
-              (e.target as Element).setPointerCapture?.(e.pointerId);
+              movedRef.current = false;
             }}
             onPointerMove={(e) => {
               const d = drag.current;
               if (!d) return;
-              setPan({ x: d.px + (e.clientX - d.x), y: d.py + (e.clientY - d.y) });
+              const dx = e.clientX - d.x;
+              const dy = e.clientY - d.y;
+              if (Math.abs(dx) + Math.abs(dy) > 5) movedRef.current = true;
+              setPan({ x: d.px + dx, y: d.py + dy });
             }}
             onPointerUp={() => (drag.current = null)}
             onPointerLeave={() => (drag.current = null)}
@@ -180,13 +184,18 @@ function RankPage() {
               }}
             >
               {souls.map((s, i) => (
-                <button
+                <Link
                   key={s.username}
-                  type="button"
+                  to="/$username"
+                  params={{ username: s.username }}
                   onMouseEnter={() => setActive(s)}
                   onFocus={() => setActive(s)}
                   onMouseLeave={() => setActive(null)}
-                  aria-label={`${s.display_name} — puesto ${i + 1}`}
+                  onClick={(e) => {
+                    // Ignore the click that ends a pan gesture.
+                    if (movedRef.current) e.preventDefault();
+                  }}
+                  aria-label={`Ver el biolink de ${s.display_name} — puesto ${i + 1}`}
                   className="group absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none"
                   style={{ left: s.x, top: s.y, width: s.size, height: s.size }}
                 >
@@ -210,7 +219,7 @@ function RankPage() {
                   <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-border/60 bg-background/85 px-2 py-1 text-[10px] font-medium opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
                     #{i + 1} {s.display_name}
                   </span>
-                </button>
+                </Link>
               ))}
             </div>
 
