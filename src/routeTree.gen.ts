@@ -49,6 +49,7 @@ import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './rout
 import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
 import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
 import { Route as ApiPublicWebhooksDodoRouteImport } from './routes/api/public/webhooks/dodo'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -278,6 +279,12 @@ const ApiPublicWebhooksDodoRoute = ApiPublicWebhooksDodoRouteImport.update({
   path: '/api/public/webhooks/dodo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -355,6 +363,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -398,6 +407,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/profile/': typeof AuthenticatedDashboardProfileIndexRoute
 }
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/webhooks/dodo'
+    | '/lovable/email/transactional/preview'
     | '/dashboard/admin/'
     | '/dashboard/profile/'
   fileRoutesByTo: FileRoutesByTo
@@ -479,6 +490,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/webhooks/dodo'
+    | '/lovable/email/transactional/preview'
     | '/dashboard/admin'
     | '/dashboard/profile'
   id:
@@ -521,6 +533,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
     | '/api/public/webhooks/dodo'
+    | '/lovable/email/transactional/preview'
     | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/profile/'
   fileRoutesById: FileRoutesById
@@ -536,6 +549,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   TemplatesRoute: typeof TemplatesRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -820,6 +834,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksDodoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -956,6 +977,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   TemplatesRoute: TemplatesRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
