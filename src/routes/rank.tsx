@@ -224,7 +224,7 @@ function RankPage() {
               <button
                 type="button"
                 aria-label="Alejar"
-                onClick={() => setZoom((z) => Math.max(0.4, +(z - 0.2).toFixed(2)))}
+                onClick={() => zoomAt(zoom / 1.25, 0, 0)}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ZoomOut className="size-4" />
