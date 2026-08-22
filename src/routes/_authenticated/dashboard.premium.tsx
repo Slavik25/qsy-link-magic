@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles, Type, Wand2 } from "lucide-react";
+import { Check, Coins, Gem, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,7 @@ import { useMyProfile } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
 import {
   SHOP_BG_EFFECTS,
+  SHOP_HOVER_EFFECTS,
   SHOP_DECORATIONS,
   SHOP_LAYOUTS,
   SHOP_NAME_STYLES,
@@ -36,13 +37,14 @@ export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   }),
 });
 
-type Tab = "players" | "layouts" | "names" | "effects" | "decorations";
+type Tab = "players" | "layouts" | "names" | "effects" | "hover" | "decorations";
 
 const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "players", label: "Reproductores", icon: Music4 },
   { key: "layouts", label: "Layouts", icon: LayoutTemplate },
   { key: "names", label: "Nombres", icon: Type },
   { key: "effects", label: "Fondos", icon: Wand2 },
+  { key: "hover", label: "Hover", icon: MousePointer2 },
   { key: "decorations", label: "Decoraciones", icon: Sparkles },
 ];
 
@@ -342,6 +344,60 @@ function ShopPage() {
                       className="mt-4 w-full rounded-xl"
                       variant={active ? "secondary" : "default"}
                       onClick={() => apply({ bg_effect: b.effect }, b.name)}
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "hover" && (
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_HOVER_EFFECTS.map((h) => {
+            const active = (theme?.hover_effect ?? "none") === h.effect;
+            const cls = h.effect === "none" ? "" : `qsy-hover qsy-hover-${h.effect}`;
+            return (
+              <article
+                key={h.key}
+                className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <div className="grid place-items-center p-5">
+                  <div
+                    className={`relative grid h-24 w-40 place-items-center overflow-hidden rounded-2xl border border-border/60 text-xs font-semibold text-white ${cls}`}
+                    style={{ background: h.preview }}
+                  >
+                    Pasa el ratón
+                  </div>
+                </div>
+                <div className="px-5 pb-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-sm font-semibold">{h.name}</h2>
+                    <Price price={h.price} premium={h.premium} />
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{h.description}</p>
+                  {h.price > 0 && !owned.has(h.key) ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(h.key, h.price, h.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {h.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() => apply({ hover_effect: h.effect }, h.name)}
                     >
                       {active ? (
                         <>

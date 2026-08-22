@@ -41,13 +41,27 @@ function PublicProfile() {
     } catch {
       /* storage bloqueado: registramos igual */
     }
-    void supabase.from("profile_views").insert({
-      profile_id: profileId,
-      device: detectDevice(),
-      browser: detectBrowser(),
-      referrer: document.referrer || "direct",
-      country: null,
-    });
+    supabase
+      .from("profile_views")
+      .insert({
+        profile_id: profileId,
+        device: detectDevice(),
+        browser: detectBrowser(),
+        referrer: document.referrer || "direct",
+        country: null,
+      })
+      .then(({ error }) => {
+        if (error) {
+          // Si el registro falla no marcamos la visita, para reintentarlo luego.
+          try {
+            localStorage.removeItem(key);
+          } catch {
+            /* noop */
+          }
+          tracked.current = false;
+        }
+      });
+
   }, [profileId]);
 
 
@@ -108,14 +122,18 @@ function PublicProfile() {
           likes={likes}
           music={music}
           onLinkClick={(l) => {
-            void supabase.from("link_clicks").insert({
-              profile_id: profile.id,
-              link_id: l.id,
-              label: l.title,
-              device: detectDevice(),
-              referrer: document.referrer || "direct",
-              country: null,
-            });
+            supabase
+              .from("link_clicks")
+              .insert({
+                profile_id: profile.id,
+                link_id: l.id,
+                label: l.title,
+                device: detectDevice(),
+                referrer: document.referrer || "direct",
+                country: null,
+              })
+              .then(() => undefined);
+
           }}
         />
         <div className="mt-8 flex justify-center">

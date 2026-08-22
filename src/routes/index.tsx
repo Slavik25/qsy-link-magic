@@ -1,4 +1,3 @@
-import { HomeMascot } from "@/components/qsy/home-mascot";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
@@ -700,7 +699,6 @@ function Landing() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <SiteNav />
-      <HomeMascot />
 
 
       <section className="relative overflow-hidden aurora">
