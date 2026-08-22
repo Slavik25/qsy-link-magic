@@ -80,20 +80,26 @@ export function SiteNav() {
   const { dark, toggle } = useTheme();
   const { lang, change } = useLangSelector();
 
+  const activeId = useActiveProfileId();
+
   useEffect(() => {
+    let cancelled = false;
     async function load(userId: string | undefined) {
       if (!userId) {
-        setProfile(null);
+        if (!cancelled) setProfile(null);
         return;
       }
       const { data } = await supabase
         .from("profiles")
-        .select("username, display_name, avatar_url, rank, domain")
+        .select("id, username, display_name, avatar_url, rank, domain")
         .eq("user_id", userId)
-        .maybeSingle();
-      setProfile(data ?? null);
+        .order("created_at", { ascending: true });
+      const list = (data ?? []) as (Profile & { id: string })[];
+      const chosen = list.find((p) => p.id === activeId) ?? list[0] ?? null;
+      if (!cancelled) setProfile(chosen);
     }
     supabase.auth.getSession().then(({ data }) => {
+      if (cancelled) return;
       setSignedIn(!!data.session);
       void load(data.session?.user.id);
     });
@@ -101,8 +107,11 @@ export function SiteNav() {
       setSignedIn(!!session);
       void load(session?.user.id);
     });
-    return () => sub.subscription.unsubscribe();
-  }, []);
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
+  }, [activeId]);
 
   async function signOut() {
     await supabase.auth.signOut();
