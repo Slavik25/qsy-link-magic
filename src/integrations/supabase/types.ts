@@ -583,6 +583,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rank_gifts: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          price: number
+          rank: string
+          recipient_user_id: string
+          recipient_username: string
+          sender_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string
+          price: number
+          rank: string
+          recipient_user_id: string
+          recipient_username: string
+          sender_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          price?: number
+          rank?: string
+          recipient_user_id?: string
+          recipient_username?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           category: string
@@ -896,6 +929,10 @@ export type Database = {
         Returns: number
       }
       claim_mission: { Args: { _key: string }; Returns: number }
+      gift_rank: {
+        Args: { _message?: string; _rank: string; _username: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
