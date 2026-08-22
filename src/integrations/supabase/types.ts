@@ -376,6 +376,60 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_orders: {
+        Row: {
+          amount_cents: number
+          buyer_id: string
+          checkout_url: string | null
+          created_at: string
+          currency: string
+          id: string
+          kind: string
+          message: string
+          provider: string
+          provider_payment_id: string | null
+          rank: string
+          recipient_user_id: string | null
+          recipient_username: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          buyer_id: string
+          checkout_url?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          message?: string
+          provider?: string
+          provider_payment_id?: string | null
+          rank: string
+          recipient_user_id?: string | null
+          recipient_username: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          buyer_id?: string
+          checkout_url?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          message?: string
+          provider?: string
+          provider_payment_id?: string | null
+          rank?: string
+          recipient_user_id?: string | null
+          recipient_username?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profile_badges: {
         Row: {
           badge_key: string
@@ -929,6 +983,10 @@ export type Database = {
         Returns: number
       }
       claim_mission: { Args: { _key: string }; Returns: number }
+      complete_payment_order: {
+        Args: { _order_id: string; _payment_id: string }
+        Returns: string
+      }
       gift_rank: {
         Args: { _message?: string; _rank: string; _username: string }
         Returns: number
