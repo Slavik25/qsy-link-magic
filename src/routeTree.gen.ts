@@ -34,6 +34,7 @@ import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
+import { Route as AuthenticatedDashboardAdminAuditRouteImport } from './routes/_authenticated/dashboard.admin.audit'
 import { Route as AuthenticatedDashboardAdminBoostsRouteImport } from './routes/_authenticated/dashboard.admin.boosts'
 import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_authenticated/dashboard.admin.chat'
 import { Route as AuthenticatedDashboardAdminContentRouteImport } from './routes/_authenticated/dashboard.admin.content'
@@ -193,6 +194,12 @@ const AuthenticatedDashboardAdminIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
+const AuthenticatedDashboardAdminAuditRoute =
+  AuthenticatedDashboardAdminAuditRouteImport.update({
+    id: '/audit',
+    path: '/audit',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardAdminBoostsRoute =
   AuthenticatedDashboardAdminBoostsRouteImport.update({
     id: '/boosts',
@@ -335,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
@@ -378,6 +386,7 @@ export interface FileRoutesByTo {
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
@@ -426,6 +435,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/_authenticated/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
   '/_authenticated/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/_authenticated/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
@@ -474,6 +484,7 @@ export interface FileRouteTypes {
     | '/dashboard/rank'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
     | '/dashboard/admin/chat'
     | '/dashboard/admin/content'
@@ -517,6 +528,7 @@ export interface FileRouteTypes {
     | '/dashboard/rank'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
     | '/dashboard/admin/chat'
     | '/dashboard/admin/content'
@@ -564,6 +576,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/admin/audit'
     | '/_authenticated/dashboard/admin/boosts'
     | '/_authenticated/dashboard/admin/chat'
     | '/_authenticated/dashboard/admin/content'
@@ -780,6 +793,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
+    '/_authenticated/dashboard/admin/audit': {
+      id: '/_authenticated/dashboard/admin/audit'
+      path: '/audit'
+      fullPath: '/dashboard/admin/audit'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/admin/boosts': {
       id: '/_authenticated/dashboard/admin/boosts'
       path: '/boosts'
@@ -924,6 +944,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardAdminRouteChildren {
+  AuthenticatedDashboardAdminAuditRoute: typeof AuthenticatedDashboardAdminAuditRoute
   AuthenticatedDashboardAdminBoostsRoute: typeof AuthenticatedDashboardAdminBoostsRoute
   AuthenticatedDashboardAdminChatRoute: typeof AuthenticatedDashboardAdminChatRoute
   AuthenticatedDashboardAdminContentRoute: typeof AuthenticatedDashboardAdminContentRoute
@@ -938,6 +959,8 @@ interface AuthenticatedDashboardAdminRouteChildren {
 
 const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
   {
+    AuthenticatedDashboardAdminAuditRoute:
+      AuthenticatedDashboardAdminAuditRoute,
     AuthenticatedDashboardAdminBoostsRoute:
       AuthenticatedDashboardAdminBoostsRoute,
     AuthenticatedDashboardAdminChatRoute: AuthenticatedDashboardAdminChatRoute,
