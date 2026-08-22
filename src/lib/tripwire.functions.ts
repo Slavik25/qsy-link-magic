@@ -2,20 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 
 /**
- * Trampas anti-consola: registran un baneo total del sitio cuando alguien
- * intenta manipular la app desde la consola del navegador, y permiten
- * consultar si el visitante actual está baneado.
- *
- * El baneo se guarda además por IP y user agent, de forma que borrar el
- * localStorage o la huella desde la consola no sirve para desbanearse.
+ * Consulta de estado de suspensión. Es de solo lectura: no existe ningún
+ * endpoint que permita crear baneos desde el navegador, así que ningún script
+ * externo puede suspender a otros usuarios ni a sí mismo.
  */
-
-type ReportInput = {
-  fingerprint: string;
-  kind: string;
-  detail: string;
-  userId?: string | null;
-};
 
 type StatusInput = {
   fingerprint: string;
@@ -49,43 +39,6 @@ function requestUserAgent(): string | null {
     return null;
   }
 }
-
-export const reportConsoleAttack = createServerFn({ method: "POST" })
-  .inputValidator((input: ReportInput) => ({
-    fingerprint: clean(input?.fingerprint, 64),
-    kind: clean(input?.kind, 64) || "console_attack",
-    detail: clean(input?.detail, 600),
-    userId: input?.userId ? clean(input.userId, 64) : null,
-  }))
-  .handler(async ({ data }) => {
-    const ip = requestIp();
-    const userAgent = requestUserAgent();
-    if (!data.fingerprint && !ip && !data.userId) return { banned: false };
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    let profileId: string | null = null;
-    if (data.userId) {
-      const { data: profile } = await supabaseAdmin
-        .from("profiles")
-        .select("id")
-        .eq("user_id", data.userId)
-        .maybeSingle();
-      profileId = profile?.id ?? null;
-    }
-
-    await supabaseAdmin.from("site_bans").insert({
-      user_id: data.userId,
-      profile_id: profileId,
-      fingerprint: data.fingerprint || null,
-      ip,
-      user_agent: userAgent,
-      reason: data.kind,
-      evidence: { detail: data.detail, at: new Date().toISOString(), ip } as never,
-    });
-
-    return { banned: true };
-  });
 
 export const checkBanStatus = createServerFn({ method: "POST" })
   .inputValidator((input: StatusInput) => ({
