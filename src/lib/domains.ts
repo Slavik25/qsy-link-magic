@@ -1,4 +1,6 @@
 /** Dominios QSY disponibles. Solo el rango Seraph puede elegir. */
+/** Selector de dominios Seraph temporalmente en mantenimiento. */
+export const DOMAINS_MAINTENANCE = true;
 export const QSY_DOMAINS = [
   { key: "qsy.rip", label: "qsy.rip", description: "El clásico. Corto, oscuro y directo." },
   { key: "qsy.es", label: "qsy.es", description: "Ideal para la comunidad hispana." },
