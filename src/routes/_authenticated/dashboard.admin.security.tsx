@@ -5,6 +5,7 @@ import { AdminCard, Empty, Pill, Stat } from "@/components/qsy/admin-ui";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { logAdminAction, timeAgo, useAdminTable } from "@/lib/admin-data";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/security")({
   component: AdminSecurity,
@@ -35,8 +36,41 @@ type Audit = {
   created_at: string;
 };
 
+type SiteBan = {
+  id: string;
+  fingerprint: string | null;
+  reason: string | null;
+  user_id: string | null;
+  active: boolean;
+  created_at: string;
+  evidence: { detail?: string } | null;
+};
+
 function AdminSecurity() {
   const qc = useQueryClient();
+  const { data: bans } = useQuery({
+    queryKey: ["admin-site-bans"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("site_bans")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      return (data ?? []) as unknown as SiteBan[];
+    },
+  });
+
+  async function setBanActive(ban: SiteBan, active: boolean) {
+    const { error } = await supabase.from("site_bans").update({ active }).eq("id", ban.id);
+    if (error) {
+      toast.error("No se pudo actualizar", { description: error.message });
+      return;
+    }
+    await logAdminAction(active ? "siteban:keep" : "siteban:lift", ban.fingerprint ?? ban.id);
+    toast.success(active ? "Baneo mantenido" : "Usuario desbaneado");
+    void qc.invalidateQueries({ queryKey: ["admin-site-bans"] });
+  }
+
   const { data: threats } = useAdminTable<Threat>("threats");
   const { data: ips } = useAdminTable<IpLog>("ip_logs");
   const { data: audit } = useAdminTable<Audit>("admin_audit_log");
@@ -85,6 +119,39 @@ function AdminSecurity() {
           </ul>
         ) : (
           <Empty text="Sin amenazas registradas. Todo tranquilo." />
+        )}
+      </AdminCard>
+
+      <AdminCard
+        title="Baneos por consola"
+        desc="Gente cazada intentando hackear la web desde la consola"
+      >
+        {bans?.length ? (
+          <ul className="divide-y divide-border/50">
+            {bans.map((b) => (
+              <li key={b.id} className="flex flex-wrap items-center gap-3 py-3 text-xs">
+                <Pill>{b.active ? "Baneado" : "Perdonado"}</Pill>
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  {b.fingerprint?.slice(0, 14) ?? "—"}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-muted-foreground">
+                  {b.reason ?? "console_attack"} · {b.evidence?.detail ?? "sin detalle"}
+                </span>
+                <span className="text-[10px] text-muted-foreground">{timeAgo(b.created_at)}</span>
+                {b.active ? (
+                  <Button size="sm" variant="outline" onClick={() => setBanActive(b, false)}>
+                    Desbanear
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={() => setBanActive(b, true)}>
+                    Volver a banear
+                  </Button>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Empty text="Nadie cayó en las trampas todavía." />
         )}
       </AdminCard>
 
