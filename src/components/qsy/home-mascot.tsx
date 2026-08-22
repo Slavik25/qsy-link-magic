@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import m1 from "@/assets/mascot-1.png.asset.json";
-import m2 from "@/assets/mascot-2.png.asset.json";
-import m3 from "@/assets/mascot-3.png.asset.json";
-import m4 from "@/assets/mascot-4.png.asset.json";
+import m1 from "@/assets/mascot-1.webp.asset.json";
+import m2 from "@/assets/mascot-2.webp.asset.json";
+import m3 from "@/assets/mascot-3.webp.asset.json";
+import m4 from "@/assets/mascot-4.webp.asset.json";
 
 const MASCOTS = [m1.url, m2.url, m3.url, m4.url];
-const KEY = "qsy_mascot_seen";
 
 export function HomeMascot() {
-  const [state, setState] = useState<{ src: string; side: "left" | "right" } | null>(null);
+  const [state] = useState<{ src: string; side: "left" | "right" }>(() => ({
+    src: MASCOTS[Math.floor(Math.random() * MASCOTS.length)] ?? MASCOTS[0]!,
+    side: Math.random() < 0.5 ? "left" : "right",
+  }));
+  const [closed, setClosed] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem(KEY)) return;
-    sessionStorage.setItem(KEY, "1");
-    const src = MASCOTS[Math.floor(Math.random() * MASCOTS.length)] ?? MASCOTS[0]!;
-    const side = Math.random() < 0.5 ? "left" : "right";
-    setState({ src, side });
-    const t = setTimeout(() => setVisible(true), 400);
+    const img = new Image();
+    img.src = state.src;
+    const show = () => setVisible(true);
+    if (img.complete) show();
+    else {
+      img.onload = show;
+      img.onerror = show;
+    }
+    const t = setTimeout(show, 1200);
     return () => clearTimeout(t);
-  }, []);
+  }, [state.src]);
 
-  if (!state) return null;
+  if (closed) return null;
+
 
   return (
     <div
@@ -57,7 +63,7 @@ export function HomeMascot() {
         />
         <button
           type="button"
-          onClick={() => setState(null)}
+          onClick={() => setClosed(true)}
           aria-label="Ocultar mascota"
           className={`pointer-events-auto absolute top-2 grid size-7 place-items-center rounded-full border border-border/60 bg-background/70 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-foreground focus:opacity-100 ${
             state.side === "left" ? "right-2" : "left-2"
