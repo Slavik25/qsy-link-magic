@@ -929,6 +929,24 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_price_reference: {
+        Row: {
+          key: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          key: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          key?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_bans: {
         Row: {
           active: boolean
