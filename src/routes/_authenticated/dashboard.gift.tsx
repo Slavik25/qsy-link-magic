@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Check, CreditCard, Crown, Gem, Gift, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { createDodoCheckout } from "@/lib/dodo.functions";
 import { RankBadge } from "@/components/qsy/rank-badge";
 
 export const Route = createFileRoute("/_authenticated/dashboard/gift")({
