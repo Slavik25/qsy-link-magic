@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Crown, Gift, ShieldQuestion, Wrench } from "lucide-react";
+import { Crown, Gift, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { AdminCard, Empty, Pill } from "@/components/qsy/admin-ui";
 import { Button } from "@/components/ui/button";
@@ -72,18 +72,17 @@ function AdminRanks() {
     <div className="space-y-6">
       <AdminCard
         title="Revisión de rangos premium"
-        description="Rangos sin pago ni regalo registrado. Marcá cada caso como regalo legítimo (mantiene el rango) o ajuste manual (vuelve a Free). Toda decisión queda auditada."
-        icon={ShieldQuestion}
+        desc="Rangos sin pago ni regalo registrado. Marcá cada caso como regalo legítimo (mantiene el rango) o ajuste manual (vuelve a Free). Toda decisión queda auditada."
       >
         <div className="mb-4 flex flex-wrap gap-2 text-xs">
           <Pill>{rows.length} cuentas premium</Pill>
-          <Pill tone={unbacked.length ? "danger" : "success"}>{unbacked.length} sin respaldo</Pill>
+          <Pill tone={unbacked.length ? "danger" : "ok"}>{unbacked.length} sin respaldo</Pill>
         </div>
 
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Cargando…</p>
         ) : rows.length === 0 ? (
-          <Empty label="No hay cuentas con rango premium." />
+          <Empty text="No hay cuentas con rango premium." />
         ) : (
           <div className="space-y-3">
             {rows.map((row) => {
@@ -97,11 +96,11 @@ function AdminRanks() {
                     <Crown className="size-4 text-primary" />
                     <span className="font-semibold">@{row.username}</span>
                     <Pill>{RANK_LABEL[row.rank as QsyRank] ?? row.rank}</Pill>
-                    <Pill tone={backed ? "success" : "danger"}>
+                    <Pill tone={backed ? "ok" : "danger"}>
                       {backed ? `${row.paidOrders} pagos · ${row.gifts} regalos` : "sin pago ni regalo"}
                     </Pill>
                     {row.status ? (
-                      <Pill tone={row.status === "manual_adjust" ? "danger" : "success"}>
+                      <Pill tone={row.status === "manual_adjust" ? "danger" : "ok"}>
                         {STATUS_LABEL[row.status]}
                       </Pill>
                     ) : null}
