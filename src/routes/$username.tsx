@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { ProfileStage } from "@/components/qsy/profile-stage";
 import { ProfileWall } from "@/components/qsy/profile-wall";
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import { detectBrowser, detectDevice } from "@/lib/qsy";
-import { hostDomain, profileHost, profileUrl } from "@/lib/domains";
 
 
 export const Route = createFileRoute("/$username")({
