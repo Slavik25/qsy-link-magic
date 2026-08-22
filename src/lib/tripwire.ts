@@ -51,53 +51,11 @@ export function deviceFingerprint(): string {
   }
 }
 
-export function localBanFlag(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    return localStorage.getItem(BAN_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function markBanned() {
-  try {
-    localStorage.setItem(BAN_KEY, "1");
-    document.cookie = `qsy_banned=1; path=/; max-age=31536000; samesite=lax`;
-  } catch {
-    /* noop */
-  }
-}
-
-let fired = false;
-
-/** Dispara el baneo total: registra la evidencia y bloquea la interfaz. */
-export function triggerBan(kind: string, detail: string) {
-  if (fired) return;
-  fired = true;
-  markBanned();
-  const userId = readUserId();
-  void reportConsoleAttack({
-    data: { fingerprint: deviceFingerprint(), kind, detail, userId },
-  }).catch(() => undefined);
-  window.dispatchEvent(new CustomEvent("qsy:banned"));
-}
-
-function readUserId(): string | null {
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (!key || !key.startsWith("sb-") || !key.endsWith("-auth-token")) continue;
-      const raw = localStorage.getItem(key);
-      if (!raw) continue;
-      const parsed = JSON.parse(raw) as { user?: { id?: string } };
-      if (parsed?.user?.id) return parsed.user.id;
-    }
-  } catch {
-    /* noop */
-  }
-  return null;
-}
+/**
+ * No existe ningún baneo automático desde el cliente: solo el panel de
+ * administración puede suspender cuentas. Cualquier script que intente
+ * "reportar" un ataque no tiene efecto alguno.
+ */
 
 
 let installed = false;
