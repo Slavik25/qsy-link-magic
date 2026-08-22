@@ -3,6 +3,7 @@ import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { ProfileGaming } from "@/components/qsy/profile-gaming";
 import { ProfileMedia } from "@/components/qsy/profile-media";
+import { ProfileLikeButton } from "@/components/qsy/profile-like";
 import { iconFor, labelFor, textPaint, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
