@@ -66,6 +66,7 @@ function DashboardLayout() {
   const queryClient = useQueryClient();
   const crumb = useCrumb();
   const [open, setOpen] = useState(false);
+  const { theme } = useDashTheme();
 
   const uid = (profile as { uid?: number } | undefined)?.uid ?? 0;
 
