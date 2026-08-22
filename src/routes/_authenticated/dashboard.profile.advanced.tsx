@@ -130,12 +130,8 @@ function AdvancedSection() {
 
       {!premium && <PremiumLock title="Embed personalizado y CSS" />}
 
-      <section
-        className={`space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
-          premium ? "" : "pointer-events-none select-none opacity-50"
-        }`}
-        aria-disabled={!premium}
-      >
+      {premium && (
+      <section className="space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
         <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
           <Eye className="size-3.5 text-primary" /> Metadatos del perfil (embed)
         </p>
@@ -214,13 +210,10 @@ function AdvancedSection() {
           </div>
         </div>
       </section>
+      )}
 
-      <section
-        className={`space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
-          premium ? "" : "pointer-events-none select-none opacity-50"
-        }`}
-        aria-disabled={!premium}
-      >
+      {premium && (
+      <section className="space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">CSS personalizado</p>
         <p className="text-xs text-muted-foreground">
           Inyecta CSS personalizado en tu perfil público. Solo para usuarios avanzados.
@@ -235,6 +228,7 @@ function AdvancedSection() {
           className="font-mono text-xs"
         />
       </section>
+      )}
 
       <SaveBar onSave={save} saving={saving} />
     </Panel>
