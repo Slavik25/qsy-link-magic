@@ -126,7 +126,11 @@ export function ProfileGaming({ theme }: { theme: ThemeConfig }) {
   if (visible.length === 0) return null;
 
   return (
-    <div className="mt-4 grid w-full gap-2 sm:grid-cols-2">
+    <div
+      className={`mx-auto mt-4 grid w-full gap-2 ${
+        visible.length === 1 ? "max-w-sm grid-cols-1" : "sm:grid-cols-2"
+      }`}
+    >
       {visible.map(([key, account]) => (
         <Card
           key={key}

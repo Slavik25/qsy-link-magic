@@ -268,7 +268,11 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const memberCount = guildMeta?.approximate_member_count ?? guild?.members?.length ?? 0;
 
   return (
-    <div className="mx-auto mt-6 grid w-full max-w-md items-stretch justify-center gap-3 sm:grid-cols-2">
+    <div
+      className={`mx-auto mt-6 grid w-full items-stretch justify-center gap-3 ${
+        showUser && showGuild ? "max-w-md sm:grid-cols-2" : "max-w-sm grid-cols-1"
+      }`}
+    >
       {showUser && (
         <Shell accent={accent} transparent={transparent} className="flex flex-col justify-center p-4">
           <div className="relative flex items-center gap-3.5">
