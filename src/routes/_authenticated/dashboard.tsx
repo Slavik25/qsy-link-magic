@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BadgeCheck,
   Bell,
@@ -69,7 +69,13 @@ function DashboardLayout() {
   const [open, setOpen] = useState(false);
   const { theme } = useDashTheme();
 
+  const needsUsername = (profile as { username_set?: boolean } | undefined)?.username_set === false;
+  useEffect(() => {
+    if (needsUsername) void navigate({ to: "/onboarding", replace: true });
+  }, [needsUsername, navigate]);
+
   const uid = (profile as { uid?: number } | undefined)?.uid ?? 0;
+
 
   async function signOut() {
     await queryClient.cancelQueries();
