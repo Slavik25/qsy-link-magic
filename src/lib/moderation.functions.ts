@@ -162,9 +162,9 @@ export const sendChatMessage = createServerFn({ method: "POST" })
     // La IP y la huella se guardan en una tabla privada (solo servidor) vía RPC.
     const { data: newId, error } = await supabaseAdmin.rpc("post_chat_message", {
       _user_id: context.userId,
-      _profile_id: profile?.id ?? null,
+      _profile_id: (profile?.id ?? null) as unknown as string,
       _author_name: profile?.username ?? "anon",
-      _author_avatar: profile?.avatar_url ?? null,
+      _author_avatar: (profile?.avatar_url ?? null) as unknown as string,
       _message: message,
       _ip: ip ?? "",
       _fingerprint: data.fingerprint ?? "",
