@@ -12,6 +12,7 @@ import { setActiveProfileId, useActiveProfileId, useMyProfiles } from "@/lib/qsy
 import type { Profile } from "@/lib/qsy";
 import { RankBadge, RankName, RANK_PROFILE_LIMIT, normalizeRank } from "@/components/qsy/rank-badge";
 import profilesArt from "@/assets/card-32.png.asset.json";
+import { logProfileRejection } from "@/lib/profile-audit";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
   component: ProfilesPage,
@@ -56,6 +57,13 @@ function ProfilesPage() {
         .select("id")
         .single();
       if (error) {
+        void logProfileRejection({
+          endpoint: "dashboard/profiles:create",
+          action: "insert",
+          targetUsername: clean,
+          error,
+          payload: { username: clean },
+        });
         if (error.code === "23505") throw new Error("Ese usuario ya está en uso.");
         if (error.message.includes("profile limit reached"))
           throw new Error("Has alcanzado el límite de perfiles de tu plan.");
@@ -78,7 +86,10 @@ function ProfilesPage() {
   const remove = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("profiles").delete().eq("id", id);
-      if (error) throw error;
+      if (error) {
+        void logProfileRejection({ endpoint: "dashboard/profiles:delete", action: "delete", targetId: id, error });
+        throw error;
+      }
       return id;
     },
     onSuccess: (id) => {

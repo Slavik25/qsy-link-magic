@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   Activity,
+  Crown,
   Flag,
   Gauge,
   ScrollText,
@@ -24,6 +25,7 @@ const TABS = [
   { to: "/dashboard/admin/users", label: "Usuarios", icon: Users },
   { to: "/dashboard/admin/moderation", label: "Moderación", icon: ShieldBan },
   { to: "/dashboard/admin/reports", label: "Reportes", icon: Flag },
+  { to: "/dashboard/admin/ranks", label: "Rangos", icon: Crown },
   { to: "/dashboard/admin/audit", label: "Auditoría", icon: ScrollText },
   { to: "/dashboard/admin/security", label: "Seguridad", icon: ShieldAlert },
   { to: "/dashboard/admin/chat", label: "Chat", icon: MessageSquareWarning },

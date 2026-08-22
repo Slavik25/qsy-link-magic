@@ -32,6 +32,7 @@ const FILTERS = [
   { key: "like", label: "Likes" },
   { key: "view", label: "Visitas" },
   { key: "chat", label: "Chat" },
+  { key: "profile", label: "Perfiles" },
 ] as const;
 
 

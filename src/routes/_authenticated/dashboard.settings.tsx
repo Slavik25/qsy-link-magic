@@ -31,6 +31,7 @@ import { profileHost } from "@/lib/domains";
 import { useDashPref } from "@/lib/dash-prefs";
 import { LANGS, useI18n } from "@/lib/i18n";
 import { deleteMyAccount } from "@/lib/account.functions";
+import { logProfileRejection } from "@/lib/profile-audit";
 
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
   component: SettingsPage,
@@ -181,6 +182,14 @@ function SettingsPage() {
       .eq("id", profile.id);
     setSavingInfo(false);
     if (error) {
+      void logProfileRejection({
+        endpoint: "dashboard/settings:saveInfo",
+        action: "update",
+        targetId: profile.id,
+        targetUsername: profile.username,
+        error,
+        payload: { username: clean, display_name: displayName.trim(), location: country },
+      });
       toast.error(
         error.message.includes("duplicate") ? "Ese nombre de usuario ya está en uso" : "No se pudo guardar",
       );

@@ -40,6 +40,7 @@ import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardAdminContentRouteImport } from './routes/_authenticated/dashboard.admin.content'
 import { Route as AuthenticatedDashboardAdminIntegrationsRouteImport } from './routes/_authenticated/dashboard.admin.integrations'
 import { Route as AuthenticatedDashboardAdminModerationRouteImport } from './routes/_authenticated/dashboard.admin.moderation'
+import { Route as AuthenticatedDashboardAdminRanksRouteImport } from './routes/_authenticated/dashboard.admin.ranks'
 import { Route as AuthenticatedDashboardAdminReportsRouteImport } from './routes/_authenticated/dashboard.admin.reports'
 import { Route as AuthenticatedDashboardAdminSecurityRouteImport } from './routes/_authenticated/dashboard.admin.security'
 import { Route as AuthenticatedDashboardAdminShopRouteImport } from './routes/_authenticated/dashboard.admin.shop'
@@ -232,6 +233,12 @@ const AuthenticatedDashboardAdminModerationRoute =
     path: '/moderation',
     getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
+const AuthenticatedDashboardAdminRanksRoute =
+  AuthenticatedDashboardAdminRanksRouteImport.update({
+    id: '/ranks',
+    path: '/ranks',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardAdminReportsRoute =
   AuthenticatedDashboardAdminReportsRouteImport.update({
     id: '/reports',
@@ -362,6 +369,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
   '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
   '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
@@ -408,6 +416,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
   '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
   '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
@@ -459,6 +468,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/_authenticated/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
   '/_authenticated/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
+  '/_authenticated/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/_authenticated/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
   '/_authenticated/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/_authenticated/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/content'
     | '/dashboard/admin/integrations'
     | '/dashboard/admin/moderation'
+    | '/dashboard/admin/ranks'
     | '/dashboard/admin/reports'
     | '/dashboard/admin/security'
     | '/dashboard/admin/shop'
@@ -556,6 +567,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/content'
     | '/dashboard/admin/integrations'
     | '/dashboard/admin/moderation'
+    | '/dashboard/admin/ranks'
     | '/dashboard/admin/reports'
     | '/dashboard/admin/security'
     | '/dashboard/admin/shop'
@@ -606,6 +618,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/content'
     | '/_authenticated/dashboard/admin/integrations'
     | '/_authenticated/dashboard/admin/moderation'
+    | '/_authenticated/dashboard/admin/ranks'
     | '/_authenticated/dashboard/admin/reports'
     | '/_authenticated/dashboard/admin/security'
     | '/_authenticated/dashboard/admin/shop'
@@ -862,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminModerationRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
+    '/_authenticated/dashboard/admin/ranks': {
+      id: '/_authenticated/dashboard/admin/ranks'
+      path: '/ranks'
+      fullPath: '/dashboard/admin/ranks'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminRanksRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/admin/reports': {
       id: '/_authenticated/dashboard/admin/reports'
       path: '/reports'
@@ -991,6 +1011,7 @@ interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminContentRoute: typeof AuthenticatedDashboardAdminContentRoute
   AuthenticatedDashboardAdminIntegrationsRoute: typeof AuthenticatedDashboardAdminIntegrationsRoute
   AuthenticatedDashboardAdminModerationRoute: typeof AuthenticatedDashboardAdminModerationRoute
+  AuthenticatedDashboardAdminRanksRoute: typeof AuthenticatedDashboardAdminRanksRoute
   AuthenticatedDashboardAdminReportsRoute: typeof AuthenticatedDashboardAdminReportsRoute
   AuthenticatedDashboardAdminSecurityRoute: typeof AuthenticatedDashboardAdminSecurityRoute
   AuthenticatedDashboardAdminShopRoute: typeof AuthenticatedDashboardAdminShopRoute
@@ -1012,6 +1033,8 @@ const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRoute
       AuthenticatedDashboardAdminIntegrationsRoute,
     AuthenticatedDashboardAdminModerationRoute:
       AuthenticatedDashboardAdminModerationRoute,
+    AuthenticatedDashboardAdminRanksRoute:
+      AuthenticatedDashboardAdminRanksRoute,
     AuthenticatedDashboardAdminReportsRoute:
       AuthenticatedDashboardAdminReportsRoute,
     AuthenticatedDashboardAdminSecurityRoute:
