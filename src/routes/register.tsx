@@ -41,8 +41,8 @@ function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<"form" | "code">("form");
-  const [code, setCode] = useState("");
+  const [step, setStep] = useState<"form" | "sent">("form");
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
