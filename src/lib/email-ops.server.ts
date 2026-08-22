@@ -72,14 +72,83 @@ export async function fetchEmailLogs(filters: {
   }
 }
 
-/** Envía una copia real del email de confirmación a una dirección de prueba. */
-export async function sendConfirmationTest(to: string) {
-  const element = React.createElement(SignupEmail, {
-    siteName: SITE_NAME,
-    siteUrl: SITE_URL,
-    recipient: to,
-    confirmationUrl: `${SITE_URL}/login?test=1`,
-  })
+export type TestEmailKind = 'signup' | 'magiclink'
+
+export type EmailSetupStatus = {
+  senderDomain: string
+  fromAddress: string
+  apiKeyConfigured: boolean
+  serviceReachable: boolean
+  historyStartsAt: string | null
+  eventCount: number
+  detail: string
+  templates: string[]
+}
+
+/** Estado en vivo del envío: dominio, clave y si la API de emails ya responde. */
+export async function fetchEmailSetupStatus(): Promise<EmailSetupStatus> {
+  const templates = ['signup', 'magic-link', 'recovery', 'invite', 'email-change', 'reauthentication']
+  const base = {
+    senderDomain: SENDER_DOMAIN,
+    fromAddress: `noreply@${FROM_DOMAIN}`,
+    templates,
+  }
+  let apiKeyConfigured = true
+  try {
+    apiKey()
+  } catch {
+    apiKeyConfigured = false
+  }
+  if (!apiKeyConfigured) {
+    return {
+      ...base,
+      apiKeyConfigured: false,
+      serviceReachable: false,
+      historyStartsAt: null,
+      eventCount: 0,
+      detail: 'Falta la clave de la API de emails en el servidor. Publicá la app para inyectarla.',
+    }
+  }
+  try {
+    const res = await fetchEmailLogs({ limit: 100 })
+    return {
+      ...base,
+      apiKeyConfigured: true,
+      serviceReachable: true,
+      historyStartsAt: res.historyStartsAt,
+      eventCount: res.rows.length,
+      detail:
+        res.rows.length > 0
+          ? 'Activo: el dominio envía y los eventos se están registrando.'
+          : 'Configuración terminada, pero todavía no hay envíos registrados en la ventana visible. Enviá una prueba para confirmarlo.',
+    }
+  } catch (err) {
+    const info = describeEmailError(err)
+    return {
+      ...base,
+      apiKeyConfigured: true,
+      serviceReachable: false,
+      historyStartsAt: null,
+      eventCount: 0,
+      detail: info.message,
+    }
+  }
+}
+
+/** Envía una copia real de un email de autenticación a una dirección de prueba. */
+export async function sendConfirmationTest(to: string, kind: TestEmailKind = 'signup') {
+  const element =
+    kind === 'magiclink'
+      ? React.createElement(MagicLinkEmail, {
+          siteName: SITE_NAME,
+          confirmationUrl: `${SITE_URL}/login?test=1`,
+        })
+      : React.createElement(SignupEmail, {
+          siteName: SITE_NAME,
+          siteUrl: SITE_URL,
+          recipient: to,
+          confirmationUrl: `${SITE_URL}/login?test=1`,
+        })
   const html = await render(element)
   const text = await render(element, { plainText: true })
 
@@ -88,11 +157,14 @@ export async function sendConfirmationTest(to: string) {
       to,
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
-      subject: `[Prueba] Confirmá tu email en ${SITE_NAME}`,
+      subject:
+        kind === 'magiclink'
+          ? `[Prueba] Tu enlace de acceso a ${SITE_NAME}`
+          : `[Prueba] Confirmá tu email en ${SITE_NAME}`,
       html,
       text,
       purpose: 'transactional',
-      label: 'confirmation-test',
+      label: kind === 'magiclink' ? 'magiclink-test' : 'confirmation-test',
       idempotency_key: crypto.randomUUID(),
     },
     { apiKey: apiKey() }
