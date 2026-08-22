@@ -29,7 +29,7 @@ function ShareSection() {
   const username = profile?.username ?? "qsy";
   const rank = (profile as { rank?: string } | undefined)?.rank ?? "free";
   const isSeraph = rank === "seraph";
-  const domain: QsyDomain = isSeraph && isDomain((profile as { domain?: string } | undefined)?.domain)
+  const domain: QsyDomain = !DOMAINS_MAINTENANCE && isSeraph && isDomain((profile as { domain?: string } | undefined)?.domain)
     ? ((profile as { domain?: string }).domain as QsyDomain)
     : DEFAULT_DOMAIN;
   const url = profileUrl(username, domain);
