@@ -7,7 +7,7 @@ export function QsyLogo({ className = "" }: { className?: string }) {
       <img
         src={qsyLogo.url}
         alt="QSY"
-        className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+        className="h-9 w-auto qsy-logo-img object-contain transition-transform duration-300 group-hover:scale-105"
       />
     </Link>
   );
