@@ -44,8 +44,9 @@ type Profile = {
 function useTheme() {
   const [dark, setDark] = useState(true);
   useEffect(() => {
-    const saved = localStorage.getItem("qsy-theme");
-    const isDark = saved !== "light";
+    const isDark = document.documentElement.classList.contains("qsy-light")
+      ? false
+      : localStorage.getItem("qsy-theme") !== "light";
     setDark(isDark);
     apply(isDark);
   }, []);
