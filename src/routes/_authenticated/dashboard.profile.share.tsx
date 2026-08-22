@@ -77,10 +77,20 @@ function ShareSection() {
           <RankBadge rank={rank} size="sm" />
         </div>
 
+        {DOMAINS_MAINTENANCE && (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-amber-300/30 bg-amber-300/5 p-3">
+            <Wrench className="size-4 text-amber-400" />
+            <p className="text-xs text-muted-foreground">
+              El sistema de dominios Seraph está <span className="font-semibold text-foreground">en mantenimiento</span>.
+              Mientras tanto todos los perfiles se sirven desde {DEFAULT_DOMAIN}.
+            </p>
+          </div>
+        )}
+
         <div className="grid gap-2 sm:grid-cols-3">
           {QSY_DOMAINS.map((d) => {
             const active = d.key === domain;
-            const locked = !isSeraph && d.key !== DEFAULT_DOMAIN;
+            const locked = DOMAINS_MAINTENANCE ? d.key !== DEFAULT_DOMAIN : !isSeraph && d.key !== DEFAULT_DOMAIN;
             return (
               <button
                 key={d.key}
@@ -98,10 +108,16 @@ function ShareSection() {
                   {active ? (
                     <Check className="size-4 text-primary" />
                   ) : locked ? (
-                    <Lock className="size-3.5 text-muted-foreground" />
+                    DOMAINS_MAINTENANCE ? (
+                      <Wrench className="size-3.5 text-amber-400" />
+                    ) : (
+                      <Lock className="size-3.5 text-muted-foreground" />
+                    )
                   ) : null}
                 </span>
-                <span className="mt-1 block text-xs text-muted-foreground">{d.description}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">
+                  {DOMAINS_MAINTENANCE && d.key !== DEFAULT_DOMAIN ? "En mantenimiento" : d.description}
+                </span>
                 <span className="mt-2 block truncate text-[11px] text-muted-foreground/80">
                   {d.key}/{username}
                 </span>
@@ -110,7 +126,7 @@ function ShareSection() {
           })}
         </div>
 
-        {!isSeraph && (
+        {!isSeraph && !DOMAINS_MAINTENANCE && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300/30 bg-amber-300/5 p-3">
             <p className="text-xs text-muted-foreground">
               Elegir entre qsy.rip, qsy.es y qsy.bio es exclusivo del rango Seraph.
