@@ -28,7 +28,9 @@ export const Route = createFileRoute("/$username")({
       } catch {
         /* noop */
       }
+      throw notFound();
     }
+
     return { meta };
   },
 
