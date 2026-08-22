@@ -126,6 +126,14 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
     if (error) {
+      if (/confirm/i.test(error.message)) {
+        setResendError("Tu email todavía no está confirmado. Podés pedir otro correo de confirmación.");
+        toast.error("Email sin confirmar", {
+          description: "Reenviá el correo de confirmación para activar tu cuenta.",
+          action: { label: "Reenviar", onClick: () => void resendConfirmation() },
+        });
+        return;
+      }
       toast.error(error.message);
       return;
     }
