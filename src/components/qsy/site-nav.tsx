@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { LANGS, useI18n } from "@/lib/i18n";
+import { useActiveProfileId } from "@/lib/qsy-data";
 
 const items = [
   { label: "Explore", to: "/explore" as const },
@@ -44,8 +45,9 @@ type Profile = {
 function useTheme() {
   const [dark, setDark] = useState(true);
   useEffect(() => {
-    const saved = localStorage.getItem("qsy-theme");
-    const isDark = saved !== "light";
+    const isDark = document.documentElement.classList.contains("qsy-light")
+      ? false
+      : localStorage.getItem("qsy-theme") !== "light";
     setDark(isDark);
     apply(isDark);
   }, []);
@@ -79,20 +81,26 @@ export function SiteNav() {
   const { dark, toggle } = useTheme();
   const { lang, change } = useLangSelector();
 
+  const activeId = useActiveProfileId();
+
   useEffect(() => {
+    let cancelled = false;
     async function load(userId: string | undefined) {
       if (!userId) {
-        setProfile(null);
+        if (!cancelled) setProfile(null);
         return;
       }
       const { data } = await supabase
         .from("profiles")
-        .select("username, display_name, avatar_url, rank, domain")
+        .select("id, username, display_name, avatar_url, rank, domain")
         .eq("user_id", userId)
-        .maybeSingle();
-      setProfile(data ?? null);
+        .order("created_at", { ascending: true });
+      const list = (data ?? []) as (Profile & { id: string })[];
+      const chosen = list.find((p) => p.id === activeId) ?? list[0] ?? null;
+      if (!cancelled) setProfile(chosen);
     }
     supabase.auth.getSession().then(({ data }) => {
+      if (cancelled) return;
       setSignedIn(!!data.session);
       void load(data.session?.user.id);
     });
@@ -100,8 +108,11 @@ export function SiteNav() {
       setSignedIn(!!session);
       void load(session?.user.id);
     });
-    return () => sub.subscription.unsubscribe();
-  }, []);
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
+  }, [activeId]);
 
   async function signOut() {
     await supabase.auth.signOut();
