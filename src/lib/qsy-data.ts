@@ -92,7 +92,7 @@ export function useProfileByUsername(username: string) {
         supabase.from("socials").select("*").eq("profile_id", profile.id).order("position"),
         supabase
           .from("profile_badges")
-          .select("badge_key,position")
+          .select("badge_key,position,created_at")
           .eq("profile_id", profile.id)
           .order("position"),
         Promise.resolve({ count: (data as any).view_count ?? 0 }),
@@ -101,7 +101,10 @@ export function useProfileByUsername(username: string) {
         profile,
         links: (links.data ?? []) as ProfileLink[],
         socials: (socials.data ?? []) as Social[],
-        badges: (badges.data ?? []).map((b: { badge_key: string }) => b.badge_key),
+        badges: (badges.data ?? []).map((b: { badge_key: string; created_at?: string }) => ({
+          key: b.badge_key,
+          obtained_at: b.created_at ?? null,
+        })),
         views: views.count ?? 0,
         likes: ((data as any).like_count as number) ?? 0,
       };

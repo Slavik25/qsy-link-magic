@@ -1,5 +1,6 @@
 import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
+import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -12,7 +13,7 @@ type Props = {
   >;
   links: Pick<ProfileLink, "id" | "title" | "url" | "icon">[];
   socials: Pick<Social, "id" | "platform" | "url">[];
-  badges?: string[];
+  badges?: (string | { key: string; obtained_at?: string | null })[];
   views?: number;
   likes?: number;
   music?: { title?: string; artist?: string } | null;
@@ -153,21 +154,38 @@ export function ProfileView({
 
         {badges.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
-            {badges.map((key) => {
+            {badges.map((entry) => {
+              const key = typeof entry === "string" ? entry : entry.key;
+              const obtainedAt = typeof entry === "string" ? null : (entry.obtained_at ?? null);
               const b = badgeByKey(key);
               if (!b) return null;
               return (
                 <span
                   key={key}
-                  title={b.name}
                   aria-label={b.name}
-                  className="grid size-7 place-items-center rounded-lg border border-white/10 bg-white/5 transition-transform hover:-translate-y-0.5"
+                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 bg-white/5 transition-transform hover:-translate-y-0.5"
                 >
                   {b.img ? (
                     <img src={b.img} alt={b.name} className="size-5" loading="lazy" />
                   ) : b.icon ? (
                     <b.icon className="size-4" style={{ color: b.color ?? t.accent }} />
                   ) : null}
+                  <span
+                    role="tooltip"
+                    className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-30 w-56 -translate-x-1/2 scale-95 rounded-xl border border-white/10 bg-[#0b0b12]/95 p-3 text-left opacity-0 shadow-2xl backdrop-blur transition duration-150 group-hover:scale-100 group-hover:opacity-100"
+                  >
+                    <span className="block text-xs font-semibold text-white">{b.name}</span>
+                    <span className="mt-1 block text-[11px] leading-snug text-white/70">{b.description}</span>
+                    <span className="mt-2 block text-[10px] uppercase tracking-wide text-white/45">
+                      {obtainedAt
+                        ? `Obtenida el ${new Date(obtainedAt).toLocaleDateString("es-ES", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          })}`
+                        : "Fecha de obtención no disponible"}
+                    </span>
+                  </span>
                 </span>
               );
             })}
@@ -212,6 +230,8 @@ export function ProfileView({
           </div>
         )}
 
+
+        <ProfileDiscord theme={t} />
 
         <div className="mt-6 w-full max-w-md space-y-3">
           {links.map((l) => {

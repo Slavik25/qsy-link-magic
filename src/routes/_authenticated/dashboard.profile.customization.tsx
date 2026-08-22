@@ -276,6 +276,53 @@ function CustomizationSection() {
         </div>
       </Group>
 
+      <Group label="Discord">
+        <div className="space-y-4 rounded-xl border border-border bg-card/40 p-4">
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Mi perfil de Discord (ID de usuario)
+            </Label>
+            <Input
+              maxLength={25}
+              inputMode="numeric"
+              placeholder="Ej. 302189582391443456"
+              value={t.discord_id ?? ""}
+              onChange={(e) => setTheme("discord_id", e.target.value.replace(/\D/g, ""))}
+            />
+            <p className="text-[11px] text-muted-foreground">
+              Muestra tu avatar, estado y actividad en el biolink (requiere estar en el servidor de Lanyard).
+            </p>
+          </div>
+          <ToggleRow
+            title="Mostrar mi perfil de Discord"
+            description="Tarjeta con tu estado en vivo dentro del biolink."
+            checked={t.discord_show_profile !== false}
+            onChange={(v) => setTheme("discord_show_profile", v)}
+          />
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              Mi servidor de Discord (ID del servidor)
+            </Label>
+            <Input
+              maxLength={25}
+              inputMode="numeric"
+              placeholder="Ej. 913293848392010283"
+              value={t.discord_server_id ?? ""}
+              onChange={(e) => setTheme("discord_server_id", e.target.value.replace(/\D/g, ""))}
+            />
+            <p className="text-[11px] text-muted-foreground">
+              Muestra nombre, miembros en línea y botón para unirse (activa el widget del servidor en Discord).
+            </p>
+          </div>
+          <ToggleRow
+            title="Mostrar mi servidor"
+            description="Tarjeta de invitación al servidor en el biolink."
+            checked={t.discord_show_server !== false}
+            onChange={(v) => setTheme("discord_show_server", v)}
+          />
+        </div>
+      </Group>
+
       <div className="space-y-2">
         <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
           Bio descriptiva
