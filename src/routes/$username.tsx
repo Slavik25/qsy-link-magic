@@ -10,6 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import { detectBrowser, detectDevice, sanitizeCss } from "@/lib/qsy";
 import { getProfileMeta } from "@/lib/profile-meta.functions";
+import { trackProfileView } from "@/lib/moderation.functions";
+import { deviceFingerprint } from "@/lib/tripwire";
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
