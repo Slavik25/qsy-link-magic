@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { QsyLogo } from "@/components/qsy/logo";
+import { DashBackground } from "@/components/qsy/dash-background";
 import { LangSwitcher } from "@/components/qsy/lang-switcher";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -85,10 +86,11 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[252px_1fr]">
+    <div className="min-h-screen lg:grid lg:grid-cols-[252px_1fr]">
+      <DashBackground />
       {/* Sidebar */}
       <aside
-        className={`z-40 flex-col border-border/60 bg-card/40 backdrop-blur-xl lg:sticky lg:top-0 lg:flex lg:h-screen lg:border-r ${
+        className={`z-40 flex-col border-border/60 bg-card/60 backdrop-blur-xl lg:sticky lg:top-0 lg:flex lg:h-screen lg:border-r ${
           open ? "fixed inset-0 flex" : "hidden"
         }`}
       >

@@ -16,7 +16,7 @@ export function DashBackground() {
         className="size-full object-cover opacity-[0.28] mix-blend-luminosity"
       />
       <div className="absolute inset-0 bg-background/70" />
-      <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,hsl(var(--primary)/0.14),transparent_70%)]" />
+      <div className="absolute inset-0 bg-primary/10" />
     </div>
   );
 }
