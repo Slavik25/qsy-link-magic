@@ -53,19 +53,12 @@ export function ProfileView({
   const userPaint = textPaint(t.color_username ?? "#a1a1aa", t.color_username_2, t.grad_username, ang, "#a1a1aa");
   const bioPaint = textPaint(t.color_bio ?? "#e4e4e7", t.color_bio_2, t.grad_bio, ang, "#e4e4e7");
   const statsPaint = textPaint(t.color_stats ?? "#a1a1aa", t.color_stats_2, t.grad_stats, ang, "#a1a1aa");
-  const iconPaint = (size: string) =>
-    t.grad_icon
-      ? ({
-          background: `linear-gradient(${ang}deg, ${t.color_icon ?? "#ffffff"}, ${t.color_icon_2 ?? t.accent})`,
-          WebkitMaskImage: "none",
-          color: "transparent",
-        } as React.CSSProperties)
-      : ({ color: t.color_icon ?? "#ffffff" } as React.CSSProperties);
-  void iconPaint;
   const iconStyle: React.CSSProperties = { color: t.color_icon ?? "#ffffff" };
-  const iconChipBg = t.color_icon_bg
-    ? `color-mix(in oklab, ${t.color_icon_bg} 12%, transparent)`
-    : "var(--p-surface)";
+  const iconChipBg = t.grad_icon
+    ? `linear-gradient(${ang}deg, color-mix(in oklab, ${t.color_icon ?? "#ffffff"} 22%, transparent), color-mix(in oklab, ${t.color_icon_2 ?? t.accent} 22%, transparent))`
+    : t.color_icon_bg
+      ? `color-mix(in oklab, ${t.color_icon_bg} 12%, transparent)`
+      : "var(--p-surface)";
   const cardAlpha = cardBg === "transparent" ? 0 : Math.max(0, Math.min(100, t.card_alpha ?? 100));
   const alphaStyle =
     cardAlpha < 100 ? ({ "--p-card-alpha": `${cardAlpha / 100}` } as React.CSSProperties) : {};
@@ -249,7 +242,7 @@ export function ProfileView({
                 >
                   <Icon
                     className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
-                    style={t.grad_icon ? undefined : iconStyle}
+                    style={iconStyle}
                   />
                   <span
                     className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
@@ -282,7 +275,7 @@ export function ProfileView({
                 >
                   <Icon
                     className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
-                    style={t.grad_icon ? undefined : iconStyle}
+                    style={iconStyle}
                   />
                   <span
                     className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
