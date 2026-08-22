@@ -130,14 +130,113 @@ function AdminEmailsPage() {
       ) : null}
 
       <section className="rounded-3xl border border-border/60 bg-card/50 p-6 backdrop-blur-xl">
+      <section className="rounded-3xl border border-border/60 bg-card/50 p-6 backdrop-blur-xl">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            Estado del dominio y plantillas
+          </h3>
+          <Button
+            variant="outline"
+            className="h-10 rounded-xl"
+            disabled={status.isFetching}
+            onClick={() => status.refetch()}
+          >
+            {status.isFetching ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+            Revisar
+          </Button>
+        </div>
+
+        {status.isLoading ? (
+          <p className="mt-4 text-sm text-muted-foreground">Consultando estado…</p>
+        ) : statusError ? (
+          <p className="mt-4 text-sm text-destructive">{statusError}</p>
+        ) : st ? (
+          <div className="mt-4 space-y-4">
+            <div
+              className={`flex items-start gap-3 rounded-2xl border p-4 ${
+                active
+                  ? "border-emerald-500/40 bg-emerald-500/10"
+                  : "border-amber-500/40 bg-amber-500/10"
+              }`}
+            >
+              {active ? (
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-400" />
+              ) : (
+                <Clock className="mt-0.5 size-4 shrink-0 text-amber-400" />
+              )}
+              <div>
+                <p className={`text-sm font-semibold ${active ? "text-emerald-400" : "text-amber-400"}`}>
+                  {active ? "Envío activo" : "Configuración en curso"}
+                </p>
+                <p className="text-xs text-muted-foreground">{st.detail}</p>
+                {!active ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    La activación termina sola en cuanto propaga el dominio (suele tardar minutos, hasta 72 h como
+                    máximo). No hace falta tocar nada.
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <dl className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                <dt className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Dominio de envío</dt>
+                <dd className="mt-1 break-all text-sm font-semibold">{st.senderDomain}</dd>
+              </div>
+              <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                <dt className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Remitente</dt>
+                <dd className="mt-1 break-all text-sm font-semibold">{st.fromAddress}</dd>
+              </div>
+              <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                <dt className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Eventos visibles</dt>
+                <dd className="mt-1 text-sm font-semibold">
+                  {st.eventCount}
+                  {st.historyStartsAt ? (
+                    <span className="ml-2 text-xs font-normal text-muted-foreground">
+                      desde {fmt(st.historyStartsAt)}
+                    </span>
+                  ) : null}
+                </dd>
+              </div>
+              <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                <dt className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Plantillas</dt>
+                <dd className="mt-1 text-sm font-semibold">{st.templates.length} activas</dd>
+                <dd className="mt-1 text-xs text-muted-foreground">{st.templates.join(", ")}</dd>
+              </div>
+            </dl>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="rounded-3xl border border-border/60 bg-card/50 p-6 backdrop-blur-xl">
         <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
-          Probar correo de confirmación
+          Enviar email de prueba
         </h3>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {([
+            { key: "signup", label: "Confirmación" },
+            { key: "magiclink", label: "Magic link" },
+          ] as const).map((opt) => (
+            <button
+              key={opt.key}
+              type="button"
+              onClick={() => setTestKind(opt.key)}
+              className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+                testKind === opt.key
+                  ? "border-primary/50 bg-primary/15 text-primary"
+                  : "border-border/60 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="flex-1 space-y-2">
             <Label htmlFor="test-email" className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
               Dirección de prueba
             </Label>
+
             <Input
               id="test-email"
               type="email"
