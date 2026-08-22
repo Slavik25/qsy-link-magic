@@ -9,7 +9,7 @@ import { Panel, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import { RankBadge } from "@/components/qsy/rank-badge";
-import { DEFAULT_DOMAIN, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
+import { DEFAULT_DOMAIN, DOMAINS_MAINTENANCE, QSY_DOMAINS, isDomain, profileUrl, type QsyDomain } from "@/lib/domains";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/share")({
   component: ShareSection,
