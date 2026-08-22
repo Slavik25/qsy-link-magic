@@ -238,14 +238,41 @@ export type Database = {
         }
         Relationships: []
       }
+      global_chat_message_meta: {
+        Row: {
+          created_at: string
+          fingerprint: string | null
+          ip: string | null
+          message_id: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint?: string | null
+          ip?: string | null
+          message_id: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string | null
+          ip?: string | null
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "global_chat_message_meta_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: true
+            referencedRelation: "global_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       global_chat_messages: {
         Row: {
           author_avatar: string | null
           author_name: string
           created_at: string
-          fingerprint: string | null
           id: string
-          ip: string | null
           message: string
           profile_id: string | null
           user_id: string
@@ -254,9 +281,7 @@ export type Database = {
           author_avatar?: string | null
           author_name?: string
           created_at?: string
-          fingerprint?: string | null
           id?: string
-          ip?: string | null
           message: string
           profile_id?: string | null
           user_id: string
@@ -265,9 +290,7 @@ export type Database = {
           author_avatar?: string | null
           author_name?: string
           created_at?: string
-          fingerprint?: string | null
           id?: string
-          ip?: string | null
           message?: string
           profile_id?: string | null
           user_id?: string
@@ -1272,6 +1295,18 @@ export type Database = {
       is_site_owner: { Args: { _user_id: string }; Returns: boolean }
       mission_progress: { Args: { _key: string }; Returns: number }
       new_login_code: { Args: never; Returns: string }
+      post_chat_message: {
+        Args: {
+          _author_avatar: string
+          _author_name: string
+          _fingerprint: string
+          _ip: string
+          _message: string
+          _profile_id: string
+          _user_id: string
+        }
+        Returns: string
+      }
       purchase_item: { Args: { _key: string }; Returns: number }
       reconcile_shop: { Args: never; Returns: Json }
       resolve_rank_review: {
