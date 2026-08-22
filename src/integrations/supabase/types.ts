@@ -881,6 +881,30 @@ export type Database = {
           },
         ]
       }
+      security_alert_deliveries: {
+        Row: {
+          delivered_at: string
+          error: string | null
+          event_id: string
+          ok: boolean
+          target: string
+        }
+        Insert: {
+          delivered_at?: string
+          error?: string | null
+          event_id: string
+          ok?: boolean
+          target: string
+        }
+        Update: {
+          delivered_at?: string
+          error?: string | null
+          event_id?: string
+          ok?: boolean
+          target?: string
+        }
+        Relationships: []
+      }
       service_status: {
         Row: {
           id: string
