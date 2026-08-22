@@ -119,7 +119,14 @@ function enforcedHost(): boolean {
   return true;
 }
 
-/** Bloquea atajos, menú contextual y detecta la consola abierta. */
+/**
+ * Bloquea atajos de DevTools y el menú contextual.
+ *
+ * No banea por "detectar" la consola (esas heurísticas dan falsos positivos
+ * con zoom, móviles o barras del navegador): el baneo solo salta cuando de
+ * verdad se manipula la app (globales trampa, llamadas manuales a la API o
+ * escritura sobre la sesión).
+ */
 function installConsoleLockdown() {
   if (!enforcedHost()) return;
 
@@ -139,42 +146,10 @@ function installConsoleLockdown() {
         (e.ctrlKey && e.shiftKey && ["i", "j", "c", "k"].includes(k)) ||
         (e.metaKey && e.altKey && ["i", "j", "c"].includes(k)) ||
         ((e.ctrlKey || e.metaKey) && k === "u");
-      if (!devtools) return;
-      kill(e);
-      triggerBan("devtools_shortcut", `Atajo bloqueado: ${e.key}`);
+      if (devtools) kill(e);
     },
     true,
   );
-
-  // Detección de DevTools por diferencia de tamaño de ventana.
-  const sizeCheck = () => {
-    const w = window.outerWidth - window.innerWidth;
-    const h = window.outerHeight - window.innerHeight;
-    if (w > 200 || h > 220) triggerBan("devtools_open", `Consola abierta (${w}x${h})`);
-  };
-
-  // Detección por trampa de consola: inspeccionar el objeto dispara el getter.
-  const bait: Record<string, unknown> = {};
-  Object.defineProperty(bait, "qsy", {
-    get() {
-      triggerBan("devtools_open", "Inspección del objeto trampa en consola");
-      return "";
-    },
-  });
-  const baitCheck = () => {
-    try {
-      console.log("%c", bait);
-      console.clear();
-    } catch {
-      /* noop */
-    }
-  };
-
-  window.setInterval(() => {
-    sizeCheck();
-    baitCheck();
-  }, 1200);
-  sizeCheck();
 }
 
 export function installTripwire() {
