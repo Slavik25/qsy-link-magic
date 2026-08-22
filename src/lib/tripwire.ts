@@ -111,9 +111,78 @@ function fromConsole(stack: string | undefined): boolean {
 
 let installed = false;
 
+/** Solo se aplica el bloqueo duro fuera del entorno de edición/desarrollo. */
+function enforcedHost(): boolean {
+  const h = location.hostname;
+  if (h === "localhost" || h === "127.0.0.1" || h.endsWith(".local")) return false;
+  if (h.includes("lovable.app") || h.includes("lovable.dev")) return false;
+  return true;
+}
+
+/** Bloquea atajos, menú contextual y detecta la consola abierta. */
+function installConsoleLockdown() {
+  if (!enforcedHost()) return;
+
+  const kill = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  window.addEventListener("contextmenu", kill, true);
+
+  window.addEventListener(
+    "keydown",
+    (e) => {
+      const k = e.key.toLowerCase();
+      const devtools =
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["i", "j", "c", "k"].includes(k)) ||
+        (e.metaKey && e.altKey && ["i", "j", "c"].includes(k)) ||
+        ((e.ctrlKey || e.metaKey) && k === "u");
+      if (!devtools) return;
+      kill(e);
+      triggerBan("devtools_shortcut", `Atajo bloqueado: ${e.key}`);
+    },
+    true,
+  );
+
+  // Detección de DevTools por diferencia de tamaño de ventana.
+  const sizeCheck = () => {
+    const w = window.outerWidth - window.innerWidth;
+    const h = window.outerHeight - window.innerHeight;
+    if (w > 200 || h > 220) triggerBan("devtools_open", `Consola abierta (${w}x${h})`);
+  };
+
+  // Detección por trampa de consola: inspeccionar el objeto dispara el getter.
+  const bait: Record<string, unknown> = {};
+  Object.defineProperty(bait, "qsy", {
+    get() {
+      triggerBan("devtools_open", "Inspección del objeto trampa en consola");
+      return "";
+    },
+  });
+  const baitCheck = () => {
+    try {
+      console.log("%c", bait);
+      console.clear();
+    } catch {
+      /* noop */
+    }
+  };
+
+  window.setInterval(() => {
+    sizeCheck();
+    baitCheck();
+  }, 1200);
+  sizeCheck();
+}
+
 export function installTripwire() {
   if (installed || typeof window === "undefined") return;
   installed = true;
+
+  installConsoleLockdown();
+
 
   // 1) Globales trampa: nadie legítimo los toca; solo aparecen en tutoriales
   //    de "hackeo" y en la consola.
