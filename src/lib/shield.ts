@@ -13,7 +13,10 @@ const SCANNER_PATHS = [
   /^\/(phpmyadmin|pma|adminer|myadmin|mysql|cgi-bin|vendor|config\.json|backup|dump\.sql)/i,
   /\.(php|asp|aspx|jsp|cgi|sh|bak|old|sql|env)$/i,
   /^\/actuator|^\/solr|^\/druid|^\/telescope|^\/debug\b/i,
+  // Rutas reservadas que jamás son usuarios ni páginas reales.
+  /^\/(shell|cmd|console|config|configs|logs|log|temp|tmp|uploads|upload|files|server-status|webshell|c99|r57|admin\.php)(\/|$)/i,
 ];
+
 
 /** Payloads clásicos de inyección / traversal en la URL. */
 const MALICIOUS_QUERY = [
@@ -145,13 +148,37 @@ export function shieldRequest(request: Request): Response | null {
 }
 
 
+/** Orígenes que sí pueden embeber la app (editor/preview de Lovable). */
+const FRAME_ANCESTORS = "'self' https://*.lovable.app https://*.lovable.dev https://lovable.dev";
+
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+  "style-src 'self' 'unsafe-inline' https:",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' data: blob: https:",
+  "font-src 'self' data: https:",
+  "connect-src 'self' https: wss:",
+  "frame-src 'self' https:",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  `frame-ancestors ${FRAME_ANCESTORS}`,
+].join("; ");
+
 /** Cabeceras de seguridad aplicadas a toda respuesta que sale del servidor. */
 export function withSecurityHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
   headers.set("x-content-type-options", "nosniff");
   headers.set("referrer-policy", "strict-origin-when-cross-origin");
   headers.set("permissions-policy", "geolocation=(), microphone=(), camera=(), payment=()");
-  headers.set("strict-transport-security", "max-age=31536000; includeSubDomains");
+  headers.set("strict-transport-security", "max-age=31536000; includeSubDomains; preload");
+  headers.set("x-xss-protection", "1; mode=block");
+  headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
+  headers.set("content-security-policy", CSP);
+  headers.delete("x-powered-by");
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
