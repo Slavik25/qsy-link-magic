@@ -758,7 +758,7 @@ function Landing() {
             style={{ animationDelay: "320ms" }}
           >
             <Button asChild variant="ghost" size="sm" className="hover-scale">
-              <Link to="/explore">Explorar perfiles</Link>
+              <Link to="/rank">Ver el ranking</Link>
             </Button>
             <span className="text-xs text-muted-foreground">
               100% gratis · sin tarjeta · listo en 2 min
@@ -849,8 +849,8 @@ function Landing() {
               Miles de creadores ya tienen su QSY. Personaliza cada detalle y únete a la red.
             </p>
             <Button asChild size="lg" className="mt-8 group rounded-full px-8">
-              <Link to="/explore">
-                Explorar perfiles
+              <Link to="/rank">
+                Ver el ranking
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>

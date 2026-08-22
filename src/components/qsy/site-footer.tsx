@@ -14,8 +14,8 @@ export function SiteFooter() {
         <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
           <div className="space-y-2">
             <p className="font-medium">Producto</p>
-            <Link to="/explore" className="block text-muted-foreground hover:text-foreground">
-              Explore
+            <Link to="/rank" className="block text-muted-foreground hover:text-foreground">
+              Ranking
             </Link>
             <Link to="/templates" className="block text-muted-foreground hover:text-foreground">
               Templates
