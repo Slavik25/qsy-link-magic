@@ -8,6 +8,7 @@ import {
   Gift,
   Image as ImageIcon,
   KeyRound,
+  Mail,
   MessageSquareWarning,
   Rocket,
   ShieldAlert,
