@@ -46,6 +46,12 @@ function ShareSection() {
 
   async function chooseDomain(next: QsyDomain) {
     if (!profile || next === domain) return;
+    if (DOMAINS_MAINTENANCE) {
+      toast.info("Dominios en mantenimiento", {
+        description: "Estamos migrando la infraestructura. Por ahora todos los perfiles viven en qsy.rip.",
+      });
+      return;
+    }
     if (!isSeraph) {
       toast.error("Dominios exclusivos de Seraph", { description: "Sube de rango para elegir tu dominio." });
       return;
