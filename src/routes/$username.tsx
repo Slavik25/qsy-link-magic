@@ -21,13 +21,7 @@ export const Route = createFileRoute("/$username")({
     }
     // Un perfil inexistente debe responder 404 real, no 200 (evita que los
     // escáneres marquen cualquier ruta como "directorio expuesto").
-    if (!meta && typeof window === "undefined") {
-      try {
-        const { setResponseStatus } = await import("@tanstack/react-start/server");
-        setResponseStatus(404);
-      } catch {
-        /* noop */
-      }
+    if (!meta) {
       throw notFound();
     }
 
