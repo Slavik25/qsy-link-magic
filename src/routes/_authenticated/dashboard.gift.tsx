@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Check, CreditCard, Crown, Gem, Gift, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
@@ -83,7 +83,6 @@ function useSearchProfiles(term: string) {
 }
 
 function GiftPremium() {
-  const qc = useQueryClient();
   const [term, setTerm] = useState("");
   const [target, setTarget] = useState<Target | null>(null);
   const [plan, setPlan] = useState<Plan>("obsidian");
