@@ -240,7 +240,8 @@ function CustomizationSection() {
               const v = Number(e.target.value);
               setThemeMany({
                 card_alpha: v,
-                card_bg_type: v === 0 ? "transparent" : t.card_bg_type === "transparent" ? "solid" : t.card_bg_type,
+                card_bg_type:
+                  v === 0 ? "transparent" : t.card_bg_type === "transparent" ? "solid" : (t.card_bg_type ?? "solid"),
                 ...(t.show_card === false ? { show_card: true } : {}),
               });
             }}
