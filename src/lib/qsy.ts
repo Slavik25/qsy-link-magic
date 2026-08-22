@@ -108,6 +108,7 @@ export const defaultTheme: ThemeConfig = {
   avatar_decoration: "none",
   profile_width: "normal",
   card_bg_type: "solid",
+  card_alpha: 100,
   show_card: true,
   color_text: "#ffffff",
   color_icon: "#ffffff",
