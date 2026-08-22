@@ -76,6 +76,27 @@ function PublicProfile() {
     );
   }
 
+  if (blocked) {
+    const real = profileUrl(username, allowed);
+    return (
+      <div className="grid min-h-screen place-items-center px-4 text-center">
+        <div>
+          <QsyLogo />
+          <h1 className="mt-6 text-2xl font-semibold">Perfil no disponible en {current}</h1>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Este perfil solo está publicado en <strong>{allowed}</strong>. Elegir otro dominio es
+            exclusivo del rango Seraph.
+          </p>
+          <Button asChild className="mt-6">
+            <a href={real}>Ir a {allowed}/{username}</a>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+
+
   const { profile, links, socials, badges, views, likes } = data;
   const music = profile.music as { title?: string; artist?: string };
   const widthClass =
