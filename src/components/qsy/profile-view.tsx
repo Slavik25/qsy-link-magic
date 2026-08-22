@@ -3,6 +3,7 @@ import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { ProfileGaming } from "@/components/qsy/profile-gaming";
 import { ProfileMedia } from "@/components/qsy/profile-media";
+import { ProfileLikeButton } from "@/components/qsy/profile-like";
 import { iconFor, labelFor, textPaint, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -18,6 +19,7 @@ type Props = {
   badges?: (string | { key: string; obtained_at?: string | null })[];
   views?: number;
   likes?: number;
+  profileId?: string;
   music?: { title?: string; artist?: string } | null;
   compact?: boolean;
   onLinkClick?: (link: { id: string; title: string; url: string }) => void;
@@ -30,6 +32,7 @@ export function ProfileView({
   badges = [],
   views = 0,
   likes = 0,
+  profileId,
   music,
   compact = false,
   onLinkClick,
@@ -328,12 +331,15 @@ export function ProfileView({
               {views.toLocaleString()} visitas
             </span>
           )}
-          {t.show_likes !== false && (
-            <span className="inline-flex items-center gap-1.5">
-              <Heart className="size-3" style={{ color: t.accent }} />
-              {likes.toLocaleString()} likes
-            </span>
-          )}
+          {t.show_likes !== false &&
+            (profileId && !compact ? (
+              <ProfileLikeButton profileId={profileId} accent={t.accent} initialLikes={likes} />
+            ) : (
+              <span className="inline-flex items-center gap-1.5">
+                <Heart className="size-3" style={{ color: t.accent }} />
+                {likes.toLocaleString()} likes
+              </span>
+            ))}
         </div>
       </div>
       </div>
