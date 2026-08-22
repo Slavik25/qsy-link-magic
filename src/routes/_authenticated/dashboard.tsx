@@ -50,6 +50,7 @@ const NAV: NavItem[] = [
   { to: "/dashboard/missions", label: "Misiones", icon: Target },
   { to: "/dashboard/premium", label: "Tienda", icon: Gem },
   { to: "/dashboard/rank", label: "Subir de rango", icon: Crown },
+  { to: "/dashboard/og", label: "Nombres OG", icon: Target, tag: "Nuevo" },
   { to: "/templates", label: "Plantillas", icon: ImageIcon },
   { to: "/rank", label: "Ranking", icon: Sparkles },
   { to: "/dashboard/settings", label: "Configuración", icon: Settings },
