@@ -180,13 +180,18 @@ function RankPage() {
               }}
             >
               {souls.map((s, i) => (
-                <button
+                <Link
                   key={s.username}
-                  type="button"
+                  to="/$username"
+                  params={{ username: s.username }}
                   onMouseEnter={() => setActive(s)}
                   onFocus={() => setActive(s)}
                   onMouseLeave={() => setActive(null)}
-                  aria-label={`${s.display_name} — puesto ${i + 1}`}
+                  onClick={(e) => {
+                    // Ignore the click that ends a pan gesture.
+                    if (movedRef.current) e.preventDefault();
+                  }}
+                  aria-label={`Ver el biolink de ${s.display_name} — puesto ${i + 1}`}
                   className="group absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none"
                   style={{ left: s.x, top: s.y, width: s.size, height: s.size }}
                 >
