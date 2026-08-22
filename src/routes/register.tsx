@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ArrowRight, AtSign, Lock, Mail } from "lucide-react";
+import { ArrowRight, AtSign, Copy, KeyRound, Lock, Mail } from "lucide-react";
+import { registerWithLoginCode } from "@/lib/login-code.functions";
 import { AuthShell } from "@/components/qsy/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +48,41 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"form" | "sent">("form");
+  const [mode, setMode] = useState<"email" | "code">("email");
+  const [issuedCode, setIssuedCode] = useState<string | null>(null);
+  const codeRegister = useServerFn(registerWithLoginCode);
+
+  async function onCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const parsed = schema.shape.username.safeParse(username);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await codeRegister({ data: { username: parsed.data } });
+      if (!res.ok) {
+        setLoading(false);
+        toast.error(res.error);
+        return;
+      }
+      const { error } = await supabase.auth.verifyOtp({
+        type: "magiclink",
+        token_hash: res.tokenHash,
+      });
+      setLoading(false);
+      if (error) {
+        toast.error("Cuenta creada, pero no pudimos entrar", { description: error.message });
+      }
+      setIssuedCode(res.code);
+    } catch {
+      setLoading(false);
+      toast.error("No se pudo crear la cuenta con código");
+    }
+  }
+
+
 
 
   async function onSubmit(e: React.FormEvent) {
@@ -95,7 +132,111 @@ function RegisterPage() {
     toast.success("Enlace reenviado");
   }
 
+  if (issuedCode) {
+    return (
+      <AuthShell
+        side="left"
+        eyebrow="Cuenta creada"
+        title="Guarda tu código"
+        subtitle="Es la única forma de entrar a esta cuenta"
+      >
+        <div className="space-y-5">
+          <div className="rounded-2xl border border-primary/40 bg-primary/10 px-4 py-5 text-center">
+            <p className="font-mono text-lg font-semibold tracking-[0.18em] text-primary">
+              {issuedCode}
+            </p>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Copialo y guardalo en un lugar seguro. Sin este código no vas a poder volver a
+            entrar, porque tu cuenta no tiene email ni contraseña. Podés cambiarlo o agregar
+            email más tarde desde Configuración.
+          </p>
+
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => {
+              void navigator.clipboard.writeText(issuedCode);
+              toast.success("Código copiado");
+            }}
+            className="h-12 w-full gap-2 rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+          >
+            <Copy className="size-4" /> Copiar código
+          </Button>
+
+          <Button
+            type="button"
+            onClick={() => navigate({ to: "/dashboard" })}
+            className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
+          >
+            Ya lo guardé, entrar
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+        </div>
+      </AuthShell>
+    );
+  }
+
+  if (mode === "code") {
+    return (
+      <AuthShell
+        side="left"
+        eyebrow="Registro con código"
+        title="Crea tu cuenta anónima"
+        subtitle="Sin email ni contraseña · solo tu código QSY"
+      >
+        <form onSubmit={onCodeSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label
+              htmlFor="code-username"
+              className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
+            >
+              Tu link
+            </Label>
+            <div className="relative">
+              <AtSign className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <span className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 font-mono text-xs text-primary">
+                qsy.rip/
+              </span>
+              <Input
+                id="code-username"
+                value={username}
+                maxLength={24}
+                placeholder="tu_usuario"
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                className="h-12 rounded-xl bg-background/60 pl-[5.6rem] font-mono"
+              />
+            </div>
+          </div>
+
+          <p className="rounded-xl border border-border/60 bg-surface px-4 py-3 text-xs text-muted-foreground">
+            Vamos a generar un código único tipo <span className="font-mono">QSY-XXXX-XXXX-XXXX</span>.
+            Ese código es tu llave: guardalo, no se puede recuperar por correo.
+          </p>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="group h-12 w-full rounded-xl text-sm font-semibold uppercase tracking-[0.14em]"
+          >
+            {loading ? "Generando…" : "Generar mi código"}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+
+          <button
+            type="button"
+            onClick={() => setMode("email")}
+            className="w-full text-center text-xs text-muted-foreground hover:underline"
+          >
+            Prefiero registrarme con email
+          </button>
+        </form>
+      </AuthShell>
+    );
+  }
+
   if (step === "sent") {
+
     return (
       <AuthShell
         side="left"
@@ -240,6 +381,17 @@ function RegisterPage() {
           </svg>
           Registrarme con Google
         </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setMode("code")}
+          className="h-12 w-full gap-2 rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          <KeyRound className="size-4" />
+          Registrarme con código aleatorio
+        </Button>
+
 
         <p className="pt-2 text-center text-xs text-muted-foreground">
           ¿Ya tienes cuenta?{" "}
