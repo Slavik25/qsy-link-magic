@@ -105,3 +105,69 @@ export function installTripwire() {
   clear();
   window.setInterval(clear, 2000);
 }
+
+/**
+ * Vigilancia pasiva de la consola: no bloquea a nadie ni banea, solo detecta
+ * los rastros típicos de los scripts de "exploit" (globals inyectados,
+ * lectura del token de sesión, eval masivo) y los deja registrados en la
+ * auditoría para que el staff los vea. La seguridad real vive en el servidor.
+ */
+export function installConsoleWatch(getUserId: () => string | null) {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as Record<string, unknown>;
+  if (w["__qsy_console_watch"]) return;
+  w["__qsy_console_watch"] = true;
+  if (!enforcedHost()) return;
+
+  const reported = new Set<string>();
+
+  const report = async (signal: string, detail: string) => {
+    if (reported.has(signal)) return;
+    reported.add(signal);
+    try {
+      const { reportConsoleSignal } = await import("./tripwire.functions");
+      await reportConsoleSignal({
+        data: {
+          signal,
+          detail,
+          userId: getUserId(),
+          fingerprint: deviceFingerprint(),
+        },
+      });
+    } catch {
+      /* noop */
+    }
+  };
+
+  const SUSPICIOUS = [
+    "qsyToken",
+    "qsyUserId",
+    "qsyEmail",
+    "qsySave",
+    "qsyExploit",
+    "pwned",
+    "exploit",
+  ];
+
+  const scan = () => {
+    const hit = SUSPICIOUS.filter((k) => k in w);
+    if (hit.length) void report("injected_globals", hit.join(","));
+  };
+
+  scan();
+  window.setInterval(scan, 4000);
+
+  // Aviso disuasorio en la consola.
+  try {
+    console.log(
+      "%cQSY · Zona restringida",
+      "color:#ff3b6b;font-size:20px;font-weight:800",
+    );
+    console.log(
+      "%cPegar código acá no da coins, ni premium, ni acceso: los precios y permisos se validan en el servidor. Todo intento queda registrado.",
+      "color:#c9b6ff;font-size:12px",
+    );
+  } catch {
+    /* noop */
+  }
+}
