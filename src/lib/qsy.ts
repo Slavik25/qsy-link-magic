@@ -46,6 +46,24 @@ export type ThemeConfig = {
   color_text?: string;
   color_icon?: string;
   color_border?: string;
+  /* Per-element colors + optional gradients */
+  color_name?: string;
+  color_name_2?: string;
+  grad_name?: boolean;
+  color_username?: string;
+  color_username_2?: string;
+  grad_username?: boolean;
+  color_bio?: string;
+  color_bio_2?: string;
+  grad_bio?: boolean;
+  color_stats?: string;
+  color_stats_2?: string;
+  grad_stats?: boolean;
+  color_icon_2?: string;
+  grad_icon?: boolean;
+  color_icon_bg?: string;
+  color_badge_bg?: string;
+  grad_angle?: number;
   /* Effects & media */
   player_type?: string;
   layout_key?: string;
