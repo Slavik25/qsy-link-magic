@@ -1,0 +1,1 @@
+UPDATE public.site_bans SET active = false, lifted_at = now() WHERE active AND reason IN ('devtools_open','devtools_shortcut');
