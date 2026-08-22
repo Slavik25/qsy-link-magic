@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Crown, Move, ZoomIn, ZoomOut } from "lucide-react";
 import { SiteNav } from "@/components/qsy/site-nav";
 import { SiteFooter } from "@/components/qsy/site-footer";
@@ -90,8 +90,42 @@ function RankPage() {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [active, setActive] = useState<Soul | null>(null);
   const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
 
   const top = useMemo(() => souls.slice(0, 10), [souls]);
+
+  const MIN_ZOOM = 0.4;
+  const MAX_ZOOM = 2.4;
+
+  // Zoom anchored on a point measured from the viewport centre (the map's origin).
+  const zoomAt = (nextRaw: number, ax: number, ay: number) => {
+    setZoom((z) => {
+      const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, nextRaw));
+      const k = next / z;
+      setPan((p) => ({ x: ax - (ax - p.x) * k, y: ay - (ay - p.y) * k }));
+      return next;
+    });
+  };
+  const zoomAtRef = useRef(zoomAt);
+  zoomAtRef.current = zoomAt;
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
+      const rect = el.getBoundingClientRect();
+      const ax = e.clientX - rect.left - rect.width / 2;
+      const ay = e.clientY - rect.top - rect.height / 2;
+      zoomAtRef.current(zoomRef.current * Math.exp(-dy * 0.0018), ax, ay);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,6 +155,8 @@ function RankPage() {
           </header>
 
           <div
+            ref={viewportRef}
+            style={{ touchAction: "none" }}
             className="relative mt-8 h-[640px] w-full cursor-grab overflow-hidden active:cursor-grabbing"
             onPointerDown={(e) => {
               drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
@@ -188,18 +224,18 @@ function RankPage() {
               <button
                 type="button"
                 aria-label="Alejar"
-                onClick={() => setZoom((z) => Math.max(0.4, +(z - 0.2).toFixed(2)))}
+                onClick={() => zoomAt(zoom / 1.25, 0, 0)}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ZoomOut className="size-4" />
               </button>
               <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                <Move className="size-3.5 text-primary" /> Arrastra para explorar
+                <Move className="size-3.5 text-primary" /> Arrastra y usa el scroll
               </span>
               <button
                 type="button"
                 aria-label="Acercar"
-                onClick={() => setZoom((z) => Math.min(2.4, +(z + 0.2).toFixed(2)))}
+                onClick={() => zoomAt(zoom * 1.25, 0, 0)}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ZoomIn className="size-4" />
