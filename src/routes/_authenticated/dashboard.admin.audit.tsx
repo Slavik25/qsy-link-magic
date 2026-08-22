@@ -26,9 +26,14 @@ type AuditRow = {
 
 const FILTERS = [
   { key: "all", label: "Todo" },
+  { key: "shop", label: "Tienda" },
+  { key: "role", label: "Roles" },
+  { key: "counter", label: "Contadores" },
+  { key: "like", label: "Likes" },
   { key: "view", label: "Visitas" },
   { key: "chat", label: "Chat" },
 ] as const;
+
 
 function AdminAudit() {
   const [kind, setKind] = useState<(typeof FILTERS)[number]["key"]>("all");
