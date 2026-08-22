@@ -163,8 +163,8 @@ function FeatureTable() {
       </div>
       <p className="rounded-2xl border border-border/60 bg-card/40 px-5 py-4 text-xs text-muted-foreground">
         <strong className="text-foreground">¿Cómo comprar?</strong> Pulsa en «Subir a Obsidian» o «Subir a
-        Seraph» para generar tu pedido. El pago es único y sin suscripciones; tu rango se activa en menos de
-        24 horas.
+        Seraph» y completa el pago con Dodo Payments (tarjeta y métodos locales). El pago es único y tu rango
+        se activa automáticamente al confirmarse.
       </p>
     </section>
   );
