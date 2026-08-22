@@ -814,3 +814,28 @@
   --shadow-glow: 0 0 0 1px var(--border), 0 20px 50px -28px color-mix(in oklab, var(--primary) 60%, transparent);
   scrollbar-color: color-mix(in oklab, var(--primary) 70%, white) oklch(0.95 0.015 350);
 }
+
+/* Dashboard dark: black + pastel pink */
+.dash-theme.dash-dark {
+  --background: oklch(0.13 0.014 350);
+  --foreground: oklch(0.97 0.012 350);
+  --card: oklch(0.18 0.022 350);
+  --card-foreground: oklch(0.97 0.012 350);
+  --popover: oklch(0.17 0.02 350);
+  --popover-foreground: oklch(0.97 0.012 350);
+  --muted: oklch(0.24 0.025 350);
+  --muted-foreground: oklch(0.80 0.035 350);
+  --secondary: oklch(0.24 0.03 350);
+  --secondary-foreground: oklch(0.97 0.012 350);
+  --accent: oklch(0.30 0.05 350);
+  --accent-foreground: oklch(0.98 0.01 350);
+  --border: oklch(0.80 0.09 350 / 24%);
+  --input: oklch(0.80 0.09 350 / 26%);
+  --primary: oklch(0.83 0.10 350);
+  --primary-foreground: oklch(0.18 0.03 350);
+  --ring: oklch(0.83 0.10 350);
+  --sidebar-primary: oklch(0.83 0.10 350);
+  --surface: color-mix(in oklab, var(--card) 78%, transparent);
+  --surface-strong: color-mix(in oklab, var(--card) 92%, transparent);
+  scrollbar-color: color-mix(in oklab, var(--primary) 70%, black) oklch(0.15 0.02 350);
+}
