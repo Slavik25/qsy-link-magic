@@ -100,7 +100,11 @@ function DashboardLayout() {
       >
         <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-border/60 px-5">
           <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-            <QsyLogo />
+            <img
+              src={qsyLogoAsset.url}
+              alt="QSY"
+              className="h-9 w-auto qsy-logo-img object-contain"
+            />
             <span className="text-sm font-semibold tracking-[0.22em] uppercase text-foreground/80">
               Dashboard
             </span>
