@@ -153,24 +153,43 @@ export function shieldRequest(request: Request): Response | null {
 /** Orígenes que sí pueden embeber la app (editor/preview de Lovable). */
 const FRAME_ANCESTORS = "'self' https://*.lovable.app https://*.lovable.dev https://lovable.dev";
 
-const CSP = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
-  "style-src 'self' 'unsafe-inline' https:",
-  "img-src 'self' data: blob: https:",
-  "media-src 'self' data: blob: https:",
-  "font-src 'self' data: https:",
-  "connect-src 'self' https: wss:",
-  "frame-src 'self' https:",
-  "worker-src 'self' blob:",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  `frame-ancestors ${FRAME_ANCESTORS}`,
-].join("; ");
+function buildCsp(strict: boolean): string {
+  return [
+    "default-src 'self'",
+    // En producción no se permite eval/new Function: los payloads pegados en la
+    // consola que usan eval, Function() o import() dinámico quedan bloqueados.
+    strict
+      ? "script-src 'self' 'unsafe-inline' https:"
+      : "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+    "style-src 'self' 'unsafe-inline' https:",
+    "img-src 'self' data: blob: https:",
+    "media-src 'self' data: blob: https:",
+    "font-src 'self' data: https:",
+    "connect-src 'self' https: wss:",
+    "frame-src 'self' https:",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    `frame-ancestors ${FRAME_ANCESTORS}`,
+  ].join("; ");
+}
+
+/** Solo los dominios públicos reales llevan la política estricta. */
+function strictHost(request?: Request): boolean {
+  if (!request) return false;
+  try {
+    const host = new URL(request.url).hostname;
+    if (host.includes("lovable.app") || host.includes("lovable.dev")) return false;
+    if (host === "localhost" || host === "127.0.0.1") return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /** Cabeceras de seguridad aplicadas a toda respuesta que sale del servidor. */
-export function withSecurityHeaders(response: Response): Response {
+export function withSecurityHeaders(response: Response, request?: Request): Response {
   const headers = new Headers(response.headers);
   headers.set("x-content-type-options", "nosniff");
   headers.set("referrer-policy", "strict-origin-when-cross-origin");
@@ -180,7 +199,7 @@ export function withSecurityHeaders(response: Response): Response {
   headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
   headers.set("cross-origin-resource-policy", "cross-origin");
 
-  headers.set("content-security-policy", CSP);
+  headers.set("content-security-policy", buildCsp(strictHost(request)));
   headers.delete("x-powered-by");
 
   return new Response(response.body, {

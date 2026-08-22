@@ -104,6 +104,51 @@ export function installTripwire() {
   };
   clear();
   window.setInterval(clear, 2000);
+
+  lockdownScripting();
+}
+
+/**
+ * Congela `console` y los métodos de `localStorage` para que los scripts
+ * pegados en la consola no puedan montar sus paneles "anti-clear".
+ * La CSP del servidor ya prohíbe `eval` / `new Function` en los dominios
+ * públicos, que es lo que usan esos payloads para ejecutarse.
+ */
+function lockdownScripting() {
+  // Impide que un script redefina console.* o los métodos de storage para
+  // montar sus propios paneles "anti-clear".
+  for (const key of ["log", "clear", "warn", "error", "info", "table", "dir"]) {
+    try {
+      const original = (console as unknown as Record<string, unknown>)[key];
+      Object.defineProperty(console, key, {
+        value: original,
+        writable: false,
+        configurable: false,
+      });
+    } catch {
+      /* noop */
+    }
+  }
+
+  for (const key of ["clear", "removeItem", "setItem", "getItem"]) {
+    try {
+      const proto = Storage.prototype as unknown as Record<string, unknown>;
+      Object.defineProperty(proto, key, {
+        value: proto[key],
+        writable: false,
+        configurable: false,
+      });
+    } catch {
+      /* noop */
+    }
+  }
+
+  try {
+    Object.freeze(console);
+    Object.freeze(Storage.prototype);
+  } catch {
+    /* noop */
+  }
 }
 
 /**
