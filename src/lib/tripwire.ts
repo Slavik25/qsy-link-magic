@@ -11,13 +11,42 @@ import { reportConsoleAttack } from "./tripwire.functions";
 const FP_KEY = "qsy_fp";
 const BAN_KEY = "qsy_banned";
 
+function hash(input: string): string {
+  let h1 = 0x811c9dc5;
+  let h2 = 0x01000193;
+  for (let i = 0; i < input.length; i++) {
+    h1 = (h1 ^ input.charCodeAt(i)) >>> 0;
+    h1 = (h1 * 16777619) >>> 0;
+    h2 = (h2 + input.charCodeAt(i) * (i + 7)) >>> 0;
+  }
+  return `${h1.toString(36)}${h2.toString(36)}`;
+}
+
+/**
+ * Huella derivada del propio navegador (no de un valor guardado), así borrar
+ * el localStorage desde la consola no genera una identidad nueva.
+ */
 export function deviceFingerprint(): string {
   if (typeof window === "undefined") return "";
   try {
-    let fp = localStorage.getItem(FP_KEY);
-    if (!fp) {
-      fp = `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+    const n = navigator as Navigator & { deviceMemory?: number };
+    const parts = [
+      navigator.userAgent,
+      navigator.language,
+      (navigator.languages ?? []).join(","),
+      String(navigator.hardwareConcurrency ?? ""),
+      String(n.deviceMemory ?? ""),
+      `${screen.width}x${screen.height}x${screen.colorDepth}`,
+      String(new Date().getTimezoneOffset()),
+      Intl.DateTimeFormat().resolvedOptions().timeZone ?? "",
+      String(navigator.maxTouchPoints ?? ""),
+      navigator.platform ?? "",
+    ];
+    const fp = `qsy_${hash(parts.join("|"))}`;
+    try {
       localStorage.setItem(FP_KEY, fp);
+    } catch {
+      /* noop */
     }
     return fp;
   } catch {
