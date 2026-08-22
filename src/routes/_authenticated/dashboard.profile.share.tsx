@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Check, Copy, Crown, Download, ExternalLink, Globe, ImageIcon, Lock, QrCode } from "lucide-react";
+import { Check, Copy, Crown, Download, ExternalLink, Globe, ImageIcon, Lock, QrCode, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
