@@ -130,12 +130,8 @@ function AdvancedSection() {
 
       {!premium && <PremiumLock title="Embed personalizado y CSS" />}
 
-      <section
-        className={`space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
-          premium ? "" : "pointer-events-none select-none opacity-50"
-        }`}
-        aria-disabled={!premium}
-      >
+      {premium && (
+      <section className="space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
         <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em]">
           <Eye className="size-3.5 text-primary" /> Metadatos del perfil (embed)
         </p>
@@ -195,32 +191,23 @@ function AdvancedSection() {
               <p className="mt-1 text-xs text-muted-foreground">
                 {t.meta_description || draft.bio || "Bienvenido a mi página personal QSY."}
               </p>
-              <div className="mt-3 grid place-items-center gap-2 rounded-lg bg-surface-strong/60 p-6 text-center">
-                {(t.meta_image || draft.avatar_url) && (
-                  <img
-                    src={t.meta_image || draft.avatar_url}
-                    alt=""
-                    className="size-12 rounded-full object-cover"
-                  />
-                )}
-                <p className="text-sm font-semibold">
-                  {draft.display_name || profile?.username || "qsy"}
-                </p>
-                <p className="text-[11px] text-muted-foreground">
-                  {profileHost(profile)}/{profile?.username ?? "qsy"}
-                </p>
-              </div>
+              <img
+                src={t.meta_image || `/api/public/og/${profile?.username ?? "qsy"}`}
+                alt="Vista previa del embed"
+                className="mt-3 aspect-[1200/630] w-full rounded-lg border border-border/50 object-cover"
+              />
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                {profileHost(profile)}/{profile?.username ?? "qsy"}
+              </p>
+
             </div>
           </div>
         </div>
       </section>
+      )}
 
-      <section
-        className={`space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5 ${
-          premium ? "" : "pointer-events-none select-none opacity-50"
-        }`}
-        aria-disabled={!premium}
-      >
+      {premium && (
+      <section className="space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">CSS personalizado</p>
         <p className="text-xs text-muted-foreground">
           Inyecta CSS personalizado en tu perfil público. Solo para usuarios avanzados.
@@ -235,6 +222,7 @@ function AdvancedSection() {
           className="font-mono text-xs"
         />
       </section>
+      )}
 
       <SaveBar onSave={save} saving={saving} />
     </Panel>

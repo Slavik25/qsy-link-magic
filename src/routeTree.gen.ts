@@ -50,6 +50,7 @@ import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from '
 import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
 import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
 import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
+import { Route as ApiPublicOgUsernameRouteImport } from './routes/api/public/og.$username'
 import { Route as ApiPublicWebhooksDodoRouteImport } from './routes/api/public/webhooks/dodo'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -289,6 +290,11 @@ const AuthenticatedDashboardProfileShareRoute =
     path: '/share',
     getParentRoute: () => AuthenticatedDashboardProfileRoute,
   } as any)
+const ApiPublicOgUsernameRoute = ApiPublicOgUsernameRouteImport.update({
+  id: '/api/public/og/$username',
+  path: '/api/public/og/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksDodoRoute = ApiPublicWebhooksDodoRouteImport.update({
   id: '/api/public/webhooks/dodo',
   path: '/api/public/webhooks/dodo',
@@ -350,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/og/$username': typeof ApiPublicOgUsernameRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -393,6 +400,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/og/$username': typeof ApiPublicOgUsernameRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -441,6 +449,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
+  '/api/public/og/$username': typeof ApiPublicOgUsernameRoute
   '/api/public/webhooks/dodo': typeof ApiPublicWebhooksDodoRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -489,6 +498,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/api/public/og/$username'
     | '/api/public/webhooks/dodo'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -532,6 +542,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/effects'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
+    | '/api/public/og/$username'
     | '/api/public/webhooks/dodo'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -579,6 +590,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile/effects'
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
+    | '/api/public/og/$username'
     | '/api/public/webhooks/dodo'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -597,6 +609,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
+  ApiPublicOgUsernameRoute: typeof ApiPublicOgUsernameRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -892,6 +905,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileShareRouteImport
       parentRoute: typeof AuthenticatedDashboardProfileRoute
     }
+    '/api/public/og/$username': {
+      id: '/api/public/og/$username'
+      path: '/api/public/og/$username'
+      fullPath: '/api/public/og/$username'
+      preLoaderRoute: typeof ApiPublicOgUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/dodo': {
       id: '/api/public/webhooks/dodo'
       path: '/api/public/webhooks/dodo'
@@ -1059,6 +1079,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
+  ApiPublicOgUsernameRoute: ApiPublicOgUsernameRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
