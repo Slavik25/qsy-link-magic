@@ -46,13 +46,16 @@ export function ProfileView({
   const shape = t.avatar_shape ?? "circle";
   const shapeClass = `qsy-shape-${shape}`;
   const cardBg = t.card_bg_type ?? "solid";
+  const cardAlpha = cardBg === "transparent" ? 0 : Math.max(0, Math.min(100, t.card_alpha ?? 100));
+  const alphaStyle =
+    cardAlpha < 100 ? ({ "--p-card-alpha": `${cardAlpha / 100}` } as React.CSSProperties) : {};
 
   return (
     <div
-      style={style}
+      style={{ ...style, ...alphaStyle }}
       className={`relative w-full overflow-hidden ${
         showCard
-          ? `qsy-tpl qsy-tpl-${template} ${cardBg === "transparent" ? "!bg-transparent" : ""}`
+          ? `qsy-tpl qsy-tpl-${template} ${cardAlpha < 100 ? "qsy-tpl-alpha" : ""}`
           : "border-0 bg-transparent"
       }`}
     >
