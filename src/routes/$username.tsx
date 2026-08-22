@@ -48,10 +48,15 @@ export const Route = createFileRoute("/$username")({
         { name: "twitter:description", content: description },
         { name: "theme-color", content: "#7c5cff" },
         { property: "og:image", content: image },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
+        ...(largeCard
+          ? [
+              { property: "og:image:width", content: "1200" },
+              { property: "og:image:height", content: "630" },
+            ]
+          : []),
         { name: "twitter:image", content: image },
-        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:card", content: largeCard ? "summary_large_image" : "summary" },
+
       ],
 
       links: m?.meta_favicon ? [{ rel: "icon", href: m.meta_favicon }] : [],
