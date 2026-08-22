@@ -166,7 +166,8 @@ export const Route = createFileRoute("/api/public/og/$username")({
               "cache-control": "public, max-age=300, s-maxage=300",
             },
           } as never);
-        } catch {
+        } catch (err) {
+          console.error("og render failed", err);
           return new Response("og unavailable", { status: 500 });
         }
       },
