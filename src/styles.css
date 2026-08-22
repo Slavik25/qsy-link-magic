@@ -854,3 +854,121 @@
 .qsy-logo-on-light { display: none; }
 :root.qsy-light .qsy-logo-on-light { display: block; }
 :root.qsy-light .qsy-logo-on-dark { display: none; }
+
+/* ── Animaciones al pasar el ratón sobre el biolink (tienda) ───────── */
+.qsy-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    filter 0.35s ease;
+  will-change: transform;
+}
+.qsy-hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 26px 60px -24px rgb(0 0 0 / 0.85);
+}
+.qsy-hover-zoom:hover {
+  transform: scale(1.03);
+}
+.qsy-hover-tilt {
+  transform-style: preserve-3d;
+}
+.qsy-hover-tilt:hover {
+  transform: perspective(1100px) rotateX(6deg) rotateY(-6deg) translateY(-4px);
+}
+.qsy-hover-glow:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--p-accent, #a78bfa) 55%, transparent),
+    0 0 42px color-mix(in oklab, var(--p-accent, #a78bfa) 45%, transparent);
+}
+.qsy-hover-float:hover {
+  animation: qsy-hover-float 2.4s ease-in-out infinite;
+}
+@keyframes qsy-hover-float {
+  0%, 100% { transform: translateY(-4px); }
+  50% { transform: translateY(-14px); }
+}
+.qsy-hover-jelly:hover {
+  animation: qsy-hover-jelly 0.7s ease;
+}
+@keyframes qsy-hover-jelly {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.06, 0.94); }
+  50% { transform: scale(0.96, 1.04); }
+  70% { transform: scale(1.03, 0.97); }
+  100% { transform: scale(1, 1); }
+}
+.qsy-hover-shine::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgb(255 255 255 / 0.22) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  opacity: 0;
+}
+.qsy-hover-shine:hover::after {
+  opacity: 1;
+  animation: qsy-hover-shine 1.1s ease forwards;
+}
+@keyframes qsy-hover-shine {
+  to { transform: translateX(120%); }
+}
+.qsy-hover-rgb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: conic-gradient(from 0deg, #ff004c, #ffb800, #22d3ee, #7c5cff, #ff004c);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.qsy-hover-rgb:hover::before {
+  opacity: 1;
+  animation: qsy-hue 4s linear infinite;
+}
+.qsy-hover-scan::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in oklab, var(--p-accent, #a78bfa) 35%, transparent),
+    transparent
+  );
+}
+.qsy-hover-scan:hover::after {
+  opacity: 1;
+  animation: qsy-hover-scan 1.8s linear infinite;
+}
+@keyframes qsy-hover-scan {
+  0% { top: -22%; }
+  100% { top: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qsy-hover,
+  .qsy-hover::before,
+  .qsy-hover::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
