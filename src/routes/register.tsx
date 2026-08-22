@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ArrowRight, AtSign, Lock, Mail } from "lucide-react";
+import { ArrowRight, AtSign, Copy, KeyRound, Lock, Mail } from "lucide-react";
+import { registerWithLoginCode } from "@/lib/login-code.functions";
 import { AuthShell } from "@/components/qsy/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
