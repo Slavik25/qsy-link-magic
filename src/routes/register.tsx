@@ -36,8 +36,7 @@ const schema = z.object({
     .string()
     .trim()
     .email("Email inválido")
-    .max(255)
-    .refine((v) => !isDisposableEmail(v), DISPOSABLE_EMAIL_MESSAGE),
+    .max(255),
   password: z.string().min(6, "Mínimo 6 caracteres").max(72),
 });
 

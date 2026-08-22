@@ -195,10 +195,6 @@ function SettingsPage() {
   async function changeEmail() {
     const next = window.prompt("Nuevo email de la cuenta:", email);
     if (!next || next === email) return;
-    if (isDisposableEmail(next)) {
-      toast.error(DISPOSABLE_EMAIL_MESSAGE);
-      return;
-    }
     const { error } = await supabase.auth.updateUser({ email: next.trim() });
     if (error) {
       toast.error(error.message);
