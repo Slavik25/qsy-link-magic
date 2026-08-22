@@ -91,6 +91,7 @@ function RankPage() {
   const [active, setActive] = useState<Soul | null>(null);
   const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const movedRef = useRef(false);
 
   const top = useMemo(() => souls.slice(0, 10), [souls]);
 
