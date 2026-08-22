@@ -22,10 +22,12 @@ import dashBanner from "@/assets/dash-banner.png.asset.json";
 import cardProfile from "@/assets/card-32.png.asset.json";
 import cardTemplates from "@/assets/card-33.png.asset.json";
 import cardShop from "@/assets/card-34.png.asset.json";
+import { RankBadge, normalizeRank } from "@/components/qsy/rank-badge";
 import {
   useAnalytics,
   useLinks,
   useMyProfile,
+  useMyProfiles,
   useShowcaseProfiles,
   useSocials,
 } from "@/lib/qsy-data";
@@ -85,6 +87,12 @@ function StatCard({
 
 function Overview() {
   const { data: profile } = useMyProfile();
+  const { data: myProfiles = [] } = useMyProfiles();
+  const rank = normalizeRank(
+    myProfiles.find((p) => (p as { rank?: string }).rank === "seraph")?.rank ??
+      myProfiles.find((p) => (p as { rank?: string }).rank === "obsidian")?.rank ??
+      (profile as { rank?: string } | undefined)?.rank,
+  );
   const { data: stats } = useAnalytics(profile?.id, 7);
   const { data: links = [] } = useLinks(profile?.id);
   const { data: socials = [] } = useSocials(profile?.id);
@@ -152,12 +160,12 @@ function Overview() {
           )}
           <div>
             <p className="truncate text-sm font-semibold">{profile?.display_name || profile?.username}</p>
-            <span className="mt-1 inline-block rounded-md bg-surface-strong px-2 py-0.5 text-[10px] font-bold tracking-wider text-muted-foreground">
-              FREE
-            </span>
+            <RankBadge rank={rank} size="sm" className="mt-1.5" />
           </div>
-          <Button asChild className="pulse-glow w-full rounded-xl">
-            <Link to="/dashboard/premium">Mejorar plan</Link>
+          <Button asChild className={`w-full rounded-xl ${rank === "seraph" ? "" : "pulse-glow"}`} variant={rank === "seraph" ? "outline" : "default"}>
+            <Link to={rank === "seraph" ? "/dashboard/rank" : "/dashboard/premium"}>
+              {rank === "seraph" ? "Ver tu plan" : "Mejorar plan"}
+            </Link>
           </Button>
         </aside>
       </div>
