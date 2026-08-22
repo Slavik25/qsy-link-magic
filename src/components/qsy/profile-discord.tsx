@@ -70,25 +70,34 @@ function Shell({
 }) {
   return (
     <div
-      className={`group relative overflow-hidden border transition-all duration-300 ${className}`}
+      className={`group relative overflow-hidden transition-all duration-300 ${transparent ? "" : "border"} ${className}`}
       style={{
         borderRadius: "var(--p-radius)",
-        background: transparent ? "transparent" : "var(--p-surface)",
+        background: transparent ? "none" : "var(--p-surface)",
+        backgroundColor: transparent ? "transparent" : undefined,
         backdropFilter: transparent ? "none" : "blur(var(--p-blur))",
-        borderColor: `color-mix(in oklab, ${accent} ${transparent ? 18 : 28}%, transparent)`,
-        boxShadow: transparent ? "none" : `0 10px 30px -18px ${accent}`,
+        ...(transparent
+          ? { border: "0", boxShadow: "none" }
+          : {
+              borderColor: `color-mix(in oklab, ${accent} 28%, transparent)`,
+              boxShadow: `0 10px 30px -18px ${accent}`,
+            }),
       }}
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-10 -top-14 size-32 rounded-full opacity-30 blur-3xl transition-opacity duration-300 group-hover:opacity-60"
-        style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
-        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
-      />
+      {!transparent && (
+        <>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-10 -top-14 size-32 rounded-full opacity-30 blur-3xl transition-opacity duration-300 group-hover:opacity-60"
+            style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+            style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+          />
+        </>
+      )}
       {children}
     </div>
   );
