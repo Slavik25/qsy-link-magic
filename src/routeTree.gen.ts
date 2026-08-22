@@ -17,6 +17,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RankRouteImport } from './routes/rank'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
@@ -90,6 +91,11 @@ const RankRoute = RankRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TemplatesRoute = TemplatesRouteImport.update({
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
@@ -350,6 +357,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
@@ -393,6 +401,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
@@ -439,6 +448,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/rank'
     | '/register'
+    | '/reset-password'
     | '/templates'
     | '/dashboard'
     | '/dashboard/admin'
@@ -483,6 +493,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/rank'
     | '/register'
+    | '/reset-password'
     | '/templates'
     | '/dashboard/analytics'
     | '/dashboard/badges'
@@ -525,6 +536,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/rank'
     | '/register'
+    | '/reset-password'
     | '/templates'
     | '/_authenticated/dashboard'
     | '/_authenticated/dashboard/admin'
@@ -571,6 +583,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RankRoute: typeof RankRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
@@ -634,6 +647,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/templates': {
@@ -1015,6 +1035,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RankRoute: RankRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
