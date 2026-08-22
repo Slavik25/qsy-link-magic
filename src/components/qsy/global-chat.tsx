@@ -130,15 +130,28 @@ export function GlobalChat() {
                 </p>
                 <p className="break-words text-sm">{m.message}</p>
               </div>
-              {me === m.user_id && (
-                <button
-                  onClick={() => remove(m.id)}
-                  className="opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
-                  title="Borrar"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-              )}
+              <div className="flex shrink-0 items-center gap-1.5">
+                {me && me !== m.user_id && (
+                  <button
+                    onClick={() => report.mutate(m.id)}
+                    disabled={report.isPending}
+                    className="opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                    title="Reportar mensaje"
+                  >
+                    <Flag className="size-3.5" />
+                  </button>
+                )}
+                {me === m.user_id && (
+                  <button
+                    onClick={() => remove(m.id)}
+                    className="opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                    title="Borrar"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                )}
+              </div>
+
             </div>
           ))
         ) : (
