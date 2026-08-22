@@ -49,7 +49,7 @@ function AdminEmailsPage() {
 
   const status = useQuery({
     queryKey: ["admin-email-status"],
-    queryFn: () => fetchStatus({ data: {} }),
+    queryFn: () => fetchStatus(),
     refetchOnWindowFocus: false,
   });
 
