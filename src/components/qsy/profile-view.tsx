@@ -203,63 +203,76 @@ export function ProfileView({
           <p className="mt-3 max-w-md text-sm text-foreground/80">&ldquo;{profile.bio}&rdquo;</p>
         )}
 
-        {socials.length > 0 && (
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        <ProfileDiscord theme={t} />
+
+        {(socials.length > 0 || links.length > 0) && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             {socials.map((s) => {
               const Icon = iconFor(s.platform);
               return (
                 <a
-                  key={s.id}
+                  key={`s-${s.id}`}
                   href={s.url}
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label={labelFor(s.platform)}
-                  className="inline-flex items-center gap-2 border px-3.5 py-2 text-xs font-medium lift"
+                  title={labelFor(s.platform)}
+                  className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
                     borderRadius: "999px",
                     background: "var(--p-surface)",
                     backdropFilter: `blur(var(--p-blur))`,
-                    borderColor: `color-mix(in oklab, ${t.accent} 25%, transparent)`,
+                    borderColor: `color-mix(in oklab, ${t.accent} 28%, transparent)`,
                   }}
                 >
-                  <Icon className="size-3.5" style={{ color: t.accent }} />
-                  {labelFor(s.platform)}
+                  <Icon
+                    className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
+                    style={{ color: t.color_icon ?? "#ffffff" }}
+                  />
+                  <span
+                    className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ backdropFilter: "blur(8px)" }}
+                  >
+                    {labelFor(s.platform)}
+                  </span>
+                </a>
+              );
+            })}
+
+            {links.map((l) => {
+              const Icon = platformById(l.icon).Icon;
+              return (
+                <a
+                  key={`l-${l.id}`}
+                  href={l.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  onClick={() => onLinkClick?.(l)}
+                  aria-label={l.title}
+                  title={l.title}
+                  className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    borderRadius: "999px",
+                    background: "var(--p-surface)",
+                    backdropFilter: `blur(var(--p-blur))`,
+                    borderColor: `color-mix(in oklab, ${t.accent} 28%, transparent)`,
+                  }}
+                >
+                  <Icon
+                    className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
+                    style={{ color: t.color_icon ?? "#ffffff" }}
+                  />
+                  <span
+                    className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/10 bg-black/85 px-2 py-1 text-[10px] font-medium opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ backdropFilter: "blur(8px)" }}
+                  >
+                    {l.title}
+                  </span>
                 </a>
               );
             })}
           </div>
         )}
-
-
-        <ProfileDiscord theme={t} />
-
-        <div className="mt-6 w-full max-w-md space-y-3">
-          {links.map((l) => {
-            const Icon = platformById(l.icon).Icon;
-            return (
-              <a
-                key={l.id}
-                href={l.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                onClick={() => onLinkClick?.(l)}
-                className="group flex items-center gap-3 border px-4 py-3 text-sm font-medium lift"
-                style={{
-                  borderRadius: "var(--p-radius)",
-                  background: "var(--p-surface)",
-                  backdropFilter: `blur(var(--p-blur))`,
-                  borderColor: `color-mix(in oklab, ${t.accent} 25%, transparent)`,
-                }}
-              >
-                <Icon className="size-4 shrink-0" style={{ color: t.accent }} />
-                <span className="flex-1 text-left">{l.title}</span>
-                <span className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                  ↗
-                </span>
-              </a>
-            );
-          })}
-        </div>
 
         {t.audio_url && !isFloatingPlayer(t) && (
           <div className="mt-6 flex w-full justify-center">
