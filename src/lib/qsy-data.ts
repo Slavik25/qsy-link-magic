@@ -76,7 +76,7 @@ export function useProfileByUsername(username: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select(PUBLIC_PROFILE_COLUMNS)
         .eq("username", username.toLowerCase())
         .maybeSingle();
       if (error) throw error;
