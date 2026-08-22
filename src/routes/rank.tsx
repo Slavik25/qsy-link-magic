@@ -285,21 +285,31 @@ function RankPage() {
                   className="flex items-center gap-4 rounded-xl border border-border/60 bg-card/40 px-4 py-3 backdrop-blur transition-colors hover:bg-card/70"
                 >
                   <span className="w-8 font-mono text-sm text-primary">#{i + 1}</span>
-                  <img
-                    src={s.avatar_url ?? ""}
-                    alt=""
-                    loading="lazy"
-                    width={36}
-                    height={36}
-                    className="size-9 rounded-full object-cover"
-                  />
+                  {s.avatar_url ? (
+                    <img
+                      src={s.avatar_url}
+                      alt=""
+                      loading="lazy"
+                      width={36}
+                      height={36}
+                      className="size-9 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span
+                      className="grid size-9 place-items-center rounded-full bg-card font-mono text-xs font-bold"
+                      style={{ color: s.accent }}
+                    >
+                      {s.username.slice(0, 2).toUpperCase()}
+                    </span>
+                  )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium">{s.display_name}</span>
                     <span className="block truncate text-xs text-muted-foreground">@{s.username}</span>
                   </span>
                   <span className="font-mono text-xs text-muted-foreground">
-                    {s.score.toLocaleString()} pts
+                    {s.views.toLocaleString()} visitas
                   </span>
+
                 </Link>
               </li>
             ))}
