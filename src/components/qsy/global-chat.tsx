@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { MessagesSquare, Send, Trash2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { Flag, MessagesSquare, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyProfile } from "@/lib/qsy-data";
 import { timeAgo } from "@/lib/admin-data";
+import { reportChatMessage, sendChatMessage } from "@/lib/moderation.functions";
+import { deviceFingerprint } from "@/lib/tripwire";
 
 type ChatRow = {
   id: string;
