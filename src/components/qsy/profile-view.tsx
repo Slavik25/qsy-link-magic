@@ -1,5 +1,6 @@
 import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
+import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { iconFor, labelFor, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -229,6 +230,8 @@ export function ProfileView({
           </div>
         )}
 
+
+        <ProfileDiscord theme={t} />
 
         <div className="mt-6 w-full max-w-md space-y-3">
           {links.map((l) => {
