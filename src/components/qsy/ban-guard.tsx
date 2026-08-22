@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { BannedScreen } from "@/components/qsy/banned-screen";
-import { deviceFingerprint, installTripwire, localBanFlag } from "@/lib/tripwire";
+import { deviceFingerprint, installTripwire } from "@/lib/tripwire";
 import { checkBanStatus } from "@/lib/tripwire.functions";
 
 /**
@@ -12,7 +12,13 @@ export function BanGuard({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     installTripwire();
-    if (localBanFlag()) setBanned(true);
+    // El estado de baneo lo decide siempre el servidor; limpiamos restos locales.
+    try {
+      localStorage.removeItem("qsy_banned");
+      document.cookie = "qsy_banned=; path=/; max-age=0; samesite=lax";
+    } catch {
+      /* noop */
+    }
 
     const onBan = () => setBanned(true);
     window.addEventListener("qsy:banned", onBan);
@@ -36,16 +42,7 @@ export function BanGuard({ children }: { children: ReactNode }) {
       void checkBanStatus({ data: { fingerprint: deviceFingerprint(), userId } })
         .then((res) => {
           // El servidor manda: si dice baneado, se banea (aunque borren el flag local).
-          if (res?.banned) {
-            setBanned(true);
-            try {
-              localStorage.setItem("qsy_banned", "1");
-            } catch {
-              /* noop */
-            }
-          } else if (!localBanFlag()) {
-            setBanned(false);
-          }
+          setBanned(Boolean(res?.banned));
         })
         .catch(() => undefined);
 
