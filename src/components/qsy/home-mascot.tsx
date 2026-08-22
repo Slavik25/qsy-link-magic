@@ -63,7 +63,7 @@ export function HomeMascot() {
         />
         <button
           type="button"
-          onClick={() => setState(null)}
+          onClick={() => setClosed(true)}
           aria-label="Ocultar mascota"
           className={`pointer-events-auto absolute top-2 grid size-7 place-items-center rounded-full border border-border/60 bg-background/70 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-foreground focus:opacity-100 ${
             state.side === "left" ? "right-2" : "left-2"
