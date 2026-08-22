@@ -230,6 +230,18 @@ function LoginPage() {
           Google
         </Button>
 
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setMode("code")}
+          className="h-12 w-full rounded-xl text-xs font-semibold uppercase tracking-[0.14em]"
+        >
+          <KeyRound className="size-4" />
+          Entrar con código
+        </Button>
+
+
+
         <p className="pt-2 text-center text-xs text-muted-foreground">
           ¿Sin cuenta?{" "}
           <Link to="/register" className="font-semibold text-primary hover:underline">
