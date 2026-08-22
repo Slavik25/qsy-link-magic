@@ -100,11 +100,13 @@ function DashboardLayout() {
       >
         <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-border/60 px-5">
           <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-            <img
-              src={qsyLogoAsset.url}
-              alt="QSY"
-              className="h-9 w-auto qsy-logo-img object-contain"
-            />
+            <span className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-border/70 bg-background/60">
+              <img
+                src={qsyLogoAsset.url}
+                alt="Logo de QSY"
+                className="size-10 qsy-logo-img object-contain"
+              />
+            </span>
             <span className="text-sm font-semibold tracking-[0.22em] uppercase text-foreground/80">
               Dashboard
             </span>
@@ -213,6 +215,18 @@ function DashboardLayout() {
           >
             <Menu className="size-5" />
           </button>
+
+          <Link
+            to="/"
+            aria-label="Ir al inicio de QSY"
+            className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg border border-border/70 bg-card/70"
+          >
+            <img
+              src={qsyLogoAsset.url}
+              alt="Logo de QSY"
+              className="size-9 qsy-logo-img object-contain"
+            />
+          </Link>
 
           <div className="flex min-w-0 items-center gap-2 text-xs">
             <span className="hidden truncate uppercase tracking-[0.18em] text-muted-foreground sm:inline">
