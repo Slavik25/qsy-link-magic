@@ -15,6 +15,8 @@ const SCANNER_PATHS = [
   /^\/actuator|^\/solr|^\/druid|^\/telescope|^\/debug\b/i,
   // Rutas reservadas que jamás son usuarios ni páginas reales.
   /^\/(shell|cmd|console|config|configs|logs|log|temp|tmp|uploads|upload|files|server-status|webshell|c99|r57|admin\.php)(\/|$)/i,
+  /^\/(admin|administrator|api|v1|v2|graphql|manager|owa|jenkins|kibana)$/i,
+
 ];
 
 
@@ -176,6 +178,8 @@ export function withSecurityHeaders(response: Response): Response {
   headers.set("strict-transport-security", "max-age=31536000; includeSubDomains; preload");
   headers.set("x-xss-protection", "1; mode=block");
   headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
+  headers.set("cross-origin-resource-policy", "cross-origin");
+
   headers.set("content-security-policy", CSP);
   headers.delete("x-powered-by");
 
