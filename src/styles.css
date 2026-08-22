@@ -789,7 +789,7 @@
 }
 
 /* Dashboard: lighter violet theme */
-":root.qsy-light,
+:root.qsy-light,
 .dash-theme {
   --grad-1: oklch(0.42 0.06 350);
   --grad-2: oklch(0.72 0.14 350);
