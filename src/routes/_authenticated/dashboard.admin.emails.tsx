@@ -130,7 +130,7 @@ function AdminEmailsPage() {
       ) : null}
 
       <section className="rounded-3xl border border-border/60 bg-card/50 p-6 backdrop-blur-xl">
-      <section className="rounded-3xl border border-border/60 bg-card/50 p-6 backdrop-blur-xl">
+
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Estado del dominio y plantillas
