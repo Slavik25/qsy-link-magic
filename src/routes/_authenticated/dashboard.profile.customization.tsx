@@ -334,6 +334,13 @@ function CustomizationSection() {
             checked={t.discord_show_server !== false}
             onChange={(v) => setTheme("discord_show_server", v)}
           />
+          <ToggleRow
+            title="Tarjetas transparentes"
+            description="Quita el fondo de las tarjetas de Discord y deja ver el fondo del perfil."
+            checked={t.discord_transparent === true}
+            onChange={(v) => setTheme("discord_transparent", v)}
+          />
+
         </div>
       </Group>
 
