@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { LANGS, useI18n } from "@/lib/i18n";
+import { useActiveProfileId } from "@/lib/qsy-data";
 
 const items = [
   { label: "Explore", to: "/explore" as const },
