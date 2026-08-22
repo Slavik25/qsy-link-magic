@@ -21,6 +21,15 @@ function AdminUsers() {
   const [selected, setSelected] = useState<AdminProfile | null>(null);
   const { data: users } = useAdminUsers(search);
   const qc = useQueryClient();
+  const { data: adminRows } = useQuery({
+    queryKey: ["admin-role-ids"],
+    queryFn: async () => {
+      const { data } = await supabase.from("user_roles").select("user_id").eq("role", "admin");
+      return (data ?? []).map((r) => r.user_id as string);
+    },
+  });
+  const adminIds = new Set(adminRows ?? []);
+
 
   async function refresh() {
     await qc.invalidateQueries({ queryKey: ["admin-users"] });
