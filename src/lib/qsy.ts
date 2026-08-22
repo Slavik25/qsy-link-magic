@@ -41,6 +41,7 @@ export type ThemeConfig = {
   avatar_decoration?: string;
   profile_width?: "compact" | "normal" | "wide";
   card_bg_type?: "solid" | "gradient" | "image" | "video" | "transparent";
+  card_alpha?: number;
   show_card?: boolean;
   color_text?: string;
   color_icon?: string;
