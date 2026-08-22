@@ -149,8 +149,13 @@ function PublicProfile() {
         ? "max-w-3xl"
         : "max-w-xl";
 
+  // CSS personalizado: exclusivo de Obsidian y Seraph.
+  const premium = profile.rank === "obsidian" || profile.rank === "seraph";
+  const customCss = premium ? (profile.theme.custom_css ?? "").trim() : "";
+
   return (
     <ProfileStage theme={profile.theme} music={music}>
+      {customCss ? <style dangerouslySetInnerHTML={{ __html: customCss }} /> : null}
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
       <main
         className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
