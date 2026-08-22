@@ -8,7 +8,7 @@ import { QsyLogo } from "@/components/qsy/logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfileByUsername } from "@/lib/qsy-data";
-import { detectBrowser, detectDevice } from "@/lib/qsy";
+import { detectBrowser, detectDevice, sanitizeCss } from "@/lib/qsy";
 import { getProfileMeta } from "@/lib/profile-meta.functions";
 
 export const Route = createFileRoute("/$username")({
