@@ -1,3 +1,4 @@
+import { HomeMascot } from "@/components/qsy/home-mascot";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
