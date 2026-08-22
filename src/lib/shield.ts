@@ -15,6 +15,8 @@ const SCANNER_PATHS = [
   /^\/actuator|^\/solr|^\/druid|^\/telescope|^\/debug\b/i,
   // Rutas reservadas que jamás son usuarios ni páginas reales.
   /^\/(shell|cmd|console|config|configs|logs|log|temp|tmp|uploads|upload|files|server-status|webshell|c99|r57|admin\.php)(\/|$)/i,
+  /^\/(admin|administrator|api|v1|v2|graphql|manager|owa|jenkins|kibana)$/i,
+
 ];
 
 
