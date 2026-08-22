@@ -176,7 +176,8 @@ export function ProfileView({
                 <span
                   key={key}
                   aria-label={b.name}
-                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 bg-white/5 transition-transform hover:-translate-y-0.5"
+                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 transition-transform hover:-translate-y-0.5"
+                  style={{ background: iconChipBg }}
                 >
                   {b.img ? (
                     <img src={b.img} alt={b.name} className="size-5" loading="lazy" />
