@@ -122,14 +122,18 @@ function PublicProfile() {
           likes={likes}
           music={music}
           onLinkClick={(l) => {
-            void supabase.from("link_clicks").insert({
-              profile_id: profile.id,
-              link_id: l.id,
-              label: l.title,
-              device: detectDevice(),
-              referrer: document.referrer || "direct",
-              country: null,
-            });
+            supabase
+              .from("link_clicks")
+              .insert({
+                profile_id: profile.id,
+                link_id: l.id,
+                label: l.title,
+                device: detectDevice(),
+                referrer: document.referrer || "direct",
+                country: null,
+              })
+              .then(() => undefined);
+
           }}
         />
         <div className="mt-8 flex justify-center">
