@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, LayoutTemplate, Lock, Music4, Sparkles, Type, Wand2 } from "lucide-react";
+import { Check, Coins, Gem, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
