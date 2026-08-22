@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { ProfileStage } from "@/components/qsy/profile-stage";
