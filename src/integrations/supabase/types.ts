@@ -44,6 +44,51 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_events: {
+        Row: {
+          action: string
+          actor_name: string
+          actor_user_id: string | null
+          created_at: string
+          detail: Json
+          id: string
+          ip: string | null
+          kind: string
+          profile_id: string | null
+          source: string
+          target_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_name?: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          ip?: string | null
+          kind: string
+          profile_id?: string | null
+          source?: string
+          target_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_name?: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          ip?: string | null
+          kind?: string
+          profile_id?: string | null
+          source?: string
+          target_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       banned_usernames: {
         Row: {
           created_at: string
@@ -103,6 +148,54 @@ export type Database = {
           },
         ]
       }
+      chat_reports: {
+        Row: {
+          created_at: string
+          id: string
+          message_author_id: string | null
+          message_author_name: string
+          message_id: string | null
+          message_text: string
+          note: string
+          reason: string
+          reporter_id: string
+          reporter_name: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_author_id?: string | null
+          message_author_name?: string
+          message_id?: string | null
+          message_text?: string
+          note?: string
+          reason?: string
+          reporter_id: string
+          reporter_name?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_author_id?: string | null
+          message_author_name?: string
+          message_id?: string | null
+          message_text?: string
+          note?: string
+          reason?: string
+          reporter_id?: string
+          reporter_name?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       devblog_posts: {
         Row: {
           author_id: string | null
@@ -150,7 +243,9 @@ export type Database = {
           author_avatar: string | null
           author_name: string
           created_at: string
+          fingerprint: string | null
           id: string
+          ip: string | null
           message: string
           profile_id: string | null
           user_id: string
@@ -159,7 +254,9 @@ export type Database = {
           author_avatar?: string | null
           author_name?: string
           created_at?: string
+          fingerprint?: string | null
           id?: string
+          ip?: string | null
           message: string
           profile_id?: string | null
           user_id: string
@@ -168,7 +265,9 @@ export type Database = {
           author_avatar?: string | null
           author_name?: string
           created_at?: string
+          fingerprint?: string | null
           id?: string
+          ip?: string | null
           message?: string
           profile_id?: string | null
           user_id?: string
@@ -560,7 +659,9 @@ export type Database = {
           country: string | null
           created_at: string
           device: string | null
+          fingerprint: string | null
           id: string
+          ip: string | null
           profile_id: string
           referrer: string | null
         }
@@ -569,7 +670,9 @@ export type Database = {
           country?: string | null
           created_at?: string
           device?: string | null
+          fingerprint?: string | null
           id?: string
+          ip?: string | null
           profile_id: string
           referrer?: string | null
         }
@@ -578,7 +681,9 @@ export type Database = {
           country?: string | null
           created_at?: string
           device?: string | null
+          fingerprint?: string | null
           id?: string
+          ip?: string | null
           profile_id?: string
           referrer?: string | null
         }
