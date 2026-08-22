@@ -27,7 +27,7 @@ const MALICIOUS_QUERY = [
 
 /** Ventana simple en memoria por IP (best-effort, por instancia). */
 const WINDOW_MS = 10_000;
-const MAX_REQUESTS = 150;
+const MAX_REQUESTS = 600;
 const hits = new Map<string, { count: number; reset: number }>();
 
 function clientIp(request: Request): string {
@@ -40,7 +40,12 @@ function clientIp(request: Request): string {
   );
 }
 
-function rateLimited(request: Request): boolean {
+/** Assets y módulos del bundle: no cuentan para el límite. */
+const ASSET_PATH =
+  /^\/(@|src\/|node_modules\/|_build\/|assets\/|__l5e\/|favicon|badges\/)|\.(js|mjs|css|map|png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|json|txt|xml)$/i;
+
+function rateLimited(request: Request, path: string): boolean {
+  if (ASSET_PATH.test(path)) return false;
   const ip = clientIp(request);
   if (ip === "unknown") return false;
   const now = Date.now();
@@ -80,7 +85,7 @@ export function shieldRequest(request: Request): Response | null {
   if (path.length > 512 || url.search.length > 2048) return blocked(414);
   if (SCANNER_PATHS.some((re) => re.test(path))) return blocked(403);
   if (MALICIOUS_QUERY.some((re) => re.test(target))) return blocked(403);
-  if (rateLimited(request)) return blocked(429, 10);
+  if (rateLimited(request, path)) return blocked(429, 10);
 
   return null;
 }
@@ -89,12 +94,9 @@ export function shieldRequest(request: Request): Response | null {
 export function withSecurityHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
   headers.set("x-content-type-options", "nosniff");
-  headers.set("x-frame-options", "SAMEORIGIN");
   headers.set("referrer-policy", "strict-origin-when-cross-origin");
   headers.set("permissions-policy", "geolocation=(), microphone=(), camera=(), payment=()");
-  headers.set("cross-origin-opener-policy", "same-origin");
   headers.set("strict-transport-security", "max-age=31536000; includeSubDomains");
-  if (!headers.has("x-robots-tag")) headers.set("x-robots-tag", "noindex, nofollow");
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
