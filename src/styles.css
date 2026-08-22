@@ -195,10 +195,10 @@
 @utility text-gradient-violet {
   background: linear-gradient(
     92deg,
-    oklch(0.98 0 0) 0%,
-    oklch(0.72 0.17 288) 40%,
-    oklch(0.75 0.16 330) 75%,
-    oklch(0.86 0.1 300) 100%
+    var(--grad-1, oklch(0.98 0 0)) 0%,
+    var(--grad-2, oklch(0.72 0.17 288)) 40%,
+    var(--grad-3, oklch(0.75 0.16 330)) 75%,
+    var(--grad-4, oklch(0.86 0.1 300)) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -789,8 +789,12 @@
 }
 
 /* Dashboard: lighter violet theme */
-:root.qsy-light,
+":root.qsy-light,
 .dash-theme {
+  --grad-1: oklch(0.42 0.06 350);
+  --grad-2: oklch(0.72 0.14 350);
+  --grad-3: oklch(0.78 0.11 20);
+  --grad-4: oklch(0.60 0.09 350);
   --background: oklch(0.975 0.012 40);
   --foreground: oklch(0.30 0.045 350);
   --card: oklch(0.995 0.006 60);
@@ -819,6 +823,10 @@
 /* Dashboard dark: black + pastel pink */
 :root.qsy-dark,
 .dash-theme.dash-dark {
+  --grad-1: oklch(0.98 0 0);
+  --grad-2: oklch(0.84 0.10 350);
+  --grad-3: oklch(0.80 0.10 20);
+  --grad-4: oklch(0.92 0.05 350);
   --background: oklch(0.13 0.014 350);
   --foreground: oklch(0.97 0.012 350);
   --card: oklch(0.18 0.022 350);
