@@ -46,6 +46,41 @@ function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"form" | "sent">("form");
+  const [mode, setMode] = useState<"email" | "code">("email");
+  const [issuedCode, setIssuedCode] = useState<string | null>(null);
+  const codeRegister = useServerFn(registerWithLoginCode);
+
+  async function onCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const parsed = schema.shape.username.safeParse(username);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await codeRegister({ data: { username: parsed.data } });
+      if (!res.ok) {
+        setLoading(false);
+        toast.error(res.error);
+        return;
+      }
+      const { error } = await supabase.auth.verifyOtp({
+        type: "magiclink",
+        token_hash: res.tokenHash,
+      });
+      setLoading(false);
+      if (error) {
+        toast.error("Cuenta creada, pero no pudimos entrar", { description: error.message });
+      }
+      setIssuedCode(res.code);
+    } catch {
+      setLoading(false);
+      toast.error("No se pudo crear la cuenta con código");
+    }
+  }
+
+
 
 
   async function onSubmit(e: React.FormEvent) {
