@@ -10,9 +10,9 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "Qsy Biolink"
-const SENDER_DOMAIN = "notify.qsy.rip"
-const ROOT_DOMAIN = "qsy.rip"
-const FROM_DOMAIN = "qsy.rip"
+const SENDER_DOMAIN = "notify.mail.qsy.es"
+const ROOT_DOMAIN = "mail.qsy.es"
+const FROM_DOMAIN = "mail.qsy.es"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
