@@ -2,10 +2,11 @@ import * as React from 'react'
 import { render } from '@react-email/render'
 import { EmailAPIError, listEmailLogs, sendLovableEmail } from '@lovable.dev/email-js'
 import { SignupEmail } from './email-templates/signup'
+import { MagicLinkEmail } from './email-templates/magic-link'
 
 const SITE_NAME = 'QSY'
-const SENDER_DOMAIN = 'notify.qsy.rip'
-const FROM_DOMAIN = 'qsy.rip'
+const SENDER_DOMAIN = 'notify.mail.qsy.es'
+const FROM_DOMAIN = 'mail.qsy.es'
 const SITE_URL = 'https://qsy.rip'
 
 export type EmailLogRow = {
