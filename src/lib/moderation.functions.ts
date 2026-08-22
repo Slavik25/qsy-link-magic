@@ -15,22 +15,60 @@ type ReportInput = { messageId: string; reason: string; note?: string };
 
 async function requestContext() {
   const { getRequestHeader } = await import("@tanstack/react-start/server");
+  // cf-connecting-ip / x-real-ip los pone el edge y no se pueden falsificar
+  // desde el cliente; x-forwarded-for solo como último recurso.
   const forwarded = getRequestHeader("x-forwarded-for") ?? "";
   const ip =
-    forwarded.split(",")[0]?.trim() ||
     getRequestHeader("cf-connecting-ip") ||
     getRequestHeader("x-real-ip") ||
+    forwarded.split(",").pop()?.trim() ||
     null;
   const userAgent = getRequestHeader("user-agent") ?? null;
-  return { ip, userAgent };
+  const origin = getRequestHeader("origin") ?? "";
+  const referer = getRequestHeader("referer") ?? "";
+  const host = getRequestHeader("host") ?? "";
+  const secFetchSite = getRequestHeader("sec-fetch-site") ?? "";
+  const secFetchMode = getRequestHeader("sec-fetch-mode") ?? "";
+  return { ip, userAgent, origin, referer, host, secFetchSite, secFetchMode };
 }
+
+const BOT_UA =
+  /(powershell|curl|wget|python|httpie|postman|insomnia|axios|node-fetch|go-http|java|libwww|okhttp|scrapy|httpclient|restsharp|winhttp|bot|spider|headless)/i;
+
+/** Verifica que la petición venga de un navegador real en el mismo sitio. */
+function isBrowserRequest(ctx: Awaited<ReturnType<typeof requestContext>>) {
+  const ua = ctx.userAgent ?? "";
+  if (!ua || ua.length < 20 || BOT_UA.test(ua)) return false;
+  if (!/mozilla\//i.test(ua)) return false;
+  // Los navegadores mandan sec-fetch-* en peticiones fetch/XHR.
+  if (!ctx.secFetchSite || !ctx.secFetchMode) return false;
+  if (ctx.secFetchSite !== "same-origin") return false;
+  const sameHost = (value: string) => {
+    if (!value) return false;
+    try {
+      return new URL(value).host === ctx.host;
+    } catch {
+      return false;
+    }
+  };
+  if (!sameHost(ctx.origin) && !sameHost(ctx.referer)) return false;
+  return true;
+}
+
 
 /** Registra una visita de perfil con IP real y deja rastro en la auditoría. */
 export const trackProfileView = createServerFn({ method: "POST" })
   .inputValidator((input: ViewInput) => input)
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { ip, userAgent } = await requestContext();
+    const ctx = await requestContext();
+    const { ip, userAgent } = ctx;
+
+    // Solo navegadores reales en el mismo origen: bloquea curl/PowerShell/scripts.
+    if (!isBrowserRequest(ctx)) {
+      return { ok: false as const, reason: "blocked" };
+    }
+    if (!ip) return { ok: false as const, reason: "blocked" };
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
@@ -38,6 +76,26 @@ export const trackProfileView = createServerFn({ method: "POST" })
       .eq("id", data.profileId)
       .maybeSingle();
     if (!profile) return { ok: false as const, reason: "not_found" };
+
+    const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
+
+    // Una visita por IP y perfil cada 6 horas.
+    const { count: recentSame } = await supabaseAdmin
+      .from("profile_views")
+      .select("id", { count: "exact", head: true })
+      .eq("profile_id", profile.id)
+      .eq("ip", ip)
+      .gte("created_at", sixHoursAgo);
+    if ((recentSame ?? 0) > 0) return { ok: false as const, reason: "duplicate" };
+
+    // Tope global por IP para evitar barridos automáticos.
+    const { count: burst } = await supabaseAdmin
+      .from("profile_views")
+      .select("id", { count: "exact", head: true })
+      .eq("ip", ip)
+      .gte("created_at", oneMinuteAgo);
+    if ((burst ?? 0) >= 5) return { ok: false as const, reason: "rate_limited" };
 
     const { error } = await supabaseAdmin.from("profile_views").insert({
       profile_id: profile.id,
@@ -52,6 +110,7 @@ export const trackProfileView = createServerFn({ method: "POST" })
     if (error) {
       return { ok: false as const, reason: "rate_limited" };
     }
+
 
     await supabaseAdmin.from("audit_events").insert({
       kind: "view",
@@ -82,7 +141,9 @@ export const sendChatMessage = createServerFn({ method: "POST" })
     if (message.length > 500) throw new Error("Máximo 500 caracteres");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { ip, userAgent } = await requestContext();
+    const chatCtx = await requestContext();
+    if (!isBrowserRequest(chatCtx)) throw new Error("Petición no permitida");
+    const { ip, userAgent } = chatCtx;
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
