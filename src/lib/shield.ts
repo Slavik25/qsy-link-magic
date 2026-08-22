@@ -178,6 +178,8 @@ export function withSecurityHeaders(response: Response): Response {
   headers.set("strict-transport-security", "max-age=31536000; includeSubDomains; preload");
   headers.set("x-xss-protection", "1; mode=block");
   headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
+  headers.set("cross-origin-resource-policy", "cross-origin");
+
   headers.set("content-security-policy", CSP);
   headers.delete("x-powered-by");
 
