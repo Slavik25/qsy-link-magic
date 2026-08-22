@@ -63,10 +63,12 @@ function useSouls() {
           accent: readTheme(r.theme).accent,
           views,
           likes,
-          score: views + likes * 5,
+          // El ranking depende únicamente de las visitas del perfil.
+          score: views,
         };
       });
-      rows.sort((a, b) => b.score - a.score);
+      rows.sort((a, b) => b.score - a.score || b.likes - a.likes);
+
 
       const max = Math.max(1, rows[0]?.score ?? 1);
       return rows.map((r, i): Soul => {
