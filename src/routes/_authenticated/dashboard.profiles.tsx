@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { setActiveProfileId, useActiveProfileId, useMyProfiles } from "@/lib/qsy-data";
 import type { Profile } from "@/lib/qsy";
 import { RankBadge, RankName, RANK_PROFILE_LIMIT, normalizeRank } from "@/components/qsy/rank-badge";
-import profilesArt from "@/assets/card-32.webp.asset.json";
+import profilesArt from "@/assets/card-32.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profiles")({
   component: ProfilesPage,
