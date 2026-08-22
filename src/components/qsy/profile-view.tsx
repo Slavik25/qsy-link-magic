@@ -72,7 +72,7 @@ export function ProfileView({
   return (
     <div
       style={{ ...style, ...alphaStyle }}
-      className={`relative w-full overflow-hidden ${hoverClass} ${
+      className={`qsy-card relative w-full overflow-hidden ${hoverClass} ${
         showCard
           ? `qsy-tpl qsy-tpl-${template} ${cardAlpha < 100 ? "qsy-tpl-alpha" : ""}`
           : "border-0 bg-transparent"
@@ -88,7 +88,7 @@ export function ProfileView({
 
 
       {profile.banner_url && (
-        <div className={`relative w-full overflow-hidden ${compact ? "h-24" : "h-36 sm:h-40"}`}>
+        <div className={`qsy-banner relative w-full overflow-hidden ${compact ? "h-24" : "h-36 sm:h-40"}`}>
           <img
             src={profile.banner_url}
             alt={`Banner de ${profile.display_name || profile.username}`}
@@ -110,9 +110,9 @@ export function ProfileView({
           showCard ? (compact ? "px-5 pb-5" : "px-6 pb-8 sm:px-10 sm:pb-10") : "px-0 pb-0"
         } ${profile.banner_url ? "pt-0" : showCard ? (compact ? "pt-5" : "pt-6 sm:pt-10") : "pt-0"}`}
       >
-      <div className="relative flex flex-col items-center text-center">
+      <div className="qsy-body relative flex flex-col items-center text-center">
         <div
-          className={`relative p-[3px] ${shapeClass} ${
+          className={`qsy-avatar-ring relative p-[3px] ${shapeClass} ${
             profile.banner_url ? (compact ? "-mt-8" : "-mt-12") : ""
           }`}
           style={{
@@ -136,11 +136,11 @@ export function ProfileView({
               width={compact ? 72 : 96}
               height={compact ? 72 : 96}
               loading="lazy"
-              className={`object-cover ${shapeClass} ${compact ? "size-16" : "size-24"}`}
+              className={`qsy-avatar object-cover ${shapeClass} ${compact ? "size-16" : "size-24"}`}
             />
           ) : (
             <span
-              className={`grid place-items-center bg-background font-mono font-bold ${shapeClass} ${
+              className={`qsy-avatar qsy-avatar-fallback grid place-items-center bg-background font-mono font-bold ${shapeClass} ${
                 compact ? "size-16 text-lg" : "size-24 text-2xl"
               }`}
               style={{ color: t.accent }}
@@ -152,9 +152,9 @@ export function ProfileView({
 
 
 
-        <div className="mt-4 flex items-center gap-1.5">
+        <div className="qsy-name-row mt-4 flex items-center gap-1.5">
           <h1
-            className={`font-semibold tracking-tight ${compact ? "text-lg" : "text-2xl sm:text-3xl"} ${
+            className={`qsy-name font-semibold tracking-tight ${compact ? "text-lg" : "text-2xl sm:text-3xl"} ${
               t.font === "mono" ? "font-mono" : ""
             } ${
               t.username_effect && t.username_effect !== "none"
@@ -169,10 +169,10 @@ export function ProfileView({
             <BadgeCheck className="size-5" style={{ color: t.accent }} aria-label="Verificado" />
           )}
         </div>
-        <p className="text-sm" style={userPaint}>@{profile.username}</p>
+        <p className="qsy-username text-sm" style={userPaint}>@{profile.username}</p>
 
         {badges.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+          <div className="qsy-badges mt-3 flex flex-wrap items-center justify-center gap-1.5">
             {badges.map((entry) => {
               const key = typeof entry === "string" ? entry : entry.key;
               const obtainedAt = typeof entry === "string" ? null : (entry.obtained_at ?? null);
@@ -182,7 +182,7 @@ export function ProfileView({
                 <span
                   key={key}
                   aria-label={b.name}
-                  className="group relative grid size-7 place-items-center rounded-lg border border-white/10 transition-transform hover:-translate-y-0.5"
+                  className="qsy-badge group relative grid size-7 place-items-center rounded-lg border border-white/10 transition-transform hover:-translate-y-0.5"
                   style={{ background: iconChipBg }}
                 >
                   {b.img ? (
@@ -213,14 +213,14 @@ export function ProfileView({
         )}
 
         {profile.location && (
-          <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+          <p className="qsy-location mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="size-3" />
             {profile.location}
           </p>
         )}
 
         {profile.bio && (
-          <p className="mt-3 max-w-md text-sm" style={bioPaint}>&ldquo;{profile.bio}&rdquo;</p>
+          <p className="qsy-bio mt-3 max-w-md text-sm" style={bioPaint}>&ldquo;{profile.bio}&rdquo;</p>
         )}
 
         <ProfileDiscord theme={t} />
@@ -228,7 +228,7 @@ export function ProfileView({
         <ProfileGaming theme={t} />
 
         {(socials.length > 0 || links.length > 0) && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <div className="qsy-links mt-6 flex flex-wrap items-center justify-center gap-3">
             {socials.map((s) => {
               const Icon = iconFor(s.platform);
               return (
@@ -239,7 +239,7 @@ export function ProfileView({
                   rel="noreferrer noopener"
                   aria-label={labelFor(s.platform)}
                   title={labelFor(s.platform)}
-                  className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
+                  className="qsy-link group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
                     borderRadius: "999px",
                     background: iconChipBg,
@@ -248,7 +248,7 @@ export function ProfileView({
                   }}
                 >
                   <Icon
-                    className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
+                    className="qsy-link-icon size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
                     style={iconStyle}
                   />
                   <span
@@ -272,7 +272,7 @@ export function ProfileView({
                   onClick={() => onLinkClick?.(l)}
                   aria-label={l.title}
                   title={l.title}
-                  className="group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
+                  className="qsy-link group relative grid size-11 place-items-center border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
                     borderRadius: "999px",
                     background: iconChipBg,
@@ -281,7 +281,7 @@ export function ProfileView({
                   }}
                 >
                   <Icon
-                    className="size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
+                    className="qsy-link-icon size-[18px] opacity-80 transition-opacity group-hover:opacity-100"
                     style={iconStyle}
                   />
                   <span
@@ -326,7 +326,7 @@ export function ProfileView({
           </div>
         )}
 
-        <div className="mt-6 flex items-center justify-center gap-4 text-xs" style={statsPaint}>
+        <div className="qsy-stats mt-6 flex items-center justify-center gap-4 text-xs" style={statsPaint}>
           {t.show_views !== false && (
             <span className="inline-flex items-center gap-1.5">
               <Eye className="size-3" />

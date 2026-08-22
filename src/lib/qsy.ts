@@ -320,3 +320,18 @@ export function textPaint(
     WebkitTextFillColor: "transparent",
   } as React.CSSProperties;
 }
+
+/**
+ * Limpieza básica del CSS personalizado del biolink:
+ * evita cierres de etiqueta, expresiones JS y comportamientos peligrosos.
+ */
+export function sanitizeCss(input: string): string {
+  return (input ?? "")
+    .replace(/<\/?\s*(style|script)[^>]*>/gi, "")
+    .replace(/javascript\s*:/gi, "")
+    .replace(/expression\s*\(/gi, "")
+    .replace(/@import[^;]*;?/gi, "")
+    .replace(/behavior\s*:/gi, "")
+    .slice(0, 8000)
+    .trim();
+}

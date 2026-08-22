@@ -214,16 +214,44 @@ function AdvancedSection() {
           Inyecta CSS personalizado en tu perfil público. Solo para usuarios avanzados.
         </p>
         <Textarea
-          rows={8}
-          maxLength={4000}
+          rows={10}
+          maxLength={8000}
           spellCheck={false}
-          placeholder={"/* Tu CSS personalizado aquí */\n.profile-card { border-radius: 24px; }"}
+          placeholder={"/* Tu CSS personalizado aquí */\n.qsy-card { border-radius: 28px !important; }\n.qsy-name { letter-spacing: .1em !important; }"}
           value={t.custom_css ?? ""}
           onChange={(e) => setTheme("custom_css", e.target.value)}
           className="font-mono text-xs"
         />
+        <div className="rounded-xl border border-border/50 bg-background/40 p-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">Selectores disponibles</p>
+          <div className="mt-2 grid gap-1 text-[11px] text-muted-foreground sm:grid-cols-2">
+            {[
+              [".qsy-card", "Tarjeta principal"],
+              [".qsy-banner", "Banner superior"],
+              [".qsy-avatar", "Foto de perfil"],
+              [".qsy-avatar-ring", "Marco del avatar"],
+              [".qsy-name", "Nombre"],
+              [".qsy-username", "@usuario"],
+              [".qsy-bio", "Biografía"],
+              [".qsy-location", "Ubicación"],
+              [".qsy-badges / .qsy-badge", "Insignias"],
+              [".qsy-links / .qsy-link", "Botones de redes"],
+              [".qsy-link-icon", "Iconos de redes"],
+              [".qsy-stats", "Visitas y likes"],
+            ].map(([sel, desc]) => (
+              <p key={sel}>
+                <code className="font-mono text-foreground">{sel}</code> — {desc}
+              </p>
+            ))}
+          </div>
+          <p className="mt-3 text-[11px] text-muted-foreground">
+            Usa <code className="font-mono text-foreground">!important</code> para sobrescribir colores
+            definidos en Personalización. No se permiten <code className="font-mono">@import</code> ni scripts.
+          </p>
+        </div>
       </section>
       )}
+
 
       <SaveBar onSave={save} saving={saving} />
     </Panel>
