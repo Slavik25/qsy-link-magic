@@ -68,6 +68,7 @@ function DashboardLayout() {
   const crumb = useCrumb();
   const [open, setOpen] = useState(false);
   const { theme } = useDashTheme();
+  const [slideSidebar] = useDashPref("slide-sidebar");
 
   const needsUsername = (profile as { username_set?: boolean } | undefined)?.username_set === false;
   useEffect(() => {
@@ -96,14 +97,14 @@ function DashboardLayout() {
 
   return (
     <div
-      className={`dash-theme ${theme === "dark" ? "dash-dark" : ""} min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[252px_1fr]`}
+      className={`dash-theme ${theme === "dark" ? "dash-dark" : ""} min-h-screen bg-background text-foreground ${slideSidebar ? "" : "lg:grid lg:grid-cols-[252px_1fr]"}`}
     >
       <DashBackground />
       {/* Sidebar */}
       <aside
-        className={`z-40 flex-col border-border/60 bg-card/60 backdrop-blur-xl lg:sticky lg:top-0 lg:flex lg:h-screen lg:border-r ${
-          open ? "fixed inset-0 flex" : "hidden"
-        }`}
+        className={`z-40 flex-col border-border/60 bg-card/60 backdrop-blur-xl ${
+          slideSidebar ? "" : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:border-r"
+        } ${open ? "fixed inset-0 flex" : "hidden"}`}
       >
         <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-border/60 px-5">
           <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
@@ -126,7 +127,7 @@ function DashboardLayout() {
           <button
             onClick={() => setOpen(false)}
             aria-label="Cerrar menú"
-            className="text-muted-foreground lg:hidden"
+            className={`text-muted-foreground ${slideSidebar ? "" : "lg:hidden"}`}
           >
             <ChevronRight className="size-5" />
           </button>
@@ -223,7 +224,7 @@ function DashboardLayout() {
           <button
             onClick={() => setOpen(true)}
             aria-label="Abrir menú"
-            className="text-muted-foreground lg:hidden"
+            className={`text-muted-foreground ${slideSidebar ? "" : "lg:hidden"}`}
           >
             <Menu className="size-5" />
           </button>
