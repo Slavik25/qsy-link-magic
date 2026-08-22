@@ -30,9 +30,10 @@ export const Route = createFileRoute("/$username")({
     const description =
       m?.meta_description ??
       (m?.bio?.trim() ? m.bio.trim() : `${handle} en QSY — links, redes y música en un solo perfil.`);
-    // Tarjeta generada por QSY (avatar, nombre, @usuario y bio) salvo override premium.
-    const image =
-      m?.meta_image ?? `https://qsy.rip/api/public/og/${m?.username ?? params.username}`;
+    // Imagen del embed: override premium → avatar del perfil → tarjeta QSY por defecto.
+    const image = m?.meta_image ?? m?.avatar_url ?? "https://qsy.rip/og-default.png";
+    const largeCard = !m?.meta_image && !m?.avatar_url;
+
 
     return {
       meta: [
@@ -47,10 +48,15 @@ export const Route = createFileRoute("/$username")({
         { name: "twitter:description", content: description },
         { name: "theme-color", content: "#7c5cff" },
         { property: "og:image", content: image },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
+        ...(largeCard
+          ? [
+              { property: "og:image:width", content: "1200" },
+              { property: "og:image:height", content: "630" },
+            ]
+          : []),
         { name: "twitter:image", content: image },
-        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:card", content: largeCard ? "summary_large_image" : "summary" },
+
       ],
 
       links: m?.meta_favicon ? [{ rel: "icon", href: m.meta_favicon }] : [],

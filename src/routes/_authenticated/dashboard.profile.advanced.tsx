@@ -192,10 +192,11 @@ function AdvancedSection() {
                 {t.meta_description || draft.bio || "Bienvenido a mi página personal QSY."}
               </p>
               <img
-                src={t.meta_image || `/api/public/og/${profile?.username ?? "qsy"}`}
+                src={t.meta_image || draft.avatar_url || "/og-default.png"}
                 alt="Vista previa del embed"
                 className="mt-3 aspect-[1200/630] w-full rounded-lg border border-border/50 object-cover"
               />
+
               <p className="mt-2 text-[11px] text-muted-foreground">
                 {profileHost(profile)}/{profile?.username ?? "qsy"}
               </p>
