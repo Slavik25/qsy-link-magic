@@ -851,4 +851,6 @@
   scrollbar-color: color-mix(in oklab, var(--primary) 70%, black) oklch(0.15 0.02 350);
 }
 
-:root.qsy-light .qsy-logo-img { filter: invert(1); }
+.qsy-logo-on-light { display: none; }
+:root.qsy-light .qsy-logo-on-light { display: block; }
+:root.qsy-light .qsy-logo-on-dark { display: none; }
