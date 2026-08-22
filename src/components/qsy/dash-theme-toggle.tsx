@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 const KEY = "qsy-dash-theme";
@@ -11,13 +11,18 @@ export function readDashTheme(): DashTheme {
 
 export function useDashTheme() {
   const [theme, setTheme] = useState<DashTheme>("light");
+  const hydrated = useRef(false);
 
+  // Lee la preferencia guardada tras hidratar (evita mismatch de SSR).
   useEffect(() => {
-    setTheme(readDashTheme());
+    const stored = readDashTheme();
+    hydrated.current = true;
+    setTheme(stored);
   }, []);
 
+  // Solo persiste cuando ya se leyó lo guardado, para no pisarlo con el default.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !hydrated.current) return;
     window.localStorage.setItem(KEY, theme);
     window.dispatchEvent(new CustomEvent("qsy-dash-theme", { detail: theme }));
   }, [theme]);
@@ -27,12 +32,20 @@ export function useDashTheme() {
       const next = (e as CustomEvent<DashTheme>).detail;
       if (next === "light" || next === "dark") setTheme(next);
     }
+    function onStorage(e: StorageEvent) {
+      if (e.key === KEY && (e.newValue === "light" || e.newValue === "dark")) setTheme(e.newValue);
+    }
     window.addEventListener("qsy-dash-theme", onChange);
-    return () => window.removeEventListener("qsy-dash-theme", onChange);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("qsy-dash-theme", onChange);
+      window.removeEventListener("storage", onStorage);
+    };
   }, []);
 
   return { theme, setTheme } as const;
 }
+
 
 export function DashThemeToggle() {
   const { theme, setTheme } = useDashTheme();
