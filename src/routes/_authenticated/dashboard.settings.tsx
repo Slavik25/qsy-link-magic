@@ -68,6 +68,43 @@ function SettingsPage() {
       </section>
 
       <section className="space-y-3 rounded-2xl glass p-6">
+        <div className="flex items-center gap-2">
+          <KeyRound className="size-4 text-primary" />
+          <h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Código de acceso</h2>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Podés iniciar sesión con este código en vez de tu contraseña. No lo compartas con nadie.
+        </p>
+        <div className="flex items-center gap-2">
+          <Input
+            readOnly
+            value={showCode ? (loginCode ?? "…") : "QSY-••••-••••-••••"}
+            className="font-mono tracking-[0.14em]"
+          />
+          <Button type="button" variant="secondary" size="icon" onClick={() => setShowCode((v) => !v)}>
+            {showCode ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            onClick={() => {
+              if (!loginCode) return;
+              void navigator.clipboard.writeText(loginCode);
+              toast.success("Código copiado");
+            }}
+          >
+            <Copy className="size-4" />
+          </Button>
+        </div>
+        <Button variant="outline" onClick={rotateCode} disabled={rotating}>
+          <RefreshCw className={`size-4 ${rotating ? "animate-spin" : ""}`} />
+          {rotating ? "Generando…" : "Generar código nuevo"}
+        </Button>
+      </section>
+
+
+      <section className="space-y-3 rounded-2xl glass p-6">
         <p className="text-sm text-muted-foreground">
           Tu link público: <span className="font-mono text-foreground">{profileHost(profile)}/{profile?.username ?? "…"}</span>
         </p>
