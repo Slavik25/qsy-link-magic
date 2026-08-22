@@ -140,7 +140,7 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
   const name = user?.global_name || user?.username || "Discord";
 
   return (
-    <div className="mt-6 w-full max-w-md space-y-3">
+    <div className="mt-6 grid w-full max-w-md items-stretch gap-3 sm:grid-cols-2">
       {showUser && user && (
         <Shell accent={accent} className="p-4">
           <div className="relative flex items-center gap-3.5">
@@ -201,41 +201,50 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
       )}
 
       {showGuild && guild && (
-        <a
-          href={guild.instant_invite ?? "#"}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="block"
-        >
-          <Shell accent={accent} className="p-4 hover:-translate-y-0.5">
-            <div className="relative flex items-center gap-3.5">
-              <span
-                className="grid size-12 shrink-0 place-items-center rounded-2xl"
-                style={{ background: `color-mix(in oklab, ${accent} 18%, transparent)` }}
-              >
-                <SiDiscord className="size-6" style={{ color: accent }} />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold leading-tight">{guild.name}</p>
-                <p className="mt-1 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+        <Shell accent={accent} className="flex flex-col p-4">
+          <div className="relative flex items-center gap-3">
+            <span
+              className="grid size-11 shrink-0 place-items-center rounded-xl"
+              style={{ background: `color-mix(in oklab, ${accent} 18%, transparent)` }}
+            >
+              <SiDiscord className="size-5" style={{ color: accent }} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold leading-tight">{guild.name}</p>
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
                   <span className="size-1.5 rounded-full bg-[#23a55a]" aria-hidden />
-                  <Users className="size-3" />
-                  {guild.presence_count ?? 0} en línea
-                </p>
-              </div>
-              <span
-                className="inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-transform duration-300 group-hover:scale-105"
-                style={{
-                  background: `color-mix(in oklab, ${accent} 22%, transparent)`,
-                  color: accent,
-                }}
-              >
-                Unirse
-                <ExternalLink className="size-3" />
-              </span>
+                  {guild.presence_count ?? 0} Online
+                </span>
+                {!!guild.members?.length && (
+                  <span className="inline-flex items-center gap-1">
+                    <Users className="size-3" />
+                    {guild.members.length}+ Miembros
+                  </span>
+                )}
+              </p>
             </div>
-          </Shell>
-        </a>
+            <span className="inline-flex shrink-0 items-center gap-1 text-[9px] font-semibold uppercase tracking-wider opacity-50">
+              <SiDiscord className="size-3" />
+              Discord
+            </span>
+          </div>
+
+          <a
+            href={guild.instant_invite ?? "#"}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="relative mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-transform duration-300 hover:scale-[1.02]"
+            style={{
+              background: "linear-gradient(135deg, #5865f2, #4752c4)",
+              boxShadow: "0 12px 28px -14px #5865f2",
+            }}
+          >
+            <SiDiscord className="size-4" />
+            Unirse al servidor
+            <ExternalLink className="size-3 opacity-70" />
+          </a>
+        </Shell>
       )}
     </div>
   );
