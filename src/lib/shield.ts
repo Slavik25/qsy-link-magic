@@ -97,11 +97,28 @@ function blocked(status: number, retryAfter?: number): Response {
   });
 }
 
+/** Headers que suelen usarse para inyectar comandos o envenenar el host. */
+const RISKY_HEADERS = [
+  "user-agent",
+  "referer",
+  "x-forwarded-for",
+  "x-forwarded-host",
+  "x-original-url",
+  "x-rewrite-url",
+  "cookie",
+];
+
 /** Devuelve una respuesta de bloqueo, o null si la petición es legítima. */
 export function shieldRequest(request: Request): Response | null {
   const url = new URL(request.url);
   const path = decodeURIComponent(url.pathname);
-  const target = `${path}${url.search}`;
+  let query = url.search;
+  try {
+    query = decodeURIComponent(url.search);
+  } catch {
+    return blocked(400);
+  }
+  const target = `${path}${query}`;
 
   if (!["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"].includes(request.method)) {
     return blocked(405);
@@ -109,10 +126,24 @@ export function shieldRequest(request: Request): Response | null {
   if (path.length > 512 || url.search.length > 2048) return blocked(414);
   if (SCANNER_PATHS.some((re) => re.test(path))) return blocked(403);
   if (MALICIOUS_QUERY.some((re) => re.test(target))) return blocked(403);
+  if (COMMAND_INJECTION.some((re) => re.test(query))) return blocked(403);
+
+  const agent = request.headers.get("user-agent") ?? "";
+  if (BAD_AGENTS.test(agent)) return blocked(403);
+
+  for (const name of RISKY_HEADERS) {
+    const value = request.headers.get(name);
+    if (!value) continue;
+    if (value.length > 4096) return blocked(431);
+    if (COMMAND_INJECTION.some((re) => re.test(value))) return blocked(403);
+    if (MALICIOUS_QUERY.some((re) => re.test(value))) return blocked(403);
+  }
+
   if (rateLimited(request, path)) return blocked(429, 10);
 
   return null;
 }
+
 
 /** Cabeceras de seguridad aplicadas a toda respuesta que sale del servidor. */
 export function withSecurityHeaders(response: Response): Response {
