@@ -13,10 +13,10 @@ export function DashBackground() {
       <img
         src={src}
         alt=""
-        className="size-full object-cover opacity-[0.28] mix-blend-luminosity"
+        className="size-full object-cover opacity-[0.18] mix-blend-luminosity"
       />
-      <div className="absolute inset-0 bg-background/70" />
-      <div className="absolute inset-0 bg-primary/10" />
+      <div className="absolute inset-0 bg-background/75" />
+      <div className="absolute inset-0 bg-primary/15" />
     </div>
   );
 }
