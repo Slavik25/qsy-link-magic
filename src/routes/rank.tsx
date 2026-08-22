@@ -212,7 +212,7 @@ function RankPage() {
                     {s.avatar_url && (
                       <img
                         src={s.avatar_url}
-                        alt=""
+                        alt={`Avatar de ${s.display_name}`}
                         loading="lazy"
                         className="size-full object-cover opacity-80"
                       />
@@ -288,7 +288,7 @@ function RankPage() {
                   {s.avatar_url ? (
                     <img
                       src={s.avatar_url}
-                      alt=""
+                      alt={`Avatar de ${s.display_name}`}
                       loading="lazy"
                       width={36}
                       height={36}

@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RankRouteImport } from './routes/rank'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
@@ -97,6 +98,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TemplatesRoute = TemplatesRouteImport.update({
@@ -354,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -405,6 +412,7 @@ export interface FileRoutesByTo {
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -455,6 +463,7 @@ export interface FileRoutesById {
   '/rank': typeof RankRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -508,6 +517,7 @@ export interface FileRouteTypes {
     | '/rank'
     | '/register'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/templates'
     | '/dashboard'
     | '/onboarding'
@@ -559,6 +569,7 @@ export interface FileRouteTypes {
     | '/rank'
     | '/register'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/templates'
     | '/onboarding'
     | '/dashboard/analytics'
@@ -608,6 +619,7 @@ export interface FileRouteTypes {
     | '/rank'
     | '/register'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/templates'
     | '/_authenticated/dashboard'
     | '/_authenticated/onboarding'
@@ -661,6 +673,7 @@ export interface RootRouteChildren {
   RankRoute: typeof RankRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
   ApiPublicHooksSecurityAlertsRoute: typeof ApiPublicHooksSecurityAlertsRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
@@ -725,6 +738,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/templates': {
@@ -1171,6 +1191,7 @@ const rootRouteChildren: RootRouteChildren = {
   RankRoute: RankRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
   ApiPublicHooksSecurityAlertsRoute: ApiPublicHooksSecurityAlertsRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
