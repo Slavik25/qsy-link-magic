@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant qsylight (&:is(:root.qsy-light *));
 
 /*
  * QSY design system — dark premium, glassmorphism, subtle glow.

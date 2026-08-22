@@ -18,16 +18,16 @@ const STYLES: Record<
   obsidian: {
     label: "Obsidian",
     className:
-      "border-violet-400/40 bg-gradient-to-r from-violet-500/25 via-fuchsia-500/15 to-transparent text-violet-100 shadow-[0_0_26px_-12px_theme(colors.violet.400)] qsy-shimmer",
+      "border-violet-400/40 bg-gradient-to-r from-violet-500/25 via-fuchsia-500/15 to-transparent text-violet-100 qsylight:text-violet-700 qsylight:border-violet-500/50 qsylight:from-violet-500/20 shadow-[0_0_26px_-12px_theme(colors.violet.400)] qsy-shimmer",
     icon: Gem,
-    dot: "bg-violet-300",
+    dot: "bg-violet-500",
   },
   seraph: {
     label: "Seraph",
     className:
-      "border-amber-300/50 bg-gradient-to-r from-amber-300/25 via-amber-200/15 to-transparent text-amber-100 shadow-[0_0_28px_-10px_theme(colors.amber.300)] qsy-shimmer",
+      "border-amber-400/60 bg-gradient-to-r from-amber-300/25 via-amber-200/15 to-transparent text-amber-100 qsylight:text-amber-700 qsylight:border-amber-500/60 qsylight:from-amber-400/25 shadow-[0_0_28px_-10px_theme(colors.amber.300)] qsy-shimmer",
     icon: Crown,
-    dot: "bg-amber-200",
+    dot: "bg-amber-400",
   },
 };
 
@@ -62,7 +62,7 @@ export function RankBadge({ rank, prefix, size = "md", className = "" }: Props) 
 export function RankName({ rank, className = "" }: { rank?: string | null; className?: string }) {
   const r = normalizeRank(rank);
   const tone =
-    r === "seraph" ? "text-amber-200" : r === "obsidian" ? "text-violet-300" : "text-primary";
+    r === "seraph" ? "text-amber-300 qsylight:text-amber-700" : r === "obsidian" ? "text-violet-300 qsylight:text-violet-700" : "text-primary";
   return <span className={`font-semibold ${tone} ${className}`}>{STYLES[r].label}</span>;
 }
 
