@@ -799,6 +799,53 @@ export type Database = {
         }
         Relationships: []
       }
+      rank_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          note: string
+          profile_id: string
+          rank: string
+          reason: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string
+          profile_id: string
+          rank: string
+          reason?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string
+          profile_id?: string
+          rank?: string
+          reason?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rank_reviews_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reports: {
         Row: {
           category: string
@@ -1227,6 +1274,10 @@ export type Database = {
       new_login_code: { Args: never; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
       reconcile_shop: { Args: never; Returns: Json }
+      resolve_rank_review: {
+        Args: { _decision: string; _note?: string; _review_id: string }
+        Returns: string
+      }
       rotate_login_code: { Args: never; Returns: string }
     }
     Enums: {
