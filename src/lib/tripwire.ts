@@ -115,36 +115,6 @@ export function installTripwire() {
  * cierra lo que la CSP no alcanza dentro de la propia página.
  */
 function lockdownScripting() {
-  const w = window as unknown as Record<string, unknown>;
-
-  const denied = () => {
-    throw new Error("QSY: ejecución de scripts deshabilitada");
-  };
-
-  try {
-    Object.defineProperty(window, "eval", {
-      value: denied,
-      writable: false,
-      configurable: false,
-    });
-  } catch {
-    /* noop */
-  }
-
-  try {
-    const BlockedFunction = new Proxy(Function, {
-      apply: denied,
-      construct: denied,
-    });
-    Object.defineProperty(w, "Function", {
-      value: BlockedFunction,
-      writable: false,
-      configurable: false,
-    });
-  } catch {
-    /* noop */
-  }
-
   // Impide que un script redefina console.* o los métodos de storage para
   // montar sus propios paneles "anti-clear".
   for (const key of ["log", "clear", "warn", "error", "info", "table", "dir"]) {
