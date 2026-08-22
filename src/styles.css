@@ -665,9 +665,27 @@
   --tpl-bg: color-mix(in oklab, var(--background) 92%, transparent);
   --tpl-border: color-mix(in oklab, var(--p-accent, #fff) 22%, transparent);
   --tpl-radius: 1rem;
+  position: relative;
   background: var(--tpl-bg);
   border: 1px solid var(--tpl-border);
   border-radius: var(--tpl-radius);
+}
+/* Transparencia del layout: el fondo de la plantilla pasa a una capa con opacidad */
+.qsy-tpl-alpha {
+  background: transparent !important;
+  border-color: color-mix(in oklab, var(--tpl-border) calc(var(--p-card-alpha, 1) * 100%), transparent);
+  backdrop-filter: none !important;
+}
+.qsy-tpl-alpha::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--tpl-bg);
+  background-size: inherit;
+  opacity: var(--p-card-alpha, 1);
+  pointer-events: none;
 }
 .qsy-tpl-glass {
   --tpl-bg: color-mix(in oklab, var(--background) 60%, transparent);
