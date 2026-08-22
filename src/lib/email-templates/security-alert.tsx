@@ -12,7 +12,7 @@ export interface SecurityAlertProps {
 export const SecurityAlertEmail = ({ count, items }: SecurityAlertProps) => (
   <Html lang="es" dir="ltr">
     <Head />
-    <Preview>{count} alerta(s) de seguridad en QSY</Preview>
+    <Preview>{`${count} alerta(s) de seguridad en QSY`}</Preview>
     <EmailShell
       siteName="QSY"
       title="Alertas de seguridad"
