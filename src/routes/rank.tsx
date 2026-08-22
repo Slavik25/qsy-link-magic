@@ -215,7 +215,7 @@ function RankPage() {
                   <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-border/60 bg-background/85 px-2 py-1 text-[10px] font-medium opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
                     #{i + 1} {s.display_name}
                   </span>
-                </button>
+                </Link>
               ))}
             </div>
 
