@@ -37,3 +37,43 @@ export const checkBanStatus = createServerFn({ method: "POST" })
 
     return { banned: !!rows?.length };
   });
+
+type ConsoleAlertInput = {
+  signal: string;
+  detail?: string;
+  userId?: string | null;
+  fingerprint?: string;
+};
+
+/**
+ * Registra (solo registra: nunca banea) señales de manipulación desde la
+ * consola del navegador para que queden visibles en el panel de auditoría.
+ */
+export const reportConsoleSignal = createServerFn({ method: "POST" })
+  .inputValidator((input: ConsoleAlertInput) => ({
+    signal: String(input?.signal ?? "unknown").slice(0, 64),
+    detail: String(input?.detail ?? "").slice(0, 500),
+    userId: input?.userId ? String(input.userId).slice(0, 64) : null,
+    fingerprint: String(input?.fingerprint ?? "").slice(0, 64),
+  }))
+  .handler(async ({ data }) => {
+    const { requestIp, requestUserAgent } = await import("./tripwire-request.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    await supabaseAdmin.from("audit_events").insert({
+      kind: "shop",
+      action: "console_tamper_detected",
+      actor_user_id: data.userId,
+      actor_name: "console",
+      source: "browser",
+      ip: requestIp(),
+      user_agent: requestUserAgent(),
+      detail: {
+        signal: data.signal,
+        detail: data.detail,
+        fingerprint: data.fingerprint,
+      },
+    });
+
+    return { logged: true };
+  });

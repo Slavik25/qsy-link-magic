@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { BannedScreen } from "@/components/qsy/banned-screen";
-import { deviceFingerprint, installTripwire } from "@/lib/tripwire";
+import { deviceFingerprint, installConsoleWatch, installTripwire } from "@/lib/tripwire";
 import { checkBanStatus } from "@/lib/tripwire.functions";
 
 /**
@@ -43,6 +43,8 @@ export function BanGuard({ children }: { children: ReactNode }) {
           setBanned(Boolean(res?.banned));
         })
         .catch(() => undefined);
+
+    installConsoleWatch(() => userId);
 
     verify();
     const timer = window.setInterval(verify, 20000);

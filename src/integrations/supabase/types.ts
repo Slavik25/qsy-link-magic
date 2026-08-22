@@ -881,6 +881,30 @@ export type Database = {
           },
         ]
       }
+      security_alert_deliveries: {
+        Row: {
+          delivered_at: string
+          error: string | null
+          event_id: string
+          ok: boolean
+          target: string
+        }
+        Insert: {
+          delivered_at?: string
+          error?: string | null
+          event_id: string
+          ok?: boolean
+          target: string
+        }
+        Update: {
+          delivered_at?: string
+          error?: string | null
+          event_id?: string
+          ok?: boolean
+          target?: string
+        }
+        Relationships: []
+      }
       service_status: {
         Row: {
           id: string
@@ -1202,6 +1226,7 @@ export type Database = {
       mission_progress: { Args: { _key: string }; Returns: number }
       new_login_code: { Args: never; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
+      reconcile_shop: { Args: never; Returns: Json }
       rotate_login_code: { Args: never; Returns: string }
     }
     Enums: {
