@@ -2,6 +2,21 @@ import { createStart, createCsrfMiddleware, createMiddleware } from "@tanstack/r
 
 import { renderErrorPage } from "./lib/error-page";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+import { shieldRequest, withSecurityHeaders } from "./lib/shield";
+
+// Escudo anti-escaneo/inyección/flood. Corre antes que cualquier otra cosa.
+const shieldMiddleware = createMiddleware().server(async ({ next, request }) => {
+  const url = new URL(request.url);
+  if (url.pathname.startsWith("/lovable/")) return next();
+  const blockedResponse = shieldRequest(request);
+  if (blockedResponse) return blockedResponse;
+  const result = await next();
+  const response = (result as { response?: Response }).response;
+  if (response instanceof Response) {
+    (result as { response: Response }).response = withSecurityHeaders(response);
+  }
+  return result;
+});
 
 const errorMiddleware = createMiddleware().server(async ({ next, request }) => {
   const url = new URL(request.url);
@@ -33,5 +48,5 @@ const csrfMiddleware = createCsrfMiddleware({
 
 export const startInstance = createStart(() => ({
   functionMiddleware: [attachSupabaseAuth],
-  requestMiddleware: [errorMiddleware, csrfMiddleware],
+  requestMiddleware: [shieldMiddleware, errorMiddleware, csrfMiddleware],
 }));
