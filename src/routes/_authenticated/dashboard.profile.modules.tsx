@@ -3,6 +3,8 @@ import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { detectEmbed } from "@/lib/media";
+import type { MediaItem } from "@/lib/qsy";
 import { Panel, SaveBar, ToggleRow, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/modules")({
@@ -19,6 +21,10 @@ function ModulesSection() {
   const { draft, setTheme, save, saving } = useProfileDraft();
   const t = draft.theme;
   const messages = t.typewriter ?? [];
+  const media = t.media ?? [];
+
+  const setMedia = (i: number, patch: Partial<MediaItem>) =>
+    setTheme("media", media.map((m, idx) => (idx === i ? { ...m, ...patch } : m)));
 
   const setMessage = (i: number, value: string) =>
     setTheme("typewriter", messages.map((m, idx) => (idx === i ? value : m)));
@@ -102,6 +108,65 @@ function ModulesSection() {
           onClick={() => setTheme("typewriter", [...messages, ""])}
         >
           <Plus className="size-4" /> Añadir Mensaje
+        </Button>
+      </section>
+
+      <section className="space-y-3 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em]">Música y vídeos</h2>
+        <p className="text-xs text-muted-foreground">
+          Pega enlaces de YouTube, Spotify, SoundCloud o Apple Music y se mostrarán como
+          reproductores dentro de tu biolink.
+        </p>
+
+        {media.length === 0 ? (
+          <p className="text-xs italic text-muted-foreground">Todavía no añadiste ningún medio.</p>
+        ) : (
+          <div className="space-y-3">
+            {media.map((m, i) => {
+              const embed = detectEmbed(m.url);
+              return (
+                <div key={i} className="space-y-2 rounded-xl border border-border/50 p-3">
+                  <div className="flex gap-2">
+                    <Input
+                      value={m.url}
+                      placeholder="https://open.spotify.com/track/… o https://youtu.be/…"
+                      onChange={(e) => setMedia(i, { url: e.target.value })}
+                    />
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      aria-label="Eliminar medio"
+                      className="shrink-0 rounded-xl"
+                      onClick={() => setTheme("media", media.filter((_, idx) => idx !== i))}
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    maxLength={60}
+                    value={m.title ?? ""}
+                    placeholder="Título (opcional)"
+                    onChange={(e) => setMedia(i, { title: e.target.value })}
+                  />
+                  <p className="text-[11px] text-muted-foreground">
+                    {m.url
+                      ? embed
+                        ? `Detectado: ${embed.provider}`
+                        : "Enlace no soportado todavía."
+                      : "Pega un enlace para previsualizarlo."}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <Button
+          variant="secondary"
+          className="w-full rounded-xl"
+          onClick={() => setTheme("media", [...media, { url: "" }])}
+        >
+          <Plus className="size-4" /> Añadir música o vídeo
         </Button>
       </section>
 

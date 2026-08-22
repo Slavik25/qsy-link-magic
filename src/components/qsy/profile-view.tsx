@@ -2,6 +2,7 @@ import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
 import { ProfileGaming } from "@/components/qsy/profile-gaming";
+import { ProfileMedia } from "@/components/qsy/profile-media";
 import { iconFor, labelFor, textPaint, type Profile, type ProfileLink, type Social } from "@/lib/qsy";
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
@@ -289,6 +290,8 @@ export function ProfileView({
             })}
           </div>
         )}
+
+        {t.media && t.media.length > 0 && <ProfileMedia theme={t} items={t.media} />}
 
         {t.audio_url && !isFloatingPlayer(t) && (
           <div className="mt-6 flex w-full justify-center">
