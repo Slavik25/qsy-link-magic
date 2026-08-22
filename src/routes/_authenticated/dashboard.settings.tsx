@@ -21,10 +21,34 @@ function SettingsPage() {
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginCode, setLoginCode] = useState<string | null>(null);
+  const [showCode, setShowCode] = useState(false);
+  const [rotating, setRotating] = useState(false);
 
   useEffect(() => {
     void supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ""));
   }, []);
+
+  useEffect(() => {
+    void (async () => {
+      const { data } = await supabase.from("login_codes").select("code").maybeSingle();
+      setLoginCode((data as { code?: string } | null)?.code ?? null);
+    })();
+  }, []);
+
+  async function rotateCode() {
+    setRotating(true);
+    const { data, error } = await supabase.rpc("rotate_login_code");
+    setRotating(false);
+    if (error) {
+      toast.error("No se pudo generar el código", { description: error.message });
+      return;
+    }
+    setLoginCode(data as unknown as string);
+    setShowCode(true);
+    toast.success("Nuevo código generado");
+  }
+
 
   async function changePassword() {
     if (password.length < 6) {
