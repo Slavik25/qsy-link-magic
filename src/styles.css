@@ -790,24 +790,27 @@
 
 /* Dashboard: lighter violet theme */
 .dash-theme {
-  --background: oklch(0.15 0.045 292);
-  --foreground: oklch(0.985 0.005 292);
-  --card: oklch(0.26 0.08 292);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.24 0.075 292);
-  --popover-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.32 0.07 292);
-  --muted-foreground: oklch(0.86 0.035 292);
-  --secondary: oklch(0.32 0.075 292);
-  --secondary-foreground: oklch(0.99 0 0);
-  --accent: oklch(0.38 0.10 292);
-  --accent-foreground: oklch(0.99 0 0);
-  --border: oklch(0.62 0.12 292 / 40%);
-  --input: oklch(0.62 0.12 292 / 35%);
-  --primary: oklch(0.72 0.19 292);
-  --primary-foreground: oklch(0.14 0.04 292);
-  --ring: oklch(0.72 0.19 292);
-  --sidebar-primary: oklch(0.72 0.19 292);
-  --surface: color-mix(in oklab, var(--card) 78%, transparent);
-  --surface-strong: color-mix(in oklab, var(--card) 92%, transparent);
+  --background: oklch(0.975 0.012 40);
+  --foreground: oklch(0.30 0.045 350);
+  --card: oklch(0.995 0.006 60);
+  --card-foreground: oklch(0.30 0.045 350);
+  --popover: oklch(0.99 0.008 60);
+  --popover-foreground: oklch(0.30 0.045 350);
+  --muted: oklch(0.955 0.018 350);
+  --muted-foreground: oklch(0.50 0.045 350);
+  --secondary: oklch(0.94 0.028 350);
+  --secondary-foreground: oklch(0.32 0.05 350);
+  --accent: oklch(0.91 0.045 350);
+  --accent-foreground: oklch(0.30 0.05 350);
+  --border: oklch(0.62 0.09 350 / 22%);
+  --input: oklch(0.62 0.09 350 / 26%);
+  --primary: oklch(0.80 0.11 350);
+  --primary-foreground: oklch(0.26 0.05 350);
+  --ring: oklch(0.80 0.11 350);
+  --sidebar-primary: oklch(0.80 0.11 350);
+  --destructive: oklch(0.62 0.18 25);
+  --surface: color-mix(in oklab, var(--card) 85%, transparent);
+  --surface-strong: color-mix(in oklab, var(--card) 96%, transparent);
+  --shadow-glow: 0 0 0 1px var(--border), 0 20px 50px -28px color-mix(in oklab, var(--primary) 60%, transparent);
+  scrollbar-color: color-mix(in oklab, var(--primary) 70%, white) oklch(0.95 0.015 350);
 }
