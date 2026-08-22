@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   Activity,
+  Flag,
   Gauge,
+  ScrollText,
   Gift,
   Image as ImageIcon,
   KeyRound,
