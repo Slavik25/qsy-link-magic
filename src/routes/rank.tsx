@@ -160,12 +160,15 @@ function RankPage() {
             className="relative mt-8 h-[640px] w-full cursor-grab overflow-hidden active:cursor-grabbing"
             onPointerDown={(e) => {
               drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
-              (e.target as Element).setPointerCapture?.(e.pointerId);
+              movedRef.current = false;
             }}
             onPointerMove={(e) => {
               const d = drag.current;
               if (!d) return;
-              setPan({ x: d.px + (e.clientX - d.x), y: d.py + (e.clientY - d.y) });
+              const dx = e.clientX - d.x;
+              const dy = e.clientY - d.y;
+              if (Math.abs(dx) + Math.abs(dy) > 5) movedRef.current = true;
+              setPan({ x: d.px + dx, y: d.py + dy });
             }}
             onPointerUp={() => (drag.current = null)}
             onPointerLeave={() => (drag.current = null)}
