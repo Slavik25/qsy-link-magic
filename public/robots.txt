@@ -1,5 +1,11 @@
 # que haces pendejo virgo
-# no hay nada para ti aca. anda a laburar.
+# nada interesante aca, pero los buscadores pasan.
 
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /api/
+Disallow: /lovable/
+
+Sitemap: https://qsy.rip/sitemap.xml
