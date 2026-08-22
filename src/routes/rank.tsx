@@ -286,7 +286,7 @@ function RankPage() {
                 >
                   <span className="w-8 font-mono text-sm text-primary">#{i + 1}</span>
                   <img
-                    src={s.avatar_url || "https://i.pravatar.cc/80"}
+                    src={s.avatar_url ?? ""}
                     alt=""
                     loading="lazy"
                     width={36}
