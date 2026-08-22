@@ -109,10 +109,10 @@ export function installTripwire() {
 }
 
 /**
- * Bloquea las vías que usan los scripts pegados en la consola: `eval`,
- * `new Function(...)` y la sobreescritura de `console`/`localStorage`.
- * La CSP del servidor ya prohíbe `unsafe-eval` en los dominios públicos; esto
- * cierra lo que la CSP no alcanza dentro de la propia página.
+ * Congela `console` y los métodos de `localStorage` para que los scripts
+ * pegados en la consola no puedan montar sus paneles "anti-clear".
+ * La CSP del servidor ya prohíbe `eval` / `new Function` en los dominios
+ * públicos, que es lo que usan esos payloads para ejecutarse.
  */
 function lockdownScripting() {
   // Impide que un script redefina console.* o los métodos de storage para
