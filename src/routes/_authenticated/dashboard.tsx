@@ -23,7 +23,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { toast } from "sonner";
-import { QsyLogo } from "@/components/qsy/logo";
+import qsyLogoAsset from "@/assets/qsy-logo.png.asset.json";
 import { DashBackground } from "@/components/qsy/dash-background";
 import { LangSwitcher } from "@/components/qsy/lang-switcher";
 import { DashThemeToggle, useDashTheme } from "@/components/qsy/dash-theme-toggle";
