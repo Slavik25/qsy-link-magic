@@ -171,6 +171,24 @@ function FeatureTable() {
 }
 
 function RankPage() {
+  const checkout = useServerFn(createDodoCheckout);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function upgrade(rank: PaidRank) {
+    setBusy(rank);
+    try {
+      const { url } = await checkout({
+        data: { rank, returnUrl: `${window.location.origin}/dashboard/rank` },
+      });
+      window.location.href = url;
+    } catch (e) {
+      setBusy(null);
+      toast.error("No se pudo abrir el pago", {
+        description: e instanceof Error ? e.message : "Intenta de nuevo en unos minutos.",
+      });
+    }
+  }
+
   return (
     <div className="space-y-8">
       <header>
