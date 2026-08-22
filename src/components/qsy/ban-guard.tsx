@@ -20,8 +20,6 @@ export function BanGuard({ children }: { children: ReactNode }) {
       /* noop */
     }
 
-    const onBan = () => setBanned(true);
-    window.addEventListener("qsy:banned", onBan);
 
     let userId: string | null = null;
     try {
