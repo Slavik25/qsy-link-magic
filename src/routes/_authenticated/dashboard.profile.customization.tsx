@@ -255,23 +255,93 @@ function CustomizationSection() {
         </div>
       </Group>
 
-      <Group label="Colores de tarjeta">
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <ColorField
-            label="Primary text"
-            value={t.color_text ?? "#ffffff"}
-            onChange={(v) => setTheme("color_text", v)}
+      <Group label="Colores del biolink">
+        <div className="grid gap-3 lg:grid-cols-2">
+          <PaintField
+            label="Nombre visible"
+            sample={draft.display_name || "qsy"}
+            angle={t.grad_angle ?? 90}
+            color={t.color_name ?? "#ffffff"}
+            color2={t.color_name_2 ?? "#c6f24e"}
+            gradient={t.grad_name === true}
+            onColor={(v) => setTheme("color_name", v)}
+            onColor2={(v) => setTheme("color_name_2", v)}
+            onGradient={(v) => setTheme("grad_name", v)}
           />
-          <ColorField label="Accent / glow" value={t.accent} onChange={(v) => setTheme("accent", v)} />
-          <ColorField
-            label="Icon color"
-            value={t.color_icon ?? "#ffffff"}
-            onChange={(v) => setTheme("color_icon", v)}
+          <PaintField
+            label="Usuario (@handle)"
+            sample={`@${draft.display_name ? draft.display_name.toLowerCase() : "qsy"}`}
+            angle={t.grad_angle ?? 90}
+            color={t.color_username ?? "#a1a1aa"}
+            color2={t.color_username_2 ?? "#ffffff"}
+            gradient={t.grad_username === true}
+            onColor={(v) => setTheme("color_username", v)}
+            onColor2={(v) => setTheme("color_username_2", v)}
+            onGradient={(v) => setTheme("grad_username", v)}
           />
-          <ColorField
-            label="Card border"
-            value={t.color_border ?? "#ffffff"}
-            onChange={(v) => setTheme("color_border", v)}
+          <PaintField
+            label="Bio / descripción"
+            sample="Bio"
+            angle={t.grad_angle ?? 90}
+            color={t.color_bio ?? "#e4e4e7"}
+            color2={t.color_bio_2 ?? "#ffffff"}
+            gradient={t.grad_bio === true}
+            onColor={(v) => setTheme("color_bio", v)}
+            onColor2={(v) => setTheme("color_bio_2", v)}
+            onGradient={(v) => setTheme("grad_bio", v)}
+          />
+          <PaintField
+            label="Visitas y likes"
+            sample="0 visitas"
+            angle={t.grad_angle ?? 90}
+            color={t.color_stats ?? "#a1a1aa"}
+            color2={t.color_stats_2 ?? "#ffffff"}
+            gradient={t.grad_stats === true}
+            onColor={(v) => setTheme("color_stats", v)}
+            onColor2={(v) => setTheme("color_stats_2", v)}
+            onGradient={(v) => setTheme("grad_stats", v)}
+          />
+          <PaintField
+            label="Iconos de redes"
+            sample="◆"
+            angle={t.grad_angle ?? 90}
+            color={t.color_icon ?? "#ffffff"}
+            color2={t.color_icon_2 ?? "#c6f24e"}
+            gradient={t.grad_icon === true}
+            onColor={(v) => setTheme("color_icon", v)}
+            onColor2={(v) => setTheme("color_icon_2", v)}
+            onGradient={(v) => setTheme("grad_icon", v)}
+          />
+          <div className="space-y-3 rounded-xl border border-border/60 bg-surface-strong/30 p-3">
+            <ColorField label="Accent / glow" value={t.accent} onChange={(v) => setTheme("accent", v)} />
+            <ColorField
+              label="Borde de la tarjeta"
+              value={t.color_border ?? "#ffffff"}
+              onChange={(v) => setTheme("color_border", v)}
+            />
+            <ColorField
+              label="Fondo de iconos e insignias"
+              value={t.color_icon_bg ?? "#ffffff"}
+              onChange={(v) => setTheme("color_icon_bg", v)}
+            />
+          </div>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-surface-strong/30 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium">Ángulo de los degradados</p>
+            <span className="rounded-md border border-border px-2 py-1 font-mono text-xs">
+              {t.grad_angle ?? 90}°
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={360}
+            step={5}
+            value={t.grad_angle ?? 90}
+            onChange={(e) => setTheme("grad_angle", Number(e.target.value))}
+            aria-label="Ángulo de los degradados"
+            className="relative z-10 mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/15 accent-[var(--primary)]"
           />
         </div>
       </Group>
