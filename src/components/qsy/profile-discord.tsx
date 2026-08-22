@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { lookupDiscord } from "@/lib/discord.functions";
 import { Users, ExternalLink } from "lucide-react";
 import { SiDiscord } from "react-icons/si";
 import type { ThemeConfig } from "@/lib/qsy";
@@ -213,6 +216,25 @@ export function ProfileDiscord({ theme }: { theme: ThemeConfig }) {
       alive = false;
     };
   }, [showGuild, guildId]);
+
+  const doLookup = useServerFn(lookupDiscord);
+  const { data: bot } = useQuery({
+    queryKey: ["discord-lookup", userId, guildId],
+    queryFn: () => doLookup({ data: { userId: showUser ? userId : undefined, guildId: showGuild ? guildId : undefined } }),
+    enabled: showUser || showGuild,
+    staleTime: 5 * 60_000,
+  });
+
+  useEffect(() => {
+    if (bot?.user) setUser((prev) => (prev?.avatar ? prev : (bot.user as DUser)));
+    if (bot?.guild)
+      setGuildMeta((prev) => ({
+        ...prev,
+        icon: bot.guild!.icon,
+        banner: bot.guild!.banner,
+        name: bot.guild!.name,
+      }));
+  }, [bot]);
 
   if (!showUser && !showGuild) return null;
 
