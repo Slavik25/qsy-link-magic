@@ -293,3 +293,23 @@ export const TEMPLATES = [
   { id: "creator", name: "Creator", accent: "#ffb347", desc: "Pensado para contenido y comunidad." },
   { id: "developer", name: "Developer", accent: "#22d3ee", desc: "Monoespaciado, técnico, directo." },
 ];
+
+/** Builds a CSS style for text that can be a solid color or a 2-stop gradient. */
+export function textPaint(
+  color: string | undefined,
+  color2: string | undefined,
+  gradient: boolean | undefined,
+  angle = 90,
+  fallback = "#ffffff",
+): React.CSSProperties {
+  const a = color || fallback;
+  if (!gradient) return { color: a };
+  const b = color2 || a;
+  return {
+    backgroundImage: `linear-gradient(${angle}deg, ${a}, ${b})`,
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text",
+    color: "transparent",
+    WebkitTextFillColor: "transparent",
+  } as React.CSSProperties;
+}
