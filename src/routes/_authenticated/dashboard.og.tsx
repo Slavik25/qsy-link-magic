@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Check, Copy, Crown, Loader2, Search, Sparkles, Tag, Trash2, X } from "lucide-react";
+import { Check, Copy, Loader2, Search, Sparkles, Tag, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,22 +15,18 @@ export const Route = createFileRoute("/_authenticated/dashboard/og")({
       { title: "Nombres OG · QSY" },
       {
         name: "description",
-        content: "Consulta la disponibilidad de nombres OG de 3 y 4 letras en QSY y ponles precio si quieres venderlos.",
+        content: "Explora los nombres OG de 3 y 4 caracteres ya creados en QSY y descubre cuáles están en venta.",
       },
       { property: "og:title", content: "Nombres OG · QSY" },
-      { property: "og:description", content: "Disponibilidad y mercado de nombres cortos en QSY." },
+      { property: "og:description", content: "Mercado de nombres cortos ya registrados en QSY." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
-const LETTERS = "abcdefghijklmnopqrstuvwxyz";
-const DIGITS = "0123456789";
 const LENGTHS = [3, 4] as const;
 type Len = (typeof LENGTHS)[number];
-type Charset = "letters" | "alnum";
-const MAX_RESULTS = 240;
 const CURRENCIES = ["USD", "EUR", "COINS"] as const;
 type Currency = (typeof CURRENCIES)[number];
 
@@ -45,6 +41,14 @@ type Listing = {
   profile_id: string;
 };
 
+type OgName = {
+  id: string;
+  username: string;
+  display_name: string;
+  avatar_url: string | null;
+  uid: number;
+};
+
 function money(price: number, currency: string) {
   if (currency === "COINS") return `${price.toLocaleString("es")} coins`;
   return `${currency === "EUR" ? "€" : "$"}${price.toLocaleString("es")}`;
@@ -55,20 +59,16 @@ function useOgData() {
     queryKey: ["og-names"],
     staleTime: 30_000,
     queryFn: async () => {
-      const taken = new Set<string>();
+      const names: OgName[] = [];
       for (const pattern of ["___", "____"]) {
         const { data, error } = await supabase
           .from("profiles")
-          .select("username")
+          .select("id,username,display_name,avatar_url,uid")
           .like("username", pattern)
+          .order("uid", { ascending: true })
           .limit(5000);
         if (error) throw error;
-        for (const row of data ?? []) taken.add(row.username.toLowerCase());
-      }
-      const { data: banned } = await supabase.from("banned_usernames").select("name").limit(5000);
-      for (const row of banned ?? []) {
-        const n = row.name.toLowerCase();
-        if (n.length === 3 || n.length === 4) taken.add(n);
+        for (const row of data ?? []) names.push(row as OgName);
       }
       const { data: listingRows } = await supabase
         .from("og_listings")
@@ -76,8 +76,8 @@ function useOgData() {
         .neq("status", "sold")
         .limit(2000);
       const listings = new Map<string, Listing>();
-      for (const l of (listingRows ?? []) as Listing[]) listings.set(l.username.toLowerCase(), l);
-      return { taken, listings };
+      for (const l of (listingRows ?? []) as Listing[]) listings.set(l.profile_id, l);
+      return { names, listings };
     },
   });
 }
@@ -98,29 +98,13 @@ function useMyOgProfiles() {
   });
 }
 
-function* combos(chars: string, len: number): Generator<string> {
-  const idx = new Array(len).fill(0);
-  const total = Math.pow(chars.length, len);
-  for (let i = 0; i < total; i++) {
-    let out = "";
-    for (let p = 0; p < len; p++) out += chars[idx[p]];
-    yield out;
-    for (let p = len - 1; p >= 0; p--) {
-      idx[p]++;
-      if (idx[p] < chars.length) break;
-      idx[p] = 0;
-    }
-  }
-}
-
 function OgNamesPage() {
   const qc = useQueryClient();
   const { data, isLoading, isError } = useOgData();
   const { data: myProfiles } = useMyOgProfiles();
-  const [len, setLen] = useState<Len>(3);
-  const [charset, setCharset] = useState<Charset>("letters");
+  const [len, setLen] = useState<Len | "all">("all");
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"free" | "all" | "sale">("free");
+  const [filter, setFilter] = useState<"all" | "sale">("all");
 
   const [profileId, setProfileId] = useState("");
   const [price, setPrice] = useState("");
@@ -128,46 +112,25 @@ function OgNamesPage() {
   const [contact, setContact] = useState("");
   const [note, setNote] = useState("");
 
-  const chars = charset === "letters" ? LETTERS : LETTERS + DIGITS;
-  const taken = data?.taken;
   const listings = data?.listings;
 
   const results = useMemo(() => {
-    if (!taken) return [] as { name: string; free: boolean; listing?: Listing | undefined }[];
     const q = query.trim().toLowerCase();
-    const out: { name: string; free: boolean; listing?: Listing | undefined }[] = [];
-    if (filter === "sale") {
-      for (const [name, listing] of listings ?? []) {
-        if (name.length !== len) continue;
-        if (q && !name.includes(q)) continue;
-        out.push({ name, free: false, listing });
-      }
-      return out.sort((a, b) => (a.listing?.price ?? 0) - (b.listing?.price ?? 0));
-    }
-    for (const name of combos(chars, len)) {
-      if (q && !name.includes(q)) continue;
-      const free = !taken.has(name);
-      if (filter === "free" && !free) continue;
-      out.push({ name, free, listing: listings?.get(name) });
-      if (out.length >= MAX_RESULTS) break;
-    }
-    return out;
-  }, [taken, listings, chars, len, query, filter]);
+    return (data?.names ?? [])
+      .filter((n) => (len === "all" ? true : n.username.length === len))
+      .filter((n) => (q ? n.username.toLowerCase().includes(q) : true))
+      .map((n) => ({ ...n, listing: listings?.get(n.id) }))
+      .filter((n) => (filter === "sale" ? Boolean(n.listing) : true))
+      .sort((a, b) => {
+        if (Boolean(a.listing) !== Boolean(b.listing)) return a.listing ? -1 : 1;
+        return a.username.localeCompare(b.username);
+      });
+  }, [data, listings, len, query, filter]);
 
-  const freeCount = useMemo(() => {
-    if (!taken) return 0;
-    let n = 0;
-    for (const name of combos(chars, len)) if (!taken.has(name)) n++;
-    return n;
-  }, [taken, chars, len]);
-
-  const saleCount = useMemo(() => {
-    let n = 0;
-    for (const [name] of listings ?? []) if (name.length === len) n++;
-    return n;
-  }, [listings, len]);
-
-  const totalCount = Math.pow(chars.length, len);
+  const saleCount = useMemo(
+    () => (data?.names ?? []).filter((n) => listings?.has(n.id)).length,
+    [data, listings],
+  );
 
   const myListings = useMemo(() => {
     const ids = new Set((myProfiles ?? []).map((p) => p.id));
@@ -219,8 +182,8 @@ function OgNamesPage() {
 
   async function copy(name: string) {
     try {
-      await navigator.clipboard.writeText(name);
-      toast.success(`"${name}" copiado`, { description: `Úsalo como ${DEFAULT_DOMAIN}/${name}` });
+      await navigator.clipboard.writeText(`${DEFAULT_DOMAIN}/${name}`);
+      toast.success(`Enlace de "${name}" copiado`);
     } catch {
       toast.error("No se pudo copiar");
     }
@@ -232,19 +195,27 @@ function OgNamesPage() {
         <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
           <Sparkles className="size-3.5" /> Nombres OG
         </p>
-        <h1 className="mt-2 text-2xl font-semibold">Disponibilidad y mercado de nombres OG</h1>
+        <h1 className="mt-2 text-2xl font-semibold">Mercado de nombres OG creados</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          Solo los nombres de 3 y 4 caracteres cuentan como OG. Consulta cuáles siguen libres, cuáles ya
-          están creados en QSY y cuáles están en venta. Todo perfil con un nombre OG recibe la insignia
-          <span className="mx-1 inline-flex items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/10 px-1.5 py-0.5 text-[11px] font-semibold text-amber-300">
-            <Crown className="size-3" /> OG
-          </span>
-          automáticamente.
+          Aquí solo aparecen los nombres de 3 y 4 caracteres que ya existen en QSY. Mira quién los tiene y
+          cuáles están en venta con el valor que le puso su dueño. La insignia OG es independiente: se
+          entrega únicamente a los primeros 50 miembros de QSY.
         </p>
       </header>
 
       <section className="space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setLen("all")}
+            className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-all ${
+              len === "all"
+                ? "border-primary/60 bg-primary/10 text-primary"
+                : "border-border/60 bg-card/40 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Todos
+          </button>
           {LENGTHS.map((l) => (
             <button
               key={l}
@@ -259,21 +230,6 @@ function OgNamesPage() {
               {l} caracteres
             </button>
           ))}
-          <span className="mx-1 h-6 w-px bg-border/60" />
-          {(["letters", "alnum"] as Charset[]).map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCharset(c)}
-              className={`rounded-xl border px-3 py-2 text-xs font-semibold transition-all ${
-                charset === c
-                  ? "border-primary/60 bg-primary/10 text-primary"
-                  : "border-border/60 bg-card/40 text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {c === "letters" ? "Solo letras" : "Letras + números"}
-            </button>
-          ))}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -282,14 +238,13 @@ function OgNamesPage() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))}
-              placeholder="Filtra por letras, ej. qs"
+              placeholder="Busca un nombre, ej. qs"
               maxLength={4}
               className="pl-9"
             />
           </div>
           {(
             [
-              ["free", "Disponibles"],
               ["all", "Todos"],
               ["sale", "En venta"],
             ] as const
@@ -309,62 +264,66 @@ function OgNamesPage() {
         <p className="text-xs text-muted-foreground">
           {isLoading ? (
             <span className="inline-flex items-center gap-2">
-              <Loader2 className="size-3.5 animate-spin" /> Analizando nombres registrados…
+              <Loader2 className="size-3.5 animate-spin" /> Cargando nombres registrados…
             </span>
           ) : isError ? (
             "No se pudo cargar la lista de nombres."
           ) : (
             <>
-              <span className="font-semibold text-foreground">{freeCount.toLocaleString("es")}</span> libres de{" "}
-              {totalCount.toLocaleString("es")} combinaciones ·{" "}
-              <span className="font-semibold text-foreground">{saleCount}</span> en venta · mostrando{" "}
-              {results.length}
-              {results.length >= MAX_RESULTS ? " (usa el filtro para ver más)" : ""}
+              <span className="font-semibold text-foreground">{(data?.names ?? []).length}</span> nombres OG
+              creados · <span className="font-semibold text-foreground">{saleCount}</span> en venta ·
+              mostrando {results.length}
             </>
           )}
         </p>
       </section>
 
-      <section className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {results.map((r) => (
           <div
-            key={r.name}
-            className={`rounded-xl border px-3 py-2.5 text-left transition-all ${
-              r.free
-                ? "border-border/60 bg-card/40 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10"
-                : r.listing
-                  ? "border-amber-400/40 bg-amber-400/5"
-                  : "border-border/40 bg-card/20"
+            key={r.id}
+            className={`rounded-xl border px-3 py-2.5 transition-all ${
+              r.listing ? "border-amber-400/40 bg-amber-400/5" : "border-border/60 bg-card/40"
             }`}
           >
-            <button
-              type="button"
-              onClick={() => r.free && copy(r.name)}
-              disabled={!r.free}
-              className="flex w-full items-center justify-between font-mono text-sm disabled:cursor-default"
-            >
-              <span className={r.free ? "" : r.listing ? "text-amber-200" : "text-muted-foreground/60 line-through"}>
-                {r.name}
-              </span>
-              {r.free ? (
-                <Copy className="size-3.5 text-muted-foreground" />
-              ) : r.listing ? (
-                <Tag className="size-3.5 text-amber-300" />
-              ) : (
-                <X className="size-3.5 text-muted-foreground/60" />
-              )}
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex min-w-0 items-center gap-2">
+                {r.avatar_url ? (
+                  <img
+                    src={r.avatar_url}
+                    alt={`Avatar de ${r.username}`}
+                    className="size-8 shrink-0 rounded-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/15 font-mono text-xs text-primary">
+                    {r.username.slice(0, 2)}
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <p className={`truncate font-mono text-sm ${r.listing ? "text-amber-200" : ""}`}>{r.username}</p>
+                  <p className="truncate text-[11px] text-muted-foreground">#{r.uid} · {r.display_name || r.username}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => copy(r.username)}
+                className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                aria-label={`Copiar enlace de ${r.username}`}
+              >
+                <Copy className="size-3.5" />
+              </button>
+            </div>
             {r.listing && (
               <div className="mt-2 space-y-1 border-t border-amber-400/20 pt-2">
-                <p className="text-sm font-semibold text-amber-300">{money(Number(r.listing.price), r.listing.currency)}</p>
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-300">
+                  <Tag className="size-3.5" /> {money(Number(r.listing.price), r.listing.currency)}
+                </p>
                 {r.listing.note && <p className="text-[11px] text-muted-foreground">{r.listing.note}</p>}
                 {r.listing.contact && (
                   <p className="truncate text-[11px] text-muted-foreground">Contacto: {r.listing.contact}</p>
                 )}
               </div>
-            )}
-            {!r.free && !r.listing && (
-              <p className="mt-1 text-[11px] text-muted-foreground/70">Ya registrado</p>
             )}
           </div>
         ))}
