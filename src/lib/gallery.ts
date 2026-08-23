@@ -17,7 +17,19 @@ export type GalleryImage = {
   size_bytes: number;
   content_type: string;
   created_at: string;
+  album: string;
+  tags: string[];
 };
+
+/** Normaliza un texto de álbum/etiqueta. */
+export function normalizeTag(v: string) {
+  return v.trim().toLowerCase().slice(0, 32);
+}
+
+/** Parsea una lista de etiquetas separadas por coma. */
+export function parseTags(v: string) {
+  return Array.from(new Set(v.split(",").map(normalizeTag).filter(Boolean))).slice(0, 12);
+}
 
 /** Cuota de imágenes según rango / acceso comprado. */
 export function galleryQuota(rank?: string | null, bought?: boolean) {
@@ -52,7 +64,7 @@ export function useGallery() {
       if (!auth.user) return [] as GalleryImage[];
       const { data, error } = await supabase
         .from("gallery_images")
-        .select("id, path, url, title, size_bytes, content_type, created_at")
+        .select("id, path, url, title, size_bytes, content_type, created_at, album, tags")
         .eq("user_id", auth.user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -61,7 +73,7 @@ export function useGallery() {
   });
 }
 
-export async function uploadGalleryImage(file: File, maxMb: number) {
+export async function uploadGalleryImage(file: File, maxMb: number, album = "") {
   if (file.size > maxMb * 1024 * 1024) {
     throw new Error(`La imagen supera los ${maxMb}MB`);
   }
@@ -89,6 +101,8 @@ export async function uploadGalleryImage(file: File, maxMb: number) {
     title: file.name.slice(0, 120),
     size_bytes: file.size,
     content_type: file.type || "image/*",
+    album: normalizeTag(album),
+    tags: [],
   });
   if (insErr) throw insErr;
 
@@ -98,6 +112,14 @@ export async function uploadGalleryImage(file: File, maxMb: number) {
 export async function deleteGalleryImage(img: GalleryImage) {
   await supabase.storage.from("user-assets").remove([img.path]);
   const { error } = await supabase.from("gallery_images").delete().eq("id", img.id);
+  if (error) throw error;
+}
+
+export async function updateGalleryMeta(id: string, patch: { album?: string; tags?: string[] }) {
+  const payload: { album?: string; tags?: string[] } = {};
+  if (patch.album !== undefined) payload.album = normalizeTag(patch.album);
+  if (patch.tags !== undefined) payload.tags = patch.tags.map(normalizeTag).filter(Boolean).slice(0, 12);
+  const { error } = await supabase.from("gallery_images").update(payload).eq("id", id);
   if (error) throw error;
 }
 

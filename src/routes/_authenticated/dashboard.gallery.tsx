@@ -1,7 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Copy, Crown, HardDrive, Images, Loader2, Lock, Trash2, UploadCloud } from "lucide-react";
+import {
+  BookOpen,
+  Copy,
+  Crown,
+  FolderOpen,
+  HardDrive,
+  Images,
+  Loader2,
+  Lock,
+  Search,
+  Tag,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +22,9 @@ import {
   IMAGE_HOST_KEY,
   IMAGE_HOST_PRICE,
   deleteGalleryImage,
+  parseTags,
   renameGalleryImage,
+  updateGalleryMeta,
   uploadGalleryImage,
   useGallery,
   useImageHostAccess,
@@ -89,9 +104,28 @@ function Locked() {
   );
 }
 
-function GalleryCard({ img, onDeleted }: { img: GalleryImage; onDeleted: () => void }) {
+function GalleryCard({
+  img,
+  onDeleted,
+  onMetaChange,
+}: {
+  img: GalleryImage;
+  onDeleted: () => void;
+  onMetaChange: () => void;
+}) {
   const [title, setTitle] = useState(img.title);
+  const [album, setAlbum] = useState(img.album ?? "");
+  const [tags, setTags] = useState((img.tags ?? []).join(", "));
   const [busy, setBusy] = useState(false);
+
+  async function saveMeta(patch: { album?: string; tags?: string[] }) {
+    try {
+      await updateGalleryMeta(img.id, patch);
+      onMetaChange();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
 
   async function copy() {
     try {
@@ -129,6 +163,45 @@ function GalleryCard({ img, onDeleted }: { img: GalleryImage; onDeleted: () => v
           className="h-8 text-xs"
           aria-label="Nombre de la imagen"
         />
+        <div className="grid gap-2 sm:grid-cols-2">
+          <div className="relative">
+            <FolderOpen className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={album}
+              maxLength={32}
+              placeholder="Álbum"
+              onChange={(e) => setAlbum(e.target.value)}
+              onBlur={() => {
+                if (album !== (img.album ?? "")) void saveMeta({ album });
+              }}
+              className="h-8 pl-7 text-xs"
+              aria-label="Álbum de la imagen"
+            />
+          </div>
+          <div className="relative">
+            <Tag className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={tags}
+              placeholder="etiquetas, separadas, por coma"
+              onChange={(e) => setTags(e.target.value)}
+              onBlur={() => {
+                const next = parseTags(tags);
+                if (next.join(",") !== (img.tags ?? []).join(",")) void saveMeta({ tags: next });
+              }}
+              className="h-8 pl-7 text-xs"
+              aria-label="Etiquetas de la imagen"
+            />
+          </div>
+        </div>
+        {(img.tags ?? []).length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {img.tags.map((t) => (
+              <span key={t} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
+                #{t}
+              </span>
+            ))}
+          </div>
+        )}
         <p className="text-[11px] text-muted-foreground">
           {formatSize(img.size_bytes)} · {new Date(img.created_at).toLocaleDateString("es-ES")}
         </p>
@@ -158,9 +231,24 @@ function GalleryPage() {
   const qc = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [uploadAlbum, setUploadAlbum] = useState("");
+  const [query, setQuery] = useState("");
+  const [album, setAlbum] = useState("all");
+  const [tag, setTag] = useState<string | null>(null);
 
   const list = images ?? [];
   const usedMb = list.reduce((a, i) => a + i.size_bytes, 0) / 1024 / 1024;
+
+  const albums = Array.from(new Set(list.map((i) => i.album).filter(Boolean))).sort();
+  const allTags = Array.from(new Set(list.flatMap((i) => i.tags ?? []))).sort();
+
+  const q = query.trim().toLowerCase();
+  const filtered = list.filter((i) => {
+    if (album !== "all" && (i.album || "") !== (album === "none" ? "" : album)) return false;
+    if (tag && !(i.tags ?? []).includes(tag)) return false;
+    if (q && !`${i.title} ${i.album} ${(i.tags ?? []).join(" ")}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
 
   async function onFiles(files: FileList) {
     if (list.length + files.length > quota.max) {
@@ -170,7 +258,7 @@ function GalleryPage() {
     setBusy(true);
     try {
       for (const file of Array.from(files)) {
-        await uploadGalleryImage(file, quota.maxMb);
+        await uploadGalleryImage(file, quota.maxMb, uploadAlbum);
       }
       toast.success("Imágenes subidas");
       await qc.invalidateQueries({ queryKey: ["gallery"] });
@@ -221,29 +309,184 @@ function GalleryPage() {
                 if (f && f.length) void onFiles(f);
               }}
             />
+            <div className="flex items-center gap-2">
+              <Input
+                value={uploadAlbum}
+                maxLength={32}
+                placeholder="Álbum destino (opcional)"
+                onChange={(e) => setUploadAlbum(e.target.value)}
+                className="h-9 w-48 text-xs"
+                aria-label="Álbum destino para las subidas"
+              />
             <Button className="rounded-xl" disabled={busy} onClick={() => inputRef.current?.click()}>
               {busy ? <Loader2 className="size-4 animate-spin" /> : <UploadCloud className="size-4" />}
               Subir imágenes
             </Button>
+            </div>
           </div>
 
-          {list.length === 0 ? (
+          <div className="space-y-3 rounded-2xl border border-border/60 bg-card/40 px-5 py-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative min-w-[200px] flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Buscar por nombre, álbum o etiqueta"
+                  className="h-9 pl-9 text-sm"
+                  aria-label="Buscar imágenes"
+                />
+              </div>
+              <select
+                value={album}
+                onChange={(e) => setAlbum(e.target.value)}
+                aria-label="Filtrar por álbum"
+                className="h-9 rounded-md border border-border/60 bg-background px-3 text-sm"
+              >
+                <option value="all">Todos los álbumes</option>
+                <option value="none">Sin álbum</option>
+                {albums.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {allTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {allTags.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTag(tag === t ? null : t)}
+                    className={`rounded-full px-2.5 py-1 text-[11px] transition-colors ${
+                      tag === t
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted/40 text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    #{t}
+                  </button>
+                ))}
+              </div>
+            )}
+            <p className="text-[11px] text-muted-foreground">
+              {filtered.length} de {list.length} imágenes
+            </p>
+          </div>
+
+          {filtered.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border/60 p-12 text-center text-sm text-muted-foreground">
-              Todavía no subiste ninguna imagen.
+              {list.length === 0 ? "Todavía no subiste ninguna imagen." : "Ninguna imagen coincide con el filtro."}
             </div>
           ) : (
             <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {list.map((img) => (
+              {filtered.map((img) => (
                 <GalleryCard
                   key={img.id}
                   img={img}
                   onDeleted={() => void qc.invalidateQueries({ queryKey: ["gallery"] })}
+                  onMetaChange={() => void qc.invalidateQueries({ queryKey: ["gallery"] })}
                 />
               ))}
             </section>
           )}
+
+          <UsageGuide sample={list[0]?.url ?? "https://qsy.rip/tu-imagen.png"} premium={premium} />
         </>
       )}
     </div>
+  );
+}
+
+function Snippet({ label, code, hint }: { label: string; code: string; hint?: string }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold">{label}</p>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-7 rounded-lg text-[11px]"
+          onClick={() => {
+            void navigator.clipboard.writeText(code).then(
+              () => toast.success("Ejemplo copiado"),
+              () => toast.error("No se pudo copiar"),
+            );
+          }}
+        >
+          <Copy className="size-3.5" /> Copiar
+        </Button>
+      </div>
+      <pre className="mt-2 overflow-x-auto rounded-xl bg-muted/30 p-3 text-[11px] leading-relaxed text-muted-foreground">
+        <code>{code}</code>
+      </pre>
+      {hint && <p className="mt-2 text-[11px] text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+function UsageGuide({ sample, premium }: { sample: string; premium: boolean }) {
+  return (
+    <section className="space-y-4 rounded-3xl border border-border/60 bg-card/40 p-6 backdrop-blur-xl">
+      <header>
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <BookOpen className="size-5 text-primary" /> Cómo insertar tus imágenes
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Copiá el enlace directo de cualquier imagen y usalo en tu biolink. Estos ejemplos usan tu primer
+          enlace disponible.
+        </p>
+      </header>
+
+      <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
+        <li>Subí la imagen y asignale un álbum (por ejemplo <strong>fondos</strong>) y etiquetas.</li>
+        <li>Filtrá por álbum o etiqueta para encontrarla rápido.</li>
+        <li>Tocá <strong>Copiar link</strong> y pegalo donde quieras usarla.</li>
+      </ol>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <Snippet
+          label="Avatar / banner del perfil"
+          code={sample}
+          hint="Pegá el enlace en Perfil → Avatar o Banner en lugar de subir el archivo de nuevo."
+        />
+        <Snippet
+          label="Imagen en el muro o descripción (Markdown)"
+          code={`![mi imagen](${sample})`}
+        />
+        <Snippet
+          label="HTML"
+          code={`<img src="${sample}" alt="Mi imagen" width="320" />`}
+        />
+        <Snippet
+          label="Fondo con CSS"
+          code={`background-image: url("${sample}");\nbackground-size: cover;`}
+        />
+      </div>
+
+      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+        <p className="flex items-center gap-2 text-xs font-semibold text-primary">
+          <Crown className="size-4" /> Exclusivo Obsidian y Seraph
+        </p>
+        <p className="mt-1 text-[12px] text-muted-foreground">
+          {premium
+            ? "Tu rango incluye CSS personalizado y metadatos OG, así que podés usar tus enlaces directamente ahí."
+            : "Con Obsidian o Seraph podés usar estos enlaces también en CSS personalizado y en la imagen de vista previa (OG)."}
+        </p>
+        <div className="mt-3 grid gap-3 md:grid-cols-2">
+          <Snippet
+            label="CSS personalizado (fondo del perfil)"
+            code={`.qsy-profile {\n  background-image: url("${sample}");\n  background-size: cover;\n  background-position: center;\n}`}
+            hint="Pegalo en Perfil → Avanzado → CSS personalizado."
+          />
+          <Snippet
+            label="Imagen de vista previa (OG)"
+            code={sample}
+            hint="Pegalo en Perfil → Avanzado → Metadatos OG para definir la miniatura al compartir tu biolink."
+          />
+        </div>
+      </div>
+    </section>
   );
 }
