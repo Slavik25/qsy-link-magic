@@ -90,7 +90,7 @@ function AdminSecurity() {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Stat label="Ataques graves" value={attacks.length} tone="danger" />
         <Stat label="Amenazas abiertas" value={(threats ?? []).filter((t) => t.status === "open").length} tone="danger" />
         <Stat label="IPs registradas" value={ips?.length ?? 0} />

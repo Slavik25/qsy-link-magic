@@ -96,7 +96,7 @@ function ShareSection() {
           </div>
         )}
 
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           {QSY_DOMAINS.map((d) => {
             const active = d.key === domain;
             const locked = DOMAINS_MAINTENANCE ? d.key !== DEFAULT_DOMAIN : !isSeraph && d.key !== DEFAULT_DOMAIN;
@@ -184,7 +184,7 @@ function ShareSection() {
         </div>
         <p className="text-center text-xs text-muted-foreground">{url}</p>
 
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <Button variant="secondary" className="rounded-xl" onClick={() => copy(url, "URL copiada")}>
             <Copy className="size-4" /> Copiar URL
           </Button>

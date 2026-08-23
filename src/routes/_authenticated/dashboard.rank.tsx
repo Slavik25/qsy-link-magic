@@ -203,7 +203,7 @@ function RankPage() {
         </p>
       </header>
 
-      <section className="grid gap-5 lg:grid-cols-3">
+      <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {TIERS.map((t, i) => (
           <article
             key={t.key}

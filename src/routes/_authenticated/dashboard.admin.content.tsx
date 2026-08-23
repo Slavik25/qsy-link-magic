@@ -72,7 +72,7 @@ function AdminContent() {
   return (
     <div className="space-y-5">
       <AdminCard title="Devblog" desc="Publica novedades y decoraciones de la plataforma">
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <Input
             value={draft.title}
             onChange={(e) => setDraft({ ...draft, title: e.target.value })}
@@ -150,7 +150,7 @@ function AdminContent() {
       </AdminCard>
 
       <AdminCard title="Diseños y galería" desc="Plantillas disponibles para los biolinks">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {TEMPLATES.map((t) => (
             <div
               key={t.id}

@@ -20,7 +20,7 @@ function AdminOverview() {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Usuarios" value={o?.users ?? 0} hint={`+${o?.newUsers7 ?? 0} en 7 días`} />
         <Stat label="Visitas totales" value={o?.totalViews ?? 0} hint={`${o?.views24 ?? 0} en 24 h`} />
         <Stat label="Likes totales" value={o?.totalLikes ?? 0} />

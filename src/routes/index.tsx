@@ -347,7 +347,7 @@ function ModulesShowcase() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
+        <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
           <div className="flex flex-col gap-2.5">
             {modules.map((mod, i) => {
               const on = i === active;
@@ -782,7 +782,7 @@ function Landing() {
               </span>
             </div>
             <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {heroStats.slice(0, 3).map((s) => (
                   <div key={s.label} className="rounded-xl border border-border/60 bg-surface p-4 text-left">
                     <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -1052,7 +1052,7 @@ function Landing() {
           Precios <span className="text-gradient-violet">simples.</span>
         </h2>
         <p className="mt-3 text-muted-foreground">Empieza gratis. Escala cuando quieras.</p>
-        <div className="mt-12 grid gap-4 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-3">
           {plans.map((p) => (
             <div
               key={p.name}

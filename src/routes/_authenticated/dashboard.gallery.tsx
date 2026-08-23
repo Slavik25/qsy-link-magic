@@ -138,7 +138,7 @@ function GalleryCard({
           className="h-8 text-xs"
           aria-label="Nombre de la imagen"
         />
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div className="relative">
             <FolderOpen className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -355,7 +355,7 @@ function GalleryPage() {
               {list.length === 0 ? "Todavía no subiste ninguna imagen." : "Ninguna imagen coincide con el filtro."}
             </div>
           ) : (
-            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((img) => (
                 <GalleryCard
                   key={img.id}
@@ -420,7 +420,7 @@ function UsageGuide({ sample, premium }: { sample: string; premium: boolean }) {
         <li>Tocá <strong>Copiar link</strong> y pegalo donde quieras usarla.</li>
       </ol>
 
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <Snippet
           label="Avatar / banner del perfil"
           code={sample}
@@ -449,7 +449,7 @@ function UsageGuide({ sample, premium }: { sample: string; premium: boolean }) {
             ? "Tu rango incluye CSS personalizado y metadatos OG, así que podés usar tus enlaces directamente ahí."
             : "Con Obsidian o Seraph podés usar estos enlaces también en CSS personalizado y en la imagen de vista previa (OG)."}
         </p>
-        <div className="mt-3 grid gap-3 md:grid-cols-2">
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
           <Snippet
             label="CSS personalizado (fondo del perfil)"
             code={`.qsy-profile {\n  background-image: url("${sample}");\n  background-size: cover;\n  background-position: center;\n}`}

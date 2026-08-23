@@ -32,7 +32,7 @@ function TemplatesPage() {
           Un punto de partida. Todo sigue siendo editable desde Appearance.
         </p>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TEMPLATES.map((t) => (
             <article key={t.id} className="overflow-hidden rounded-2xl glass p-5 lift">
               <div

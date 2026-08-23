@@ -30,7 +30,7 @@ function AssetsSection() {
           : `Haz clic o arrastra archivos para subirlos. Fondos hasta ${limit(15)}MB, audios hasta ${limit(10)}MB. Con Obsidian o Seraph los límites se multiplican.`
       }
     >
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <AssetUploader
           label="Avatar"
           hint={`PNG, JPG o GIF · máx. ${limit(8)}MB`}
@@ -49,7 +49,7 @@ function AssetsSection() {
         />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <AssetUploader
           label="Background"
           hint={`Imagen o vídeo · máx. ${limit(15)}MB`}
@@ -87,7 +87,7 @@ function AssetsSection() {
 
       <div className="space-y-4">
         <p className="text-sm font-semibold">URLs de Assets</p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">Avatar URL</Label>
             <Input

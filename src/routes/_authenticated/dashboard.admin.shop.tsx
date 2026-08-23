@@ -172,7 +172,7 @@ function AdminShop() {
         }
       >
         {users?.length ? (
-          <ul className="grid gap-2 sm:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {users.slice(0, 20).map((u) => (
               <li key={u.id}>
                 <button
@@ -274,7 +274,7 @@ function AdminShop() {
                 <Empty text="Este usuario no tiene insignias todavía." />
               </div>
             )}
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {BADGES.filter((b) => !(profileBadges ?? []).some((o) => o.badge_key === b.key)).map(
                 (b) => (
                   <button
@@ -316,7 +316,7 @@ function AdminShop() {
               </div>
             }
           >
-            <ul className="grid gap-2 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {items.map((it) => {
                 const has = owned.has(it.key);
                 return (

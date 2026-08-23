@@ -72,7 +72,7 @@ function CustomizationSection() {
       title="Customization"
       description="Diseña tu tarjeta pública: colores, formas, ancho y estilo general."
     >
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
             Nombre visible
@@ -258,7 +258,7 @@ function CustomizationSection() {
       </Group>
 
       <Group label="Colores del biolink">
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           <PaintField
             label="Nombre visible"
             sample={draft.display_name || "qsy"}

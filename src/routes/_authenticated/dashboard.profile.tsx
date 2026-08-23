@@ -29,7 +29,7 @@ function ProfileEditorLayout() {
   const { data: profile } = useMyProfile();
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[248px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[248px_1fr]">
       <aside className="h-fit rounded-2xl border border-border/60 bg-card/40 p-4 backdrop-blur-xl lg:sticky lg:top-6">
         <div className="flex items-center gap-3 border-b border-border/50 pb-4">
           {profile?.avatar_url ? (

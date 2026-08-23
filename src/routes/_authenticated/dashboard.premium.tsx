@@ -146,7 +146,7 @@ function ShopPage() {
       </div>
 
       {tab === "access" && (
-        <section className="grid gap-4 sm:grid-cols-2">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <article className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-colors hover:border-primary/40">
             <div className="flex items-start justify-between gap-2">
               <h2 className="flex items-center gap-2 text-sm font-semibold">
@@ -183,7 +183,7 @@ function ShopPage() {
       )}
 
       {tab === "players" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_PLAYERS.map((p) => {
             const active = (theme?.player_key ?? "player-default") === p.key;
             return (
@@ -239,7 +239,7 @@ function ShopPage() {
       )}
 
       {tab === "layouts" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_LAYOUTS.map((l) => {
             const active = (theme?.layout_key ?? "layout-glass") === l.key;
             return (
@@ -297,7 +297,7 @@ function ShopPage() {
       )}
 
       {tab === "names" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_NAME_STYLES.map((n) => {
             const active = (theme?.username_effect ?? "none") === n.effect;
             return (
@@ -352,7 +352,7 @@ function ShopPage() {
       )}
 
       {tab === "effects" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_BG_EFFECTS.map((b) => {
             const active = (theme?.bg_effect ?? "none") === b.effect;
             return (
@@ -402,7 +402,7 @@ function ShopPage() {
       )}
 
       {tab === "hover" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_HOVER_EFFECTS.map((h) => {
             const active = (theme?.hover_effect ?? "none") === h.effect;
             const cls = h.effect === "none" ? "" : `qsy-hover qsy-hover-${h.effect}`;
@@ -456,7 +456,7 @@ function ShopPage() {
       )}
 
       {tab === "decorations" && (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SHOP_DECORATIONS.map((d) => {
             const active = (theme?.avatar_decoration ?? "none") === d.key;
             return (

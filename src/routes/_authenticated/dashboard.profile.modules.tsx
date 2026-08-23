@@ -34,7 +34,7 @@ function ModulesSection() {
       title="Modules"
       description="Controla los componentes de tu perfil y añade bloques de contenido interactivos."
     >
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <ToggleRow
           title="Contador de Visitas"
           description="Muestra las vistas en tu bio."

@@ -169,7 +169,7 @@ function PublicProfile() {
         <style data-qsy-custom-css="" dangerouslySetInnerHTML={{ __html: customCss }} />
       ) : null}
 
-      <div className="fixed right-4 top-4 z-50 flex flex-row-reverse items-center gap-2">
+      <div className="fixed right-3 top-3 z-50 flex max-w-[calc(100vw-1.5rem)] flex-row-reverse flex-wrap items-center justify-end gap-2 sm:right-4 sm:top-4">
         <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
         <ProfileGallery
           userId={(profile as { user_id?: string | null }).user_id ?? null}

@@ -78,15 +78,18 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     return "border-white/15 bg-white/5 backdrop-blur-md";
   }, [theme.player_bg]);
 
+  // En móvil los botones "Wall"/"Gallery" viven arriba a la derecha: los
+  // reproductores flotantes superiores bajan para no solaparse.
   const FLOATING_POS: Record<string, string> = {
-    "top-left": "fixed left-4 top-4 z-30 w-[min(17rem,78vw)]",
-    "top-center": "fixed left-1/2 top-4 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
-    "top-right": "fixed right-4 top-4 z-30 w-[min(17rem,78vw)]",
-    "mid-left": "fixed left-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
-    "mid-right": "fixed right-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
-    "bottom-left": "fixed bottom-4 left-4 z-30 w-[min(17rem,78vw)]",
-    "bottom-center": "fixed bottom-4 left-1/2 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
-    "bottom-right": "fixed bottom-4 right-4 z-30 w-[min(17rem,78vw)]",
+    "top-left": "fixed left-3 top-20 z-30 w-[min(17rem,72vw)] sm:left-4 sm:top-4 sm:w-[min(17rem,78vw)]",
+    "top-center":
+      "fixed left-1/2 top-20 z-30 w-[min(19rem,88vw)] -translate-x-1/2 sm:top-4 sm:w-[min(19rem,84vw)]",
+    "top-right": "fixed right-3 top-20 z-30 w-[min(17rem,72vw)] sm:right-4 sm:top-4 sm:w-[min(17rem,78vw)]",
+    "mid-left": "fixed left-3 top-1/2 z-30 w-[min(17rem,72vw)] -translate-y-1/2 sm:left-4",
+    "mid-right": "fixed right-3 top-1/2 z-30 w-[min(17rem,72vw)] -translate-y-1/2 sm:right-4",
+    "bottom-left": "fixed bottom-4 left-3 z-30 w-[min(17rem,72vw)] sm:left-4",
+    "bottom-center": "fixed bottom-4 left-1/2 z-30 w-[min(19rem,88vw)] -translate-x-1/2",
+    "bottom-right": "fixed bottom-4 right-3 z-30 w-[min(17rem,72vw)] sm:right-4",
   };
 
   const posClass = floating

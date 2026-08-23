@@ -348,7 +348,7 @@ function OgNamesPage() {
             No tienes ningún perfil con nombre de 3 o 4 caracteres, así que todavía no puedes vender nombres OG.
           </p>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="space-y-1 text-xs font-medium text-muted-foreground">
               Nombre a vender
               <select

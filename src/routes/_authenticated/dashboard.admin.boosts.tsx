@@ -47,7 +47,7 @@ function AdminBoosts() {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Stat label="Boosts aplicados" value={boosts?.length ?? 0} />
         <Stat label="Visitas otorgadas" value={totalViews} />
         <Stat label="Likes otorgados" value={totalLikes} />

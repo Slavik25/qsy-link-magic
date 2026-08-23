@@ -269,19 +269,23 @@ function DashboardLayout() {
             </Link>
           </nav>
 
-          <div className="ml-auto flex items-center gap-2 md:ml-4">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 md:ml-4">
             <DashThemeToggle />
-            <LangSwitcher />
+            <div className="hidden sm:block">
+              <LangSwitcher />
+            </div>
             {profile && (
-              <Button asChild size="sm" className="rounded-full">
+              <Button asChild size="sm" className="rounded-full px-3">
                 <Link to="/$username" params={{ username: profile.username }}>
-                  Mi página <ChevronRight className="size-4" />
+                  <span className="hidden sm:inline">Mi página</span>
+                  <span className="sm:hidden">Perfil</span>
+                  <ChevronRight className="size-4 shrink-0" />
                 </Link>
               </Button>
             )}
             <span
               aria-hidden
-              className="grid size-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground"
+              className="hidden size-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground sm:grid"
             >
               <Bell className="size-4" />
             </span>
