@@ -467,6 +467,16 @@ export const SHOP_BG_EFFECTS: BgEffectDef[] = [
   { key: "bg-plasma", name: "Plasma", description: "Manchas de plasma en mutación continua.", price: 450, premium: true, effect: "plasma", preview: "linear-gradient(140deg,#7c1d6f,#1d4d7c,#0b0b12)" },
   { key: "bg-dither", name: "Dither", description: "Trama de puntos animada estilo retro.", price: 400, premium: true, effect: "dither", preview: "linear-gradient(140deg,#333,#0b0b12)" },
   { key: "bg-nebula", name: "Nebulosa", description: "Nube estelar en rotación permanente.", price: 500, premium: true, effect: "nebula", preview: "linear-gradient(140deg,#4338ca,#a21caf,#0b0b12)" },
+  { key: "bg-sakura", name: "Sakura", description: "Pétalos de cerezo cayendo suavemente.", price: 250, effect: "sakura", preview: "linear-gradient(140deg,#f472b6,#4c1d95,#0b0b12)" },
+  { key: "bg-hearts", name: "Corazones", description: "Corazones flotando hacia arriba.", price: 200, effect: "hearts", preview: "linear-gradient(140deg,#7c1d3a,#0b0b12)" },
+  { key: "bg-embers", name: "Brasas", description: "Chispas ardientes subiendo en la oscuridad.", price: 300, effect: "embers", preview: "linear-gradient(140deg,#7c3a1d,#0b0b12)" },
+  { key: "bg-clouds", name: "Nubes", description: "Nubes lentas en movimiento continuo.", price: 150, effect: "clouds", preview: "linear-gradient(140deg,#2b3a4d,#0b0b12)" },
+  { key: "bg-vortex", name: "Vórtice", description: "Espiral cónica girando con tu color de acento.", price: 400, effect: "vortex", preview: "linear-gradient(140deg,#3a1d7c,#0b0b12)" },
+  { key: "bg-cyberrain", name: "Cyber Rain", description: "Lluvia de neón cian y violeta.", price: 350, effect: "cyberrain", preview: "linear-gradient(140deg,#0e4d5e,#3a1d7c,#0b0b12)" },
+  { key: "bg-spotlight", name: "Spotlight", description: "Foco cenital que respira sobre el perfil.", price: 200, effect: "spotlight", preview: "linear-gradient(140deg,#2b2b3d,#0b0b12)" },
+  { key: "bg-lava", name: "Lava", description: "Resplandor volcánico en la parte inferior.", price: 400, premium: true, effect: "lava", preview: "linear-gradient(140deg,#7c1d0d,#0b0b12)" },
+  { key: "bg-smoke", name: "Humo", description: "Volutas de humo etéreo desplazándose.", price: 300, effect: "smoke", preview: "linear-gradient(140deg,#3a3a44,#0b0b12)" },
+  { key: "bg-fireworks", name: "Fuegos artificiales", description: "Destellos de colores estallando en bucle.", price: 500, premium: true, effect: "fireworks", preview: "linear-gradient(140deg,#7c1d6f,#1d4d7c,#0b0b12)" },
 ];
 
 /** Animaciones al pasar el ratón sobre la tarjeta del biolink (theme.hover_effect) */
