@@ -9,6 +9,7 @@ import {
   PaintField,
   Panel,
   Pills,
+  PlayerPositionPicker,
   SaveBar,
   ShopEquipGrid,
   ToggleRow,
@@ -418,7 +419,7 @@ function CustomizationSection() {
       <Group label="Posición del reproductor de música">
         <PlayerPositionPicker
           value={t.player_position ?? "bottom-center"}
-          onChange={(v) => setTheme("player_position", v)}
+          onChange={(v: string) => setTheme("player_position", v)}
         />
       </Group>
 
