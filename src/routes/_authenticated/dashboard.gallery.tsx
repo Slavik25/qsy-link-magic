@@ -398,3 +398,95 @@ function GalleryPage() {
     </div>
   );
 }
+
+function Snippet({ label, code, hint }: { label: string; code: string; hint?: string }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold">{label}</p>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-7 rounded-lg text-[11px]"
+          onClick={() => {
+            void navigator.clipboard.writeText(code).then(
+              () => toast.success("Ejemplo copiado"),
+              () => toast.error("No se pudo copiar"),
+            );
+          }}
+        >
+          <Copy className="size-3.5" /> Copiar
+        </Button>
+      </div>
+      <pre className="mt-2 overflow-x-auto rounded-xl bg-muted/30 p-3 text-[11px] leading-relaxed text-muted-foreground">
+        <code>{code}</code>
+      </pre>
+      {hint && <p className="mt-2 text-[11px] text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+function UsageGuide({ sample, premium }: { sample: string; premium: boolean }) {
+  return (
+    <section className="space-y-4 rounded-3xl border border-border/60 bg-card/40 p-6 backdrop-blur-xl">
+      <header>
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <BookOpen className="size-5 text-primary" /> Cómo insertar tus imágenes
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Copiá el enlace directo de cualquier imagen y usalo en tu biolink. Estos ejemplos usan tu primer
+          enlace disponible.
+        </p>
+      </header>
+
+      <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
+        <li>Subí la imagen y asignale un álbum (por ejemplo <strong>fondos</strong>) y etiquetas.</li>
+        <li>Filtrá por álbum o etiqueta para encontrarla rápido.</li>
+        <li>Tocá <strong>Copiar link</strong> y pegalo donde quieras usarla.</li>
+      </ol>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <Snippet
+          label="Avatar / banner del perfil"
+          code={sample}
+          hint="Pegá el enlace en Perfil → Avatar o Banner en lugar de subir el archivo de nuevo."
+        />
+        <Snippet
+          label="Imagen en el muro o descripción (Markdown)"
+          code={`![mi imagen](${sample})`}
+        />
+        <Snippet
+          label="HTML"
+          code={`<img src="${sample}" alt="Mi imagen" width="320" />`}
+        />
+        <Snippet
+          label="Fondo con CSS"
+          code={`background-image: url("${sample}");\nbackground-size: cover;`}
+        />
+      </div>
+
+      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+        <p className="flex items-center gap-2 text-xs font-semibold text-primary">
+          <Crown className="size-4" /> Exclusivo Obsidian y Seraph
+        </p>
+        <p className="mt-1 text-[12px] text-muted-foreground">
+          {premium
+            ? "Tu rango incluye CSS personalizado y metadatos OG, así que podés usar tus enlaces directamente ahí."
+            : "Con Obsidian o Seraph podés usar estos enlaces también en CSS personalizado y en la imagen de vista previa (OG)."}
+        </p>
+        <div className="mt-3 grid gap-3 md:grid-cols-2">
+          <Snippet
+            label="CSS personalizado (fondo del perfil)"
+            code={`.qsy-profile {\n  background-image: url("${sample}");\n  background-size: cover;\n  background-position: center;\n}`}
+            hint="Pegalo en Perfil → Avanzado → CSS personalizado."
+          />
+          <Snippet
+            label="Imagen de vista previa (OG)"
+            code={sample}
+            hint="Pegalo en Perfil → Avanzado → Metadatos OG para definir la miniatura al compartir tu biolink."
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
