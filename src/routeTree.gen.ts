@@ -25,6 +25,7 @@ import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardBadgesRouteImport } from './routes/_authenticated/dashboard.badges'
+import { Route as AuthenticatedDashboardGalleryRouteImport } from './routes/_authenticated/dashboard.gallery'
 import { Route as AuthenticatedDashboardGiftRouteImport } from './routes/_authenticated/dashboard.gift'
 import { Route as AuthenticatedDashboardLinksRouteImport } from './routes/_authenticated/dashboard.links'
 import { Route as AuthenticatedDashboardMissionsRouteImport } from './routes/_authenticated/dashboard.missions'
@@ -142,6 +143,12 @@ const AuthenticatedDashboardBadgesRoute =
   AuthenticatedDashboardBadgesRouteImport.update({
     id: '/badges',
     path: '/badges',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardGalleryRoute =
+  AuthenticatedDashboardGalleryRouteImport.update({
+    id: '/gallery',
+    path: '/gallery',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardGiftRoute =
@@ -367,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
+  '/dashboard/gallery': typeof AuthenticatedDashboardGalleryRoute
   '/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
@@ -417,6 +425,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
+  '/dashboard/gallery': typeof AuthenticatedDashboardGalleryRoute
   '/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
@@ -470,6 +479,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/badges': typeof AuthenticatedDashboardBadgesRoute
+  '/_authenticated/dashboard/gallery': typeof AuthenticatedDashboardGalleryRoute
   '/_authenticated/dashboard/gift': typeof AuthenticatedDashboardGiftRoute
   '/_authenticated/dashboard/links': typeof AuthenticatedDashboardLinksRoute
   '/_authenticated/dashboard/missions': typeof AuthenticatedDashboardMissionsRoute
@@ -524,6 +534,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin'
     | '/dashboard/analytics'
     | '/dashboard/badges'
+    | '/dashboard/gallery'
     | '/dashboard/gift'
     | '/dashboard/links'
     | '/dashboard/missions'
@@ -574,6 +585,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/dashboard/analytics'
     | '/dashboard/badges'
+    | '/dashboard/gallery'
     | '/dashboard/gift'
     | '/dashboard/links'
     | '/dashboard/missions'
@@ -626,6 +638,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/badges'
+    | '/_authenticated/dashboard/gallery'
     | '/_authenticated/dashboard/gift'
     | '/_authenticated/dashboard/links'
     | '/_authenticated/dashboard/missions'
@@ -794,6 +807,13 @@ declare module '@tanstack/react-router' {
       path: '/badges'
       fullPath: '/dashboard/badges'
       preLoaderRoute: typeof AuthenticatedDashboardBadgesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/gallery': {
+      id: '/_authenticated/dashboard/gallery'
+      path: '/gallery'
+      fullPath: '/dashboard/gallery'
+      preLoaderRoute: typeof AuthenticatedDashboardGalleryRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/gift': {
@@ -1133,6 +1153,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardBadgesRoute: typeof AuthenticatedDashboardBadgesRoute
+  AuthenticatedDashboardGalleryRoute: typeof AuthenticatedDashboardGalleryRoute
   AuthenticatedDashboardGiftRoute: typeof AuthenticatedDashboardGiftRoute
   AuthenticatedDashboardLinksRoute: typeof AuthenticatedDashboardLinksRoute
   AuthenticatedDashboardMissionsRoute: typeof AuthenticatedDashboardMissionsRoute
@@ -1151,6 +1172,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
       AuthenticatedDashboardAdminRouteWithChildren,
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
     AuthenticatedDashboardBadgesRoute: AuthenticatedDashboardBadgesRoute,
+    AuthenticatedDashboardGalleryRoute: AuthenticatedDashboardGalleryRoute,
     AuthenticatedDashboardGiftRoute: AuthenticatedDashboardGiftRoute,
     AuthenticatedDashboardLinksRoute: AuthenticatedDashboardLinksRoute,
     AuthenticatedDashboardMissionsRoute: AuthenticatedDashboardMissionsRoute,

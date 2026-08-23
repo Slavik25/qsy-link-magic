@@ -45,6 +45,7 @@ const NAV: NavItem[] = [
   { to: "/dashboard/profiles", label: "Perfiles", icon: UserRound },
   { to: "/dashboard/links", label: "Conexiones", icon: Link2 },
   { to: "/dashboard/badges", label: "Insignias", icon: BadgeCheck },
+  { to: "/dashboard/gallery", label: "Image Host", icon: ImageIcon, tag: "Nuevo" },
   
   { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
   { to: "/dashboard/missions", label: "Misiones", icon: Target },

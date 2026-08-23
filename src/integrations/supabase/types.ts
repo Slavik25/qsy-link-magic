@@ -238,6 +238,39 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_images: {
+        Row: {
+          content_type: string
+          created_at: string
+          id: string
+          path: string
+          size_bytes: number
+          title: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          path: string
+          size_bytes?: number
+          title?: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          id?: string
+          path?: string
+          size_bytes?: number
+          title?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       global_chat_message_meta: {
         Row: {
           created_at: string
@@ -1276,6 +1309,10 @@ export type Database = {
       gift_rank: {
         Args: { _message?: string; _rank: string; _username: string }
         Returns: number
+      }
+      grant_imagehost_badge_for_user: {
+        Args: { _user_id: string }
+        Returns: undefined
       }
       has_role: {
         Args: {
