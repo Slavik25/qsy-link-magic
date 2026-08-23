@@ -4,6 +4,7 @@ import {
   OptionGrid,
   Panel,
   Pills,
+  PlayerPositionPicker,
   SaveBar,
   ShopEquipGrid,
   ToggleRow,
@@ -151,17 +152,9 @@ function EffectsSection() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Group label="Player position">
-          <Pills
+          <PlayerPositionPicker
             value={t.player_position ?? "bottom-center"}
-            onChange={(v) => setTheme("player_position", v)}
-            options={[
-              { id: "top-left", label: "Top left" },
-              { id: "top-center", label: "Top center" },
-              { id: "top-right", label: "Top right" },
-              { id: "bottom-left", label: "Bottom left" },
-              { id: "bottom-center", label: "Bottom center" },
-              { id: "bottom-right", label: "Bottom right" },
-            ]}
+            onChange={(v: string) => setTheme("player_position", v)}
           />
         </Group>
         <Group label="Player background">
