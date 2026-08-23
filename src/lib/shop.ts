@@ -483,6 +483,15 @@ export const SHOP_HOVER_EFFECTS: HoverEffectDef[] = [
   { key: "hover-jelly", name: "Jelly", description: "Rebote elástico al entrar el cursor.", price: 350, premium: true, effect: "jelly", preview: "linear-gradient(140deg,#1d2b12,#0b0b12)" },
   { key: "hover-rgb", name: "RGB Border", description: "Borde arcoíris girando sin parar.", price: 400, premium: true, effect: "rgb", preview: "linear-gradient(140deg,#7c1d6f,#1d4d7c,#0b0b12)" },
   { key: "hover-scan", name: "Scanline", description: "Línea de escaneo cyberpunk de arriba abajo.", price: 450, premium: true, effect: "scan", preview: "linear-gradient(140deg,#052b16,#0b0b12)" },
+  { key: "hover-pop", name: "Pop", description: "Escala y elevación marcada al apuntar.", price: 150, effect: "pop", preview: "linear-gradient(140deg,#1d2b4d,#0b0b12)" },
+  { key: "hover-swing", name: "Swing", description: "Balanceo suave de la tarjeta.", price: 200, effect: "swing", preview: "linear-gradient(140deg,#4d3d1d,#0b0b12)" },
+  { key: "hover-wobble", name: "Wobble", description: "Sacudida lateral divertida.", price: 250, effect: "wobble", preview: "linear-gradient(140deg,#4d1d1d,#0b0b12)" },
+  { key: "hover-blur", name: "Focus", description: "El perfil está desenfocado y se enfoca al apuntar.", price: 300, effect: "blur", preview: "linear-gradient(140deg,#2b2b3d,#0b0b12)" },
+  { key: "hover-breathe", name: "Breathe", description: "Respiración lenta con halo pulsante.", price: 350, effect: "breathe", preview: "linear-gradient(140deg,#1d4d3a,#0b0b12)" },
+  { key: "hover-skew", name: "Skew", description: "Inclinación diagonal editorial.", price: 250, effect: "skew", preview: "linear-gradient(140deg,#3d1d4d,#0b0b12)" },
+  { key: "hover-flip", name: "Flip 3D", description: "Giro en perspectiva sobre el eje Y.", price: 400, premium: true, effect: "flip", preview: "linear-gradient(140deg,#1d3d5e,#0b0b12)" },
+  { key: "hover-hologram", name: "Hologram", description: "Scanlines holográficas recorriendo la tarjeta.", price: 500, premium: true, effect: "hologram", preview: "linear-gradient(140deg,#0ea5e9,#7c3aed,#0b0b12)" },
+  { key: "hover-neonpulse", name: "Neon Pulse", description: "Borde de neón latiendo sin parar.", price: 450, premium: true, effect: "neonpulse", preview: "linear-gradient(140deg,#7c1d6f,#0b0b12)" },
 ];
 
 /** Decoraciones de avatar estilo Discord (theme.avatar_decoration) */
