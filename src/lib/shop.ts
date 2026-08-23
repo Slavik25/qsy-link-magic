@@ -446,6 +446,18 @@ export const SHOP_NAME_STYLES: NameStyleDef[] = [
   { key: "name-fire", name: "Inferno", description: "Degradado ardiente con brillo naranja.", price: 450, premium: true, effect: "fire" },
   { key: "name-ice", name: "Frost", description: "Hielo azul con destellos fríos.", price: 400, premium: true, effect: "ice" },
   { key: "name-sparkle", name: "Sparkle", description: "Purpurina animada sobre las letras.", price: 500, premium: true, effect: "sparkle" },
+  { key: "name-gold", name: "Gold", description: "Oro pulido con barrido de luz.", price: 400, effect: "gold" },
+  { key: "name-toxic", name: "Toxic", description: "Verde radiactivo con glow ácido.", price: 250, effect: "toxic" },
+  { key: "name-aqua", name: "Aqua", description: "Degradado cian a violeta en movimiento.", price: 200, effect: "aqua" },
+  { key: "name-candy", name: "Candy", description: "Rayas de caramelo animadas.", price: 250, effect: "candy" },
+  { key: "name-holo", name: "Holo", description: "Iridiscencia holográfica pastel.", price: 450, premium: true, effect: "holo" },
+  { key: "name-shadow3d", name: "3D Shadow", description: "Sombra sólida en capas con profundidad.", price: 200, effect: "shadow3d" },
+  { key: "name-heartbeat", name: "Heartbeat", description: "Latido rítmico con halo de acento.", price: 300, effect: "heartbeat" },
+  { key: "name-wave", name: "Wave", description: "Flotación vertical continua.", price: 150, effect: "wave" },
+  { key: "name-terminal", name: "Terminal", description: "Verde fósforo estilo consola.", price: 200, effect: "terminal" },
+  { key: "name-blurpulse", name: "Blur Pulse", description: "Desenfoque pulsante hipnótico.", price: 300, effect: "blurpulse" },
+  { key: "name-galaxy", name: "Galaxy", description: "Nebulosa estrellada dentro de las letras.", price: 500, premium: true, effect: "galaxy" },
+  { key: "name-strobe", name: "Strobe", description: "Cambio de tono estroboscópico.", price: 350, premium: true, effect: "strobe" },
 ];
 
 /** Efectos animados de fondo (theme.bg_effect) */
