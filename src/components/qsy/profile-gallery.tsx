@@ -45,7 +45,7 @@ export function ProfileGallery({ userId, accent, username }: Props) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="fixed left-4 top-4 z-50 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs font-medium lift"
+        className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs font-medium lift"
         style={{ borderColor: `color-mix(in oklab, ${accent} 35%, transparent)` }}
       >
         <Images className="size-3.5" style={{ color: accent }} />
