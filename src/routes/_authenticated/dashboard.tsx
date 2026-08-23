@@ -277,9 +277,9 @@ function DashboardLayout() {
             {profile && (
               <Button asChild size="sm" className="rounded-full px-3">
                 <Link to="/$username" params={{ username: profile.username }}>
-                  <span className="hidden xs:inline sm:inline">Mi página</span>
-                  <span className="sm:hidden xs:hidden">Perfil</span>
-                  <ChevronRight className="size-4" />
+                  <span className="hidden sm:inline">Mi página</span>
+                  <span className="sm:hidden">Perfil</span>
+                  <ChevronRight className="size-4 shrink-0" />
                 </Link>
               </Button>
             )}
