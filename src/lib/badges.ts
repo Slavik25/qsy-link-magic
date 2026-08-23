@@ -40,7 +40,7 @@ export const BADGES: BadgeDef[] = [
   { key: "donor", name: "Donator", description: "Donó para apoyar el crecimiento de la plataforma.", img: "/badges/donator.png", action: "Comprar", href: "/dashboard/premium" },
   { key: "imagehost", name: "Image Host", description: "Acceso al Image Host de QSY: sube y aloja tus propias imágenes.", icon: Images, color: "#38bdf8", action: "Obtener acceso", href: "/dashboard/gallery" },
   { key: "early", name: "Early Supporter", description: "Insignia OG para los primeros 50 usuarios registrados.", img: "/badges/earlysupporter.svg", action: "Ver OG Tags", href: "/dashboard/profile/share" },
-  { key: "og", name: "OG", description: "Posee un nombre de usuario OG de 3 o 4 caracteres.", icon: Crown, color: "#fbbf24", action: "Ver nombres OG", href: "/dashboard/og" },
+  { key: "og", name: "OG", description: "Uno de los primeros 50 miembros de QSY.", icon: Crown, color: "#fbbf24", action: "Ver nombres OG", href: "/dashboard/og" },
   { key: "king", name: "King", description: "Contribuidor especial y rey del ranking.", img: "/badges/king.svg", action: "Discord", href: "https://discord.gg/qsy" },
   { key: "partner", name: "Partner", description: "Partner oficial de QSY.", img: "/badges/partner.svg", action: "Discord", href: "https://discord.gg/qsy" },
   { key: "activedev", name: "Active Developer", description: "Contribuyó directamente al desarrollo del código.", img: "/badges/developeractivo.svg", action: "Discord", href: "https://discord.gg/qsy" },
