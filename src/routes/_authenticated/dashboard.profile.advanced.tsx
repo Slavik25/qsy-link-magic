@@ -32,8 +32,20 @@ const BG_EFFECTS = [
   { id: "fireflies", label: "Luciérnagas" },
   { id: "bubbles", label: "Burbujas" },
   { id: "oldtv", label: "Old TV" },
+  { id: "grid", label: "Retro Grid" },
+  { id: "sakura", label: "Sakura" },
+  { id: "hearts", label: "Corazones" },
+  { id: "embers", label: "Brasas" },
+  { id: "clouds", label: "Nubes" },
+  { id: "vortex", label: "Vórtice" },
+  { id: "cyberrain", label: "Cyber Rain" },
+  { id: "spotlight", label: "Spotlight" },
+  { id: "smoke", label: "Humo" },
   { id: "plasma", label: "Plasma", pro: true },
   { id: "dither", label: "Dither", pro: true },
+  { id: "nebula", label: "Nebulosa", pro: true },
+  { id: "lava", label: "Lava", pro: true },
+  { id: "fireworks", label: "Fuegos artificiales", pro: true },
 ];
 
 /** Aviso de bloqueo para funciones exclusivas de Obsidian y Seraph. */

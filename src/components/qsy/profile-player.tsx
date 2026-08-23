@@ -280,6 +280,167 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
         </div>
       </div>
     );
+  } else if (type === "orbit") {
+    body = (
+      <div className={`flex items-center gap-3 rounded-full border p-2 ${shell}`}>
+        <div
+          className="relative grid size-12 shrink-0 place-items-center rounded-full"
+          style={{
+            background: `conic-gradient(${accent} ${progress * 3.6}deg, rgb(255 255 255 / 0.12) 0deg)`,
+          }}
+        >
+          <span className="grid size-9 place-items-center rounded-full bg-black/70">
+            {playBtn("size-7")}
+          </span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{title}</p>
+          <p className="truncate text-xs text-muted-foreground">{artist || fmt(time)}</p>
+        </div>
+        {volCtl}
+      </div>
+    );
+  } else if (type === "poster") {
+    body = (
+      <div
+        className={`relative overflow-hidden rounded-2xl border ${shell}`}
+        style={{
+          background: music?.cover
+            ? `url(${music.cover}) center/cover`
+            : `linear-gradient(150deg, ${accent}, #0b0b12)`,
+        }}
+      >
+        <div className="bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 pt-16">
+          <p className="truncate text-sm font-semibold">{title}</p>
+          <p className="truncate text-xs text-muted-foreground">{artist}</p>
+          <div className="mt-3 flex items-center gap-3">
+            {playBtn()}
+            <div className="min-w-0 flex-1">{bar}</div>
+            {volCtl}
+          </div>
+        </div>
+      </div>
+    );
+  } else if (type === "lcd") {
+    body = (
+      <div className={`rounded-2xl border p-2.5 ${shell}`}>
+        <div className="rounded-lg border border-emerald-500/30 bg-emerald-950/60 p-3 font-mono text-emerald-300">
+          <p className="truncate text-xs">{playing ? "▶ PLAY" : "❚❚ PAUSE"}</p>
+          <p className="mt-1 truncate text-[11px] opacity-80">{title}</p>
+          <p className="truncate text-[10px] opacity-60">{artist || "—"}</p>
+          <p className="mt-1 text-[10px] opacity-70">
+            {fmt(time)} / {fmt(dur)}
+          </p>
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          {playBtn("size-7")}
+          {bar}
+          {volCtl}
+        </div>
+      </div>
+    );
+  } else if (type === "spectrum") {
+    body = (
+      <div className={`flex items-center gap-3 rounded-2xl border p-2.5 ${shell}`}>
+        <div
+          className="size-12 shrink-0 rounded-xl"
+          style={{
+            background: music?.cover
+              ? `url(${music.cover}) center/cover`
+              : `linear-gradient(140deg, ${accent}, transparent)`,
+          }}
+        />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{title}</p>
+          <div className="mt-1 flex h-6 items-end gap-[2px]">
+            {Array.from({ length: 14 }).map((_, i) => (
+              <span
+                key={i}
+                className="qsy-eq w-full rounded-sm"
+                style={{
+                  background: accent,
+                  height: `${6 + ((i * 5) % 18)}px`,
+                  animationDelay: `${(i % 7) * 0.11}s`,
+                  animationPlayState: playing ? "running" : "paused",
+                  opacity: 0.8,
+                }}
+              />
+            ))}
+          </div>
+          <div className="mt-2">{bar}</div>
+        </div>
+        {playBtn()}
+        {volCtl}
+      </div>
+    );
+  } else if (type === "capsule") {
+    body = (
+      <div className={`flex items-center gap-2.5 rounded-full border p-1.5 pr-3 ${shell}`}>
+        <span
+          className={`size-8 shrink-0 rounded-full ${playing ? "animate-[spin_6s_linear_infinite]" : ""}`}
+          style={{
+            background: music?.cover
+              ? `url(${music.cover}) center/cover`
+              : `conic-gradient(${accent}, #0b0b12)`,
+          }}
+        />
+        {playBtn("size-7")}
+        {bar}
+        {volCtl}
+      </div>
+    );
+  } else if (type === "terminal") {
+    body = (
+      <div className={`rounded-xl border p-3 font-mono text-xs ${shell}`}>
+        <p className="truncate">
+          <span style={{ color: accent }}>qsy@radio</span>:~$ play &quot;{title}&quot;
+        </p>
+        <p className="mt-1 truncate text-muted-foreground">
+          [{"=".repeat(Math.max(0, Math.round(progress / 5)))}
+          {".".repeat(Math.max(0, 20 - Math.round(progress / 5)))}] {Math.round(progress)}%
+        </p>
+        <div className="mt-2 flex items-center gap-2">
+          {playBtn("size-7")}
+          {bar}
+          {volCtl}
+        </div>
+      </div>
+    );
+  } else if (type === "hologram") {
+    body = (
+      <div
+        className={`relative overflow-hidden rounded-2xl border p-2.5 ${shell}`}
+        style={{ boxShadow: `0 0 40px -12px ${accent}` }}
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(180deg, rgb(255 255 255 / 0.10) 0 2px, transparent 2px 5px)",
+          }}
+        />
+        <div className="relative flex items-center gap-3">
+          <div
+            className="size-10 shrink-0 rounded-lg"
+            style={{
+              background: music?.cover
+                ? `url(${music.cover}) center/cover`
+                : `linear-gradient(140deg, ${accent}, transparent)`,
+            }}
+          />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold" style={{ textShadow: `0 0 14px ${accent}` }}>
+              {title}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">{artist}</p>
+            <div className="mt-2">{bar}</div>
+          </div>
+          {playBtn()}
+          {volCtl}
+        </div>
+      </div>
+    );
   } else if (type === "structured") {
     body = (
       <div
