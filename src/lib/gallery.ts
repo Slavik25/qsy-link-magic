@@ -116,7 +116,7 @@ export async function deleteGalleryImage(img: GalleryImage) {
 }
 
 export async function updateGalleryMeta(id: string, patch: { album?: string; tags?: string[] }) {
-  const payload: Record<string, unknown> = {};
+  const payload: { album?: string; tags?: string[] } = {};
   if (patch.album !== undefined) payload.album = normalizeTag(patch.album);
   if (patch.tags !== undefined) payload.tags = patch.tags.map(normalizeTag).filter(Boolean).slice(0, 12);
   const { error } = await supabase.from("gallery_images").update(payload).eq("id", id);
