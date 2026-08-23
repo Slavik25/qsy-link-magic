@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Type, Wand2 } from "lucide-react";
+import { Check, Coins, Gem, Images, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,7 @@ import {
   SHOP_PLAYERS,
 } from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
+import { IMAGE_HOST_KEY, IMAGE_HOST_PRICE, useImageHostAccess } from "@/lib/gallery";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
 
@@ -37,7 +38,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   }),
 });
 
-type Tab = "players" | "layouts" | "names" | "effects" | "hover" | "decorations";
+type Tab = "players" | "layouts" | "names" | "effects" | "hover" | "decorations" | "access";
 
 const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "players", label: "Reproductores", icon: Music4 },
@@ -46,6 +47,7 @@ const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "effects", label: "Fondos", icon: Wand2 },
   { key: "hover", label: "Hover", icon: MousePointer2 },
   { key: "decorations", label: "Decoraciones", icon: Sparkles },
+  { key: "access", label: "Accesos", icon: Images },
 ];
 
 function Price({ price, premium }: { price: number; premium?: boolean | undefined }) {
@@ -68,6 +70,7 @@ function ShopPage() {
   const qc = useQueryClient();
   const theme = profile?.theme;
   const owned = new Set(unlocks ?? []);
+  const imageHost = useImageHostAccess();
 
   async function buy(key: string, price: number, name: string) {
     try {
@@ -141,6 +144,43 @@ function ShopPage() {
           </button>
         ))}
       </div>
+
+      {tab === "access" && (
+        <section className="grid gap-4 sm:grid-cols-2">
+          <article className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-colors hover:border-primary/40">
+            <div className="flex items-start justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-sm font-semibold">
+                <Images className="size-4 text-primary" /> Image Host
+              </h2>
+              <Price price={IMAGE_HOST_PRICE} premium />
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Galería propia para alojar imágenes con enlaces directos. Incluye la insignia Image Host.
+              Gratis con Obsidian y Seraph.
+            </p>
+            <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+              <li>· 100 imágenes de hasta 10MB con el acceso comprado</li>
+              <li>· 200 imágenes (15MB) con Obsidian · 500 (25MB) con Seraph</li>
+              <li>· Insignia Image Host en todos tus perfiles</li>
+            </ul>
+            {imageHost.hasAccess ? (
+              <Button asChild className="mt-4 w-full rounded-xl" variant="secondary">
+                <Link to="/dashboard/gallery">
+                  <Check className="size-4" /> Desbloqueado · Abrir galería
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                className="mt-4 w-full rounded-xl"
+                variant="secondary"
+                onClick={() => buy(IMAGE_HOST_KEY, IMAGE_HOST_PRICE, "Image Host")}
+              >
+                <Lock className="size-4" /> Comprar · {IMAGE_HOST_PRICE} QSY
+              </Button>
+            )}
+          </article>
+        </section>
+      )}
 
       {tab === "players" && (
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
