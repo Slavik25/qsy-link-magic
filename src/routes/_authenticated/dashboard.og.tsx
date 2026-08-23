@@ -133,9 +133,9 @@ function OgNamesPage() {
   const listings = data?.listings;
 
   const results = useMemo(() => {
-    if (!taken) return [] as { name: string; free: boolean; listing?: Listing }[];
+    if (!taken) return [] as { name: string; free: boolean; listing?: Listing | undefined }[];
     const q = query.trim().toLowerCase();
-    const out: { name: string; free: boolean; listing?: Listing }[] = [];
+    const out: { name: string; free: boolean; listing?: Listing | undefined }[] = [];
     if (filter === "sale") {
       for (const [name, listing] of listings ?? []) {
         if (name.length !== len) continue;
