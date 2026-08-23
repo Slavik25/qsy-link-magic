@@ -1,7 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Copy, Crown, HardDrive, Images, Loader2, Lock, Trash2, UploadCloud } from "lucide-react";
+import {
+  BookOpen,
+  Copy,
+  Crown,
+  FolderOpen,
+  HardDrive,
+  Images,
+  Loader2,
+  Lock,
+  Search,
+  Tag,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +22,9 @@ import {
   IMAGE_HOST_KEY,
   IMAGE_HOST_PRICE,
   deleteGalleryImage,
+  parseTags,
   renameGalleryImage,
+  updateGalleryMeta,
   uploadGalleryImage,
   useGallery,
   useImageHostAccess,
@@ -89,9 +104,28 @@ function Locked() {
   );
 }
 
-function GalleryCard({ img, onDeleted }: { img: GalleryImage; onDeleted: () => void }) {
+function GalleryCard({
+  img,
+  onDeleted,
+  onMetaChange,
+}: {
+  img: GalleryImage;
+  onDeleted: () => void;
+  onMetaChange: () => void;
+}) {
   const [title, setTitle] = useState(img.title);
+  const [album, setAlbum] = useState(img.album ?? "");
+  const [tags, setTags] = useState((img.tags ?? []).join(", "));
   const [busy, setBusy] = useState(false);
+
+  async function saveMeta(patch: { album?: string; tags?: string[] }) {
+    try {
+      await updateGalleryMeta(img.id, patch);
+      onMetaChange();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
 
   async function copy() {
     try {
@@ -129,6 +163,45 @@ function GalleryCard({ img, onDeleted }: { img: GalleryImage; onDeleted: () => v
           className="h-8 text-xs"
           aria-label="Nombre de la imagen"
         />
+        <div className="grid gap-2 sm:grid-cols-2">
+          <div className="relative">
+            <FolderOpen className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={album}
+              maxLength={32}
+              placeholder="Álbum"
+              onChange={(e) => setAlbum(e.target.value)}
+              onBlur={() => {
+                if (album !== (img.album ?? "")) void saveMeta({ album });
+              }}
+              className="h-8 pl-7 text-xs"
+              aria-label="Álbum de la imagen"
+            />
+          </div>
+          <div className="relative">
+            <Tag className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={tags}
+              placeholder="etiquetas, separadas, por coma"
+              onChange={(e) => setTags(e.target.value)}
+              onBlur={() => {
+                const next = parseTags(tags);
+                if (next.join(",") !== (img.tags ?? []).join(",")) void saveMeta({ tags: next });
+              }}
+              className="h-8 pl-7 text-xs"
+              aria-label="Etiquetas de la imagen"
+            />
+          </div>
+        </div>
+        {(img.tags ?? []).length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {img.tags.map((t) => (
+              <span key={t} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
+                #{t}
+              </span>
+            ))}
+          </div>
+        )}
         <p className="text-[11px] text-muted-foreground">
           {formatSize(img.size_bytes)} · {new Date(img.created_at).toLocaleDateString("es-ES")}
         </p>
