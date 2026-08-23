@@ -1362,6 +1362,7 @@ export type Database = {
         Args: { _order_id: string; _payment_id: string }
         Returns: string
       }
+      gallery_is_public_owner: { Args: { _user_id: string }; Returns: boolean }
       gift_rank: {
         Args: { _message?: string; _rank: string; _username: string }
         Returns: number

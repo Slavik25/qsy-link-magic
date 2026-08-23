@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { ProfileStage } from "@/components/qsy/profile-stage";
 import { ProfileWall } from "@/components/qsy/profile-wall";
+import { ProfileGallery } from "@/components/qsy/profile-gallery";
 
 import { QsyLogo } from "@/components/qsy/logo";
 import { Button } from "@/components/ui/button";
@@ -169,6 +170,11 @@ function PublicProfile() {
       ) : null}
 
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
+      <ProfileGallery
+        userId={(profile as { user_id?: string | null }).user_id ?? null}
+        accent={profile.theme.accent}
+        username={profile.username}
+      />
       <main
         className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
       >
