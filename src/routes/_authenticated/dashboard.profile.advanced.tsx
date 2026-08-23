@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { AssetUploader } from "@/components/qsy/asset-uploader";
+import { useUploadLimits } from "@/lib/upload-limits";
 import { Panel, SaveBar, ToggleRow, useProfileDraft } from "@/components/qsy/profile-editor-ui";
 import type { ThemeConfig } from "@/lib/qsy";
 import { Link } from "@tanstack/react-router";
@@ -58,6 +59,7 @@ function PremiumLock({ title }: { title: string }) {
 
 function AdvancedSection() {
   const { profile, draft, setTheme, save, saving } = useProfileDraft();
+  const { limit } = useUploadLimits();
   const t = draft.theme;
   const premium = profile?.rank === "obsidian" || profile?.rank === "seraph";
 
@@ -163,17 +165,17 @@ function AdvancedSection() {
             <div className="grid gap-3 sm:grid-cols-2">
               <AssetUploader
                 label="Imagen del sitio web"
-                hint="OG image · máx. 5MB"
+                hint={`OG image · máx. ${limit(5)}MB`}
                 accept="image/*"
-                maxMb={5}
+                maxMb={limit(5)}
                 value={t.meta_image ?? ""}
                 onChange={(url) => setTheme("meta_image", url)}
               />
               <AssetUploader
                 label="Favicon del sitio web"
-                hint="PNG o ICO · máx. 1MB"
+                hint={`PNG o ICO · máx. ${limit(1)}MB`}
                 accept="image/*"
-                maxMb={1}
+                maxMb={limit(1)}
                 value={t.meta_favicon ?? ""}
                 onChange={(url) => setTheme("meta_favicon", url)}
               />
