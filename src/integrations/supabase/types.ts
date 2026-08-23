@@ -558,6 +558,56 @@ export type Database = {
         }
         Relationships: []
       }
+      og_listings: {
+        Row: {
+          contact: string | null
+          created_at: string
+          currency: string
+          id: string
+          note: string | null
+          price: number
+          profile_id: string
+          status: string
+          updated_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          note?: string | null
+          price?: number
+          profile_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          note?: string | null
+          price?: number
+          profile_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "og_listings_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_orders: {
         Row: {
           amount_cents: number
