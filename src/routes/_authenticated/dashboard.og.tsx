@@ -177,7 +177,7 @@ function OgNamesPage() {
   const save = useMutation({
     mutationFn: async () => {
       const profile = (myProfiles ?? []).find((p) => p.id === profileId);
-      if (!profile) throw new Error("Elige uno de tus nombres OG (3 o 4 caracteres).");
+      if (!profile || !profile.user_id) throw new Error("Elige uno de tus nombres OG (3 o 4 caracteres).");
       const value = Number(price);
       if (!Number.isFinite(value) || value < 0) throw new Error("Precio inválido.");
       const { error } = await supabase.from("og_listings").upsert(
