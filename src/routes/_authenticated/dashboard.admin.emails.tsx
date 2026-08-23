@@ -178,7 +178,7 @@ function AdminEmailsPage() {
               </div>
             </div>
 
-            <dl className="grid gap-3 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
                 <dt className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Dominio de envío</dt>
                 <dd className="mt-1 break-all text-sm font-semibold">{st.senderDomain}</dd>

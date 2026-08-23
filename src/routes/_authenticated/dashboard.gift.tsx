@@ -154,7 +154,7 @@ function GiftPremium() {
         </div>
 
         {!target && (results?.length ?? 0) > 0 && (
-          <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {results!.map((u) => (
               <li key={u.id}>
                 <button
@@ -192,7 +192,7 @@ function GiftPremium() {
 
       <section className="rounded-3xl border border-border/60 bg-surface p-6">
         <h2 className="mb-3 text-sm font-semibold">2 · Elige el plan</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {PLANS.map((p) => {
             const Icon = p.icon;
             const active = plan === p.key;

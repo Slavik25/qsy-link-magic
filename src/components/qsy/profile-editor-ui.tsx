@@ -251,7 +251,7 @@ export function PaintField({
           {sample}
         </span>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <ColorField label={gradient ? "Color 1" : "Color"} value={color} onChange={onColor} />
         {gradient && <ColorField label="Color 2" value={color2} onChange={onColor2} />}
       </div>
@@ -322,7 +322,7 @@ export function ShopEquipGrid({
   const owned = new Set(unlocks ?? []);
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => {
         const unlocked = isOwned(item, owned);
         const active = activeKey === item.key;

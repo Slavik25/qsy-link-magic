@@ -150,7 +150,7 @@ function EffectsSection() {
         />
       </Group>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Group label="Player position">
           <PlayerPositionPicker
             value={t.player_position ?? "bottom-center"}

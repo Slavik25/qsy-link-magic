@@ -119,7 +119,7 @@ function AdvancedSection() {
         <p className="text-xs text-muted-foreground">
           Efectos animados que se renderizan sobre el fondo de tu perfil.
         </p>
-        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {BG_EFFECTS.map((e) => (
             <button
               key={e.id}
@@ -153,7 +153,7 @@ function AdvancedSection() {
           Si lo dejas vacío se usa el embed por defecto de QSY con tu avatar, tu nombre, tu
           @usuario y tu bio.
         </p>
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-xs">Título del sitio web</Label>
@@ -174,7 +174,7 @@ function AdvancedSection() {
                 onChange={(e) => setTheme("meta_description", e.target.value)}
               />
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <AssetUploader
                 label="Imagen del sitio web"
                 hint={`OG image · máx. ${limit(5)}MB`}

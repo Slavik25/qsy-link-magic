@@ -140,7 +140,7 @@ function AnalyticsPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Clics totales"
           value={(stats?.clicks ?? 0).toLocaleString("es-ES")}
@@ -167,7 +167,7 @@ function AnalyticsPage() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
         <section className="rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
           <h2 className="text-sm font-medium">Visitas al perfil</h2>
           <div className="mt-4 h-64">
@@ -208,7 +208,7 @@ function AnalyticsPage() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Panel title="Links más clickeados" rows={stats?.topLinks ?? []} empty="Nadie ha hecho clic todavía" />
         <Panel title="Navegadores" rows={stats?.browsers ?? []} empty="Aún no hay navegadores" />
         <Panel title="Top referrers" rows={stats?.referrers ?? []} empty="Aún no hay referrers" />

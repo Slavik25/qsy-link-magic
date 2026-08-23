@@ -281,11 +281,11 @@ function SettingsPage() {
         </Link>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Columna izquierda */}
         <div className="space-y-6">
           <Card icon={UserRound} title="Información general">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="username">Nombre de usuario</Label>
                 <div className="relative">
@@ -512,7 +512,7 @@ function SettingsPage() {
                 {profileHost(profile)}/{profile?.username ?? "…"}
               </span>
             </p>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Button variant="secondary" onClick={changeEmail}>
                 Cambiar email
               </Button>

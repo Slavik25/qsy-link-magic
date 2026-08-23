@@ -71,7 +71,7 @@ function MissionsPage() {
         {completed}/{MISSIONS.length} misiones completadas · {claimed.size} recompensas reclamadas
       </p>
 
-      <section className="grid gap-4 md:grid-cols-2">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {MISSIONS.map((m) => {
           const progress = state?.progress[m.key] ?? 0;
           const done = progress >= m.goal;

@@ -404,7 +404,7 @@ function BadgeManager({ profile, onClose }: { profile: AdminProfile; onClose: ()
 
         <div>
           <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Catálogo</p>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {list.map((b) => (
               <button
                 key={b.key}

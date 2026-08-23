@@ -170,7 +170,7 @@ function Overview() {
         </aside>
       </div>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="URL principal"
           value={`@${profile?.username ?? "…"}`}
@@ -200,7 +200,7 @@ function Overview() {
         />
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {quick.map((q, i) => (
           <Link
             key={q.title}
@@ -262,7 +262,7 @@ function Overview() {
         </section>
       )}
 
-      <section className="grid gap-4 lg:grid-cols-[1fr_340px]">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_340px]">
         <div className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <div className="min-w-0">
