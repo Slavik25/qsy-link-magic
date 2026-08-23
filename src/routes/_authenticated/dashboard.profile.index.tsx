@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AssetUploader } from "@/components/qsy/asset-uploader";
 import { Panel, SaveBar, useProfileDraft } from "@/components/qsy/profile-editor-ui";
+import { useUploadLimits } from "@/lib/upload-limits";
 import { detectEmbed, prettyTrackName, splitTrackName } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/")({
@@ -62,9 +63,9 @@ function AssetsSection() {
         />
         <AssetUploader
           label="Audio"
-          hint="MP3 u OGG · máx. 10MB"
+          hint={`MP3 u OGG · máx. ${limit(10)}MB`}
           accept="audio/*"
-          maxMb={10}
+          maxMb={limit(10)}
           preview="audio"
           value={t.audio_url ?? ""}
           onChange={(url) => setTheme("audio_url", url)}
@@ -76,9 +77,9 @@ function AssetsSection() {
         />
         <AssetUploader
           label="Cursor"
-          hint="PNG o CUR · máx. 2MB"
+          hint={`PNG o CUR · máx. ${limit(2)}MB`}
           accept="image/png,image/*"
-          maxMb={2}
+          maxMb={limit(2)}
           value={t.cursor_url ?? ""}
           onChange={(url) => setTheme("cursor_url", url)}
         />
