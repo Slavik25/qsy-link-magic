@@ -125,6 +125,102 @@ export function PlayerPreview({ player }: { player: PlayerDef }) {
           </div>
         </div>
       )}
+      {t === "orbit" && (
+        <div className="flex w-full items-center justify-center">
+          <div className="relative grid size-16 place-items-center">
+            <span className="absolute inset-0 rounded-full border-2 border-white/10" />
+            <span className="absolute inset-0 animate-[spin_3s_linear_infinite] rounded-full border-2 border-transparent border-t-primary" />
+            <Play className="size-5 text-primary" />
+          </div>
+        </div>
+      )}
+
+      {t === "poster" && (
+        <div className="relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-primary/60 via-primary/20 to-black">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-3">
+            <p className="truncate text-[11px] font-semibold">Midnight Drive</p>
+            <p className="truncate text-[10px] text-muted-foreground">QSY Radio</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <Play className="size-3.5 text-primary" />
+              <span className="h-1 flex-1 overflow-hidden rounded-full bg-white/20">
+                <span className="block h-full w-2/5 rounded-full bg-primary" />
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {t === "lcd" && (
+        <div className="w-full rounded-md border border-emerald-400/40 bg-[#07160d] p-3 font-mono">
+          <p className="truncate text-[11px] text-emerald-300">▶ MIDNIGHT DRIVE</p>
+          <p className="mt-1 text-[10px] text-emerald-500/70">QSY RADIO · 01:24 / 03:02</p>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-sm bg-emerald-900/70">
+            <div className="h-full w-2/5 bg-emerald-400" />
+          </div>
+        </div>
+      )}
+
+      {t === "spectrum" && (
+        <div className={`flex w-full items-center gap-3 rounded-xl border p-2.5 ${shell}`}>
+          <div className="size-11 shrink-0 rounded-lg bg-gradient-to-br from-primary/80 to-primary/10" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[11px] font-medium">Midnight Drive</p>
+            <p className="truncate text-[10px] text-muted-foreground">QSY Radio</p>
+          </div>
+          <div className="flex h-8 items-end gap-0.5">
+            {[14, 22, 10, 26, 16, 20].map((h, i) => (
+              <span
+                key={i}
+                className="w-1 rounded-full bg-primary/80"
+                style={{ height: h, animation: `qsy-eq 1s ease-in-out ${i * 0.1}s infinite alternate` }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {t === "capsule" && (
+        <div className={`flex w-full items-center gap-2 rounded-full border px-2 py-1.5 ${shell}`}>
+          <span className="size-7 shrink-0 animate-[spin_5s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,#000,#555,#000)] ring-2 ring-primary/50" />
+          <p className="truncate text-[11px]">Midnight Drive</p>
+          <span className="ml-auto h-0.5 w-10 overflow-hidden rounded-full bg-white/20">
+            <span className="block h-full w-1/2 bg-primary" />
+          </span>
+          <Play className="size-3 shrink-0 text-primary" />
+        </div>
+      )}
+
+      {t === "terminal" && (
+        <div className="w-full rounded-md border border-emerald-500/40 bg-black/80 p-3 font-mono text-emerald-400">
+          <p className="text-[10px]">$ qsy play midnight_drive.mp3</p>
+          <p className="mt-1 text-[10px]">[████████░░░░░░░░] 42%</p>
+          <p className="mt-1 text-[10px] text-emerald-500/60">▌now playing · QSY Radio</p>
+        </div>
+      )}
+
+      {t === "hologram" && (
+        <div className="relative w-full overflow-hidden rounded-xl border border-cyan-300/40 bg-cyan-400/10 p-3 shadow-[0_0_28px_rgba(34,211,238,.35)] backdrop-blur-md">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-40"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 1px,transparent 1px 3px)",
+            }}
+          />
+          <div className="relative flex items-center gap-3">
+            <div className="size-10 shrink-0 rounded-lg bg-gradient-to-br from-cyan-300/70 to-violet-500/30" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[11px] font-semibold text-cyan-100">Midnight Drive</p>
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/20">
+                <div className="h-full w-1/2 rounded-full bg-cyan-300" />
+              </div>
+            </div>
+            <Pause className="size-3.5 text-cyan-200" />
+          </div>
+        </div>
+      )}
+
 
       <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
         {player.player_position ?? "en tarjeta"}
