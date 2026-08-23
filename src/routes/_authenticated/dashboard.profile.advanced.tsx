@@ -59,6 +59,7 @@ function PremiumLock({ title }: { title: string }) {
 
 function AdvancedSection() {
   const { profile, draft, setTheme, save, saving } = useProfileDraft();
+  const { limit } = useUploadLimits();
   const t = draft.theme;
   const premium = profile?.rank === "obsidian" || profile?.rank === "seraph";
 
