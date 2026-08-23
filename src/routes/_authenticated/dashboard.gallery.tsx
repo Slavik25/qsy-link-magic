@@ -19,8 +19,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  IMAGE_HOST_KEY,
-  IMAGE_HOST_PRICE,
   deleteGalleryImage,
   parseTags,
   renameGalleryImage,
@@ -30,7 +28,7 @@ import {
   useImageHostAccess,
   type GalleryImage,
 } from "@/lib/gallery";
-import { purchaseItem, useWallet } from "@/lib/economy";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/gallery")({
   component: GalleryPage,

@@ -16,7 +16,7 @@ import {
   SHOP_PLAYERS,
 } from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
-import { IMAGE_HOST_KEY, IMAGE_HOST_PRICE, useImageHostAccess } from "@/lib/gallery";
+import { useImageHostAccess } from "@/lib/gallery";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
 
