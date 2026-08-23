@@ -78,19 +78,24 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     return "border-white/15 bg-white/5 backdrop-blur-md";
   }, [theme.player_bg]);
 
-  const posClass = floating
-    ? theme.player_position === "top-right"
-      ? "fixed right-4 top-4 z-30 w-auto max-w-[min(20rem,80vw)]"
-      : theme.player_position === "top-left"
-        ? "fixed left-4 top-4 z-30 w-auto max-w-[min(20rem,80vw)]"
-        : theme.player_position === "bottom-left"
-          ? "fixed bottom-4 left-4 z-30 w-[min(22rem,90vw)]"
-          : theme.player_position === "bottom-right"
-            ? "fixed bottom-4 right-4 z-30 w-[min(22rem,90vw)]"
-            : "fixed bottom-4 left-1/2 z-30 w-[min(26rem,92vw)] -translate-x-1/2"
-    : "w-full max-w-md";
+  const FLOATING_POS: Record<string, string> = {
+    "top-left": "fixed left-4 top-4 z-30 w-[min(17rem,78vw)]",
+    "top-center": "fixed left-1/2 top-4 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
+    "top-right": "fixed right-4 top-4 z-30 w-[min(17rem,78vw)]",
+    "mid-left": "fixed left-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
+    "mid-right": "fixed right-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
+    "bottom-left": "fixed bottom-4 left-4 z-30 w-[min(17rem,78vw)]",
+    "bottom-center": "fixed bottom-4 left-1/2 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
+    "bottom-right": "fixed bottom-4 right-4 z-30 w-[min(17rem,78vw)]",
+  };
 
-  const playBtn = (size = "size-9") => (
+  const posClass = floating
+    ? (FLOATING_POS[theme.player_position ?? "bottom-center"] ??
+      FLOATING_POS["bottom-center"]!)
+    : "w-full max-w-sm";
+
+
+  const playBtn = (size = "size-8") => (
     <button
       type="button"
       onClick={toggle}
@@ -130,7 +135,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
         value={volume}
         aria-label="Volumen"
         onChange={(e) => setVol(Number(e.target.value))}
-        className="h-1 w-14 cursor-pointer appearance-none rounded-full bg-white/20"
+        className="h-1 w-12 cursor-pointer appearance-none rounded-full bg-white/20"
         style={{ accentColor: accent }}
       />
     </div>
@@ -146,7 +151,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
         const r = e.currentTarget.getBoundingClientRect();
         el.currentTime = ((e.clientX - r.left) / r.width) * dur;
       }}
-      className="block h-1.5 w-full overflow-hidden rounded-full bg-white/15"
+      className="block h-1 w-full overflow-hidden rounded-full bg-white/15"
     >
       <span
         className="block h-full rounded-full transition-[width] duration-300"
@@ -177,7 +182,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
 
   if (type === "minimal") {
     body = (
-      <div className={`flex items-center gap-3 rounded-full border px-3 py-2 ${shell}`}>
+      <div className={`flex items-center gap-3 rounded-full border px-2.5 py-1.5 ${shell}`}>
         {playBtn("size-7")}
         {bar}
         {volCtl}
@@ -185,7 +190,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else if (type === "text") {
     body = (
-      <div className={`flex items-center gap-3 overflow-hidden rounded-full border px-3 py-2 ${shell}`}>
+      <div className={`flex items-center gap-3 overflow-hidden rounded-full border px-2.5 py-1.5 ${shell}`}>
         {playBtn("size-7")}
         <div className="min-w-0 flex-1 overflow-hidden">
           <p
@@ -200,9 +205,9 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else if (type === "vinyl") {
     body = (
-      <div className={`flex items-center gap-3 rounded-2xl border p-3 ${shell}`}>
+      <div className={`flex items-center gap-3 rounded-2xl border p-2.5 ${shell}`}>
         <div
-          className={`relative size-14 shrink-0 overflow-hidden rounded-full ${
+          className={`relative size-11 shrink-0 overflow-hidden rounded-full ${
             playing ? "animate-[spin_4s_linear_infinite]" : ""
           }`}
           style={{
@@ -229,10 +234,10 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else if (type === "wave") {
     body = (
-      <div className={`flex items-center gap-3 rounded-2xl border p-3 ${shell}`}>
+      <div className={`flex items-center gap-3 rounded-2xl border p-2.5 ${shell}`}>
         {playBtn()}
         <div className="flex min-w-0 flex-1 items-end gap-[3px]">
-          {Array.from({ length: 22 }).map((_, i) => (
+          {Array.from({ length: 18 }).map((_, i) => (
             <span
               key={i}
               className="qsy-eq w-full rounded-full"
@@ -251,12 +256,12 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else if (type === "cassette") {
     body = (
-      <div className={`rounded-2xl border p-3 ${shell}`}>
+      <div className={`rounded-2xl border p-2.5 ${shell}`}>
         <div className="flex items-center justify-between gap-3 rounded-xl bg-black/40 p-3">
           {[0, 1].map((i) => (
             <span
               key={i}
-              className={`grid size-9 place-items-center rounded-full border-2 border-white/20 ${
+              className={`grid size-8 place-items-center rounded-full border-2 border-white/20 ${
                 playing ? "animate-[spin_2.4s_linear_infinite]" : ""
               }`}
             >
@@ -267,7 +272,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             <p className="truncate font-mono text-xs">{title}</p>
             <p className="truncate font-mono text-[10px] text-muted-foreground">{artist}</p>
           </div>
-          {playBtn("size-8")}
+          {playBtn("size-7")}
         </div>
         <div className="mt-2 flex items-center gap-2">
           {bar}
@@ -278,7 +283,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   } else if (type === "structured") {
     body = (
       <div
-        className={`rounded-2xl border p-3 ${shell}`}
+        className={`rounded-2xl border p-2.5 ${shell}`}
         style={
           theme.player_type === "structured"
             ? { boxShadow: `0 18px 50px -30px ${accent}` }
@@ -287,7 +292,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
       >
         <div className="flex items-center gap-3">
           <div
-            className="size-12 shrink-0 rounded-lg"
+            className="size-10 shrink-0 rounded-lg"
             style={{
               background: music?.cover
                 ? `url(${music.cover}) center/cover`
@@ -312,8 +317,8 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else if (type === "dock") {
     body = (
-      <div className={`flex items-center gap-3 rounded-full border px-4 py-2.5 ${shell}`}>
-        {playBtn("size-8")}
+      <div className={`flex items-center gap-3 rounded-full border px-3 py-2 ${shell}`}>
+        {playBtn("size-7")}
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-medium">{title}</p>
           <div className="mt-1.5">
@@ -326,9 +331,9 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     );
   } else {
     body = (
-      <div className={`flex items-center gap-3 rounded-2xl border p-3 ${shell}`}>
+      <div className={`flex items-center gap-3 rounded-2xl border p-2.5 ${shell}`}>
         <div
-          className="size-11 shrink-0 rounded-lg"
+          className="size-9 shrink-0 rounded-lg"
           style={{
             background: music?.cover
               ? `url(${music.cover}) center/cover`

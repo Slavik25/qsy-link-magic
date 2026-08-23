@@ -371,3 +371,52 @@ export function ShopEquipGrid({
     </div>
   );
 }
+
+const PLAYER_POSITIONS: { id: string; label: string }[] = [
+  { id: "top-left", label: "Arriba izq." },
+  { id: "top-center", label: "Arriba centro" },
+  { id: "top-right", label: "Arriba der." },
+  { id: "mid-left", label: "Medio izq." },
+  { id: "card", label: "En la tarjeta" },
+  { id: "mid-right", label: "Medio der." },
+  { id: "bottom-left", label: "Abajo izq." },
+  { id: "bottom-center", label: "Abajo centro" },
+  { id: "bottom-right", label: "Abajo der." },
+];
+
+/** Selector visual 3x3 para ubicar el reproductor en la pantalla del biolink. */
+export function PlayerPositionPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="grid max-w-md grid-cols-3 gap-2 rounded-2xl border border-border/60 bg-surface-strong/30 p-3">
+      {PLAYER_POSITIONS.map((p) => {
+        const active = value === p.id;
+        return (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => onChange(p.id)}
+            aria-pressed={active}
+            className={`grid aspect-[4/3] place-items-center gap-1.5 rounded-xl border p-2 text-center transition-colors ${
+              active
+                ? "border-primary/60 bg-primary/10"
+                : "border-border/50 bg-surface-strong/40 hover:border-border"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-8 rounded-full ${active ? "bg-primary" : "bg-muted-foreground/40"}`}
+            />
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              {p.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
