@@ -78,17 +78,22 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     return "border-white/15 bg-white/5 backdrop-blur-md";
   }, [theme.player_bg]);
 
+  const FLOATING_POS: Record<string, string> = {
+    "top-left": "fixed left-4 top-4 z-30 w-[min(17rem,78vw)]",
+    "top-center": "fixed left-1/2 top-4 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
+    "top-right": "fixed right-4 top-4 z-30 w-[min(17rem,78vw)]",
+    "mid-left": "fixed left-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
+    "mid-right": "fixed right-4 top-1/2 z-30 w-[min(17rem,78vw)] -translate-y-1/2",
+    "bottom-left": "fixed bottom-4 left-4 z-30 w-[min(17rem,78vw)]",
+    "bottom-center": "fixed bottom-4 left-1/2 z-30 w-[min(19rem,84vw)] -translate-x-1/2",
+    "bottom-right": "fixed bottom-4 right-4 z-30 w-[min(17rem,78vw)]",
+  };
+
   const posClass = floating
-    ? theme.player_position === "top-right"
-      ? "fixed right-4 top-4 z-30 w-auto max-w-[min(20rem,80vw)]"
-      : theme.player_position === "top-left"
-        ? "fixed left-4 top-4 z-30 w-auto max-w-[min(20rem,80vw)]"
-        : theme.player_position === "bottom-left"
-          ? "fixed bottom-4 left-4 z-30 w-[min(22rem,90vw)]"
-          : theme.player_position === "bottom-right"
-            ? "fixed bottom-4 right-4 z-30 w-[min(22rem,90vw)]"
-            : "fixed bottom-4 left-1/2 z-30 w-[min(26rem,92vw)] -translate-x-1/2"
-    : "w-full max-w-md";
+    ? (FLOATING_POS[theme.player_position ?? "bottom-center"] ??
+      FLOATING_POS["bottom-center"]!)
+    : "w-full max-w-sm";
+
 
   const playBtn = (size = "size-9") => (
     <button
