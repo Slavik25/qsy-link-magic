@@ -16,7 +16,7 @@ import {
   SHOP_PLAYERS,
 } from "@/lib/shop";
 import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
-import { IMAGE_HOST_KEY, IMAGE_HOST_PRICE, useImageHostAccess } from "@/lib/gallery";
+import { useImageHostAccess } from "@/lib/gallery";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
 
@@ -152,15 +152,17 @@ function ShopPage() {
               <h2 className="flex items-center gap-2 text-sm font-semibold">
                 <Images className="size-4 text-primary" /> Image Host
               </h2>
-              <Price price={IMAGE_HOST_PRICE} premium />
+              <span className="rounded-lg border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                Obsidian / Seraph
+              </span>
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
               Galería propia para alojar imágenes con enlaces directos. Incluye la insignia Image Host.
-              Gratis con Obsidian y Seraph.
+              Exclusivo de los rangos Obsidian y Seraph.
             </p>
             <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-              <li>· 100 imágenes de hasta 10MB con el acceso comprado</li>
-              <li>· 200 imágenes (15MB) con Obsidian · 500 (25MB) con Seraph</li>
+              <li>· 200 imágenes (15MB) con Obsidian</li>
+              <li>· 500 imágenes (25MB) con Seraph</li>
               <li>· Insignia Image Host en todos tus perfiles</li>
             </ul>
             {imageHost.hasAccess ? (
@@ -170,12 +172,10 @@ function ShopPage() {
                 </Link>
               </Button>
             ) : (
-              <Button
-                className="mt-4 w-full rounded-xl"
-                variant="secondary"
-                onClick={() => buy(IMAGE_HOST_KEY, IMAGE_HOST_PRICE, "Image Host")}
-              >
-                <Lock className="size-4" /> Comprar · {IMAGE_HOST_PRICE} QSY
+              <Button asChild className="mt-4 w-full rounded-xl" variant="secondary">
+                <Link to="/dashboard/rank">
+                  <Lock className="size-4" /> Requiere Obsidian o Seraph
+                </Link>
               </Button>
             )}
           </article>

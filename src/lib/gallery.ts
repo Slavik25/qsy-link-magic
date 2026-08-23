@@ -31,16 +31,15 @@ export function parseTags(v: string) {
   return Array.from(new Set(v.split(",").map(normalizeTag).filter(Boolean))).slice(0, 12);
 }
 
-/** Cuota de imágenes según rango / acceso comprado. */
-export function galleryQuota(rank?: string | null, bought?: boolean) {
+/** Cuota de imágenes según rango (exclusivo Obsidian / Seraph). */
+export function galleryQuota(rank?: string | null) {
   const r = (rank ?? "").toLowerCase();
   if (r === "seraph") return { max: 500, maxMb: 25 };
   if (r === "obsidian") return { max: 200, maxMb: 15 };
-  if (bought) return { max: 100, maxMb: 10 };
   return { max: 0, maxMb: 0 };
 }
 
-/** Acceso al Image Host: Obsidian, Seraph o compra en la tienda. */
+/** Acceso al Image Host: exclusivo para Obsidian y Seraph. */
 export function useImageHostAccess() {
   const { data: profile } = useMyProfile();
   const { data: unlocks } = useUnlocks();
@@ -51,8 +50,8 @@ export function useImageHostAccess() {
     rank,
     bought,
     premium,
-    hasAccess: premium || bought,
-    quota: galleryQuota(rank, bought),
+    hasAccess: premium,
+    quota: galleryQuota(rank),
   };
 }
 

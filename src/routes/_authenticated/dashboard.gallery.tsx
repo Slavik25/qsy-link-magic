@@ -19,8 +19,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  IMAGE_HOST_KEY,
-  IMAGE_HOST_PRICE,
   deleteGalleryImage,
   parseTags,
   renameGalleryImage,
@@ -30,7 +28,7 @@ import {
   useImageHostAccess,
   type GalleryImage,
 } from "@/lib/gallery";
-import { purchaseItem, useWallet } from "@/lib/economy";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/gallery")({
   component: GalleryPage,
@@ -56,47 +54,24 @@ function formatSize(bytes: number) {
 }
 
 function Locked() {
-  const qc = useQueryClient();
-  const { data: coins } = useWallet();
-  const [busy, setBusy] = useState(false);
-
-  async function buy() {
-    setBusy(true);
-    try {
-      const balance = await purchaseItem(IMAGE_HOST_KEY);
-      toast.success("Image Host desbloqueado", { description: `Saldo restante: ${balance} QSY Coins` });
-      await qc.invalidateQueries({ queryKey: ["wallet"] });
-      await qc.invalidateQueries({ queryKey: ["unlocks"] });
-    } catch (e) {
-      const msg = (e as Error).message;
-      toast.error(msg.includes("not enough") ? "No tienes suficientes QSY Coins" : "No se pudo comprar", {
-        description: msg.includes("not enough") ? `Necesitas ${IMAGE_HOST_PRICE} coins.` : msg,
-      });
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
     <div className="rounded-3xl border border-primary/40 bg-primary/5 p-8 text-center">
       <Lock className="mx-auto size-8 text-primary" />
       <h2 className="mt-4 text-lg font-semibold">Image Host bloqueado</h2>
       <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-        Aloja tus imágenes en QSY y obtén enlaces directos para usarlos en tu biolink. Incluido con
-        Obsidian y Seraph, o cómpralo por {IMAGE_HOST_PRICE.toLocaleString("es-ES")} QSY Coins.
-        Al desbloquearlo recibes la insignia <strong>Image Host</strong>.
-      </p>
-      <p className="mt-2 text-xs text-muted-foreground">
-        Tus QSY Coins: <strong className="text-primary">{(coins ?? 0).toLocaleString("es-ES")}</strong>
+        El Image Host es exclusivo de los rangos <strong>Obsidian</strong> y <strong>Seraph</strong>. Tu
+        rango actual no tiene acceso: mejora tu rango para alojar imágenes en QSY, obtener enlaces
+        directos y la insignia <strong>Image Host</strong>.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Button onClick={() => void buy()} disabled={busy} className="rounded-xl">
-          {busy ? <Loader2 className="size-4 animate-spin" /> : <Images className="size-4" />}
-          Comprar acceso · {IMAGE_HOST_PRICE} QSY
+        <Button asChild className="rounded-xl">
+          <Link to="/dashboard/premium">
+            <Crown className="size-4" /> Obtener Obsidian o Seraph
+          </Link>
         </Button>
         <Button asChild variant="secondary" className="rounded-xl">
           <Link to="/dashboard/rank">
-            <Crown className="size-4" /> Subir de rango
+            <Images className="size-4" /> Ver rangos
           </Link>
         </Button>
       </div>
