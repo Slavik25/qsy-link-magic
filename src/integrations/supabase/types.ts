@@ -240,31 +240,37 @@ export type Database = {
       }
       gallery_images: {
         Row: {
+          album: string
           content_type: string
           created_at: string
           id: string
           path: string
           size_bytes: number
+          tags: string[]
           title: string
           url: string
           user_id: string
         }
         Insert: {
+          album?: string
           content_type?: string
           created_at?: string
           id?: string
           path: string
           size_bytes?: number
+          tags?: string[]
           title?: string
           url: string
           user_id: string
         }
         Update: {
+          album?: string
           content_type?: string
           created_at?: string
           id?: string
           path?: string
           size_bytes?: number
+          tags?: string[]
           title?: string
           url?: string
           user_id?: string
