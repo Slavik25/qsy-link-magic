@@ -17,26 +17,32 @@ export const Route = createFileRoute("/_authenticated/dashboard/profile/")({
 
 function AssetsSection() {
   const { draft, set, setTheme, save, saving } = useProfileDraft();
+  const { limit, boosted, rank } = useUploadLimits();
   const t = draft.theme;
 
   return (
     <Panel
       title="Assets"
-      description="Haz clic o arrastra archivos para subirlos. Fondos hasta 15MB, audios hasta 10MB."
+      description={
+        boosted
+          ? `Haz clic o arrastra archivos para subirlos. Con ${rank === "seraph" ? "Seraph" : "Obsidian"} tus límites están ampliados: fondos hasta ${limit(15)}MB y audios hasta ${limit(10)}MB.`
+          : `Haz clic o arrastra archivos para subirlos. Fondos hasta ${limit(15)}MB, audios hasta ${limit(10)}MB. Con Obsidian o Seraph los límites se multiplican.`
+      }
     >
       <div className="grid gap-3 sm:grid-cols-2">
         <AssetUploader
           label="Avatar"
-          hint="PNG, JPG o GIF · máx. 8MB"
+          hint={`PNG, JPG o GIF · máx. ${limit(8)}MB`}
           accept="image/*"
+          maxMb={limit(8)}
           value={draft.avatar_url}
           onChange={(url) => set("avatar_url", url)}
         />
         <AssetUploader
           label="Banner"
-          hint="Imagen ancha · máx. 10MB"
+          hint={`Imagen ancha · máx. ${limit(10)}MB`}
           accept="image/*"
-          maxMb={10}
+          maxMb={limit(10)}
           value={draft.banner_url}
           onChange={(url) => set("banner_url", url)}
         />
@@ -45,9 +51,9 @@ function AssetsSection() {
       <div className="grid gap-3 sm:grid-cols-3">
         <AssetUploader
           label="Background"
-          hint="Imagen o vídeo · máx. 15MB"
+          hint={`Imagen o vídeo · máx. ${limit(15)}MB`}
           accept="image/*,video/mp4,video/webm"
-          maxMb={15}
+          maxMb={limit(15)}
           value={t.background}
           onChange={(url) => {
             setTheme("background", url);
