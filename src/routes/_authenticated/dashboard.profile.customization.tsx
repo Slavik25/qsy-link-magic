@@ -415,6 +415,13 @@ function CustomizationSection() {
         </div>
       </Group>
 
+      <Group label="Posición del reproductor de música">
+        <PlayerPositionPicker
+          value={t.player_position ?? "bottom-center"}
+          onChange={(v) => setTheme("player_position", v)}
+        />
+      </Group>
+
       <div className="space-y-2">
         <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">
           Bio descriptiva
