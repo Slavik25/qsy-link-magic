@@ -55,7 +55,7 @@ export function ProfileGallery({ userId, accent, username }: Props) {
 
       {open && (
         <aside
-          className="fixed left-4 top-16 z-50 flex max-h-[75vh] w-[min(92vw,24rem)] flex-col overflow-hidden rounded-2xl border border-border bg-background/85 backdrop-blur-xl pop-in"
+          className="fixed right-4 top-16 z-50 flex max-h-[75vh] w-[min(92vw,24rem)] flex-col overflow-hidden rounded-2xl border border-border bg-background/85 backdrop-blur-xl pop-in"
           style={{ boxShadow: `0 30px 80px -30px color-mix(in oklab, ${accent} 60%, transparent)` }}
         >
           <header className="flex items-center justify-between border-b border-border px-4 py-3">
