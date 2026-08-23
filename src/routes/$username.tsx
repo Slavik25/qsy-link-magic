@@ -169,6 +169,11 @@ function PublicProfile() {
       ) : null}
 
       <ProfileWall profileId={profile.id} accent={profile.theme.accent} />
+      <ProfileGallery
+        userId={(profile as { user_id?: string | null }).user_id ?? null}
+        accent={profile.theme.accent}
+        username={profile.username}
+      />
       <main
         className={`mx-auto flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 ${widthClass}`}
       >
