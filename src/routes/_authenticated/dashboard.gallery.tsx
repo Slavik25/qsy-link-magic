@@ -231,9 +231,24 @@ function GalleryPage() {
   const qc = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [uploadAlbum, setUploadAlbum] = useState("");
+  const [query, setQuery] = useState("");
+  const [album, setAlbum] = useState("all");
+  const [tag, setTag] = useState<string | null>(null);
 
   const list = images ?? [];
   const usedMb = list.reduce((a, i) => a + i.size_bytes, 0) / 1024 / 1024;
+
+  const albums = Array.from(new Set(list.map((i) => i.album).filter(Boolean))).sort();
+  const allTags = Array.from(new Set(list.flatMap((i) => i.tags ?? []))).sort();
+
+  const q = query.trim().toLowerCase();
+  const filtered = list.filter((i) => {
+    if (album !== "all" && (i.album || "") !== (album === "none" ? "" : album)) return false;
+    if (tag && !(i.tags ?? []).includes(tag)) return false;
+    if (q && !`${i.title} ${i.album} ${(i.tags ?? []).join(" ")}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
 
   async function onFiles(files: FileList) {
     if (list.length + files.length > quota.max) {
@@ -243,7 +258,7 @@ function GalleryPage() {
     setBusy(true);
     try {
       for (const file of Array.from(files)) {
-        await uploadGalleryImage(file, quota.maxMb);
+        await uploadGalleryImage(file, quota.maxMb, uploadAlbum);
       }
       toast.success("Imágenes subidas");
       await qc.invalidateQueries({ queryKey: ["gallery"] });
@@ -294,27 +309,90 @@ function GalleryPage() {
                 if (f && f.length) void onFiles(f);
               }}
             />
+            <div className="flex items-center gap-2">
+              <Input
+                value={uploadAlbum}
+                maxLength={32}
+                placeholder="Álbum destino (opcional)"
+                onChange={(e) => setUploadAlbum(e.target.value)}
+                className="h-9 w-48 text-xs"
+                aria-label="Álbum destino para las subidas"
+              />
             <Button className="rounded-xl" disabled={busy} onClick={() => inputRef.current?.click()}>
               {busy ? <Loader2 className="size-4 animate-spin" /> : <UploadCloud className="size-4" />}
               Subir imágenes
             </Button>
+            </div>
           </div>
 
-          {list.length === 0 ? (
+          <div className="space-y-3 rounded-2xl border border-border/60 bg-card/40 px-5 py-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative min-w-[200px] flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Buscar por nombre, álbum o etiqueta"
+                  className="h-9 pl-9 text-sm"
+                  aria-label="Buscar imágenes"
+                />
+              </div>
+              <select
+                value={album}
+                onChange={(e) => setAlbum(e.target.value)}
+                aria-label="Filtrar por álbum"
+                className="h-9 rounded-md border border-border/60 bg-background px-3 text-sm"
+              >
+                <option value="all">Todos los álbumes</option>
+                <option value="none">Sin álbum</option>
+                {albums.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {allTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {allTags.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTag(tag === t ? null : t)}
+                    className={`rounded-full px-2.5 py-1 text-[11px] transition-colors ${
+                      tag === t
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted/40 text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    #{t}
+                  </button>
+                ))}
+              </div>
+            )}
+            <p className="text-[11px] text-muted-foreground">
+              {filtered.length} de {list.length} imágenes
+            </p>
+          </div>
+
+          {filtered.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border/60 p-12 text-center text-sm text-muted-foreground">
-              Todavía no subiste ninguna imagen.
+              {list.length === 0 ? "Todavía no subiste ninguna imagen." : "Ninguna imagen coincide con el filtro."}
             </div>
           ) : (
             <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {list.map((img) => (
+              {filtered.map((img) => (
                 <GalleryCard
                   key={img.id}
                   img={img}
                   onDeleted={() => void qc.invalidateQueries({ queryKey: ["gallery"] })}
+                  onMetaChange={() => void qc.invalidateQueries({ queryKey: ["gallery"] })}
                 />
               ))}
             </section>
           )}
+
+          <UsageGuide sample={list[0]?.url ?? "https://qsy.rip/tu-imagen.png"} premium={premium} />
         </>
       )}
     </div>
