@@ -28,6 +28,7 @@ export function isFloatingPlayer(theme: ThemeConfig) {
  */
 export function ProfilePlayer({ theme, music, floating = false }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [time, setTime] = useState(0);
@@ -37,13 +38,68 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   const accent = theme.accent;
   const type = theme.player_type || "default";
   const embed = detectEmbed(theme.audio_url);
+  // YouTube y SoundCloud se pueden controlar desde fuera del iframe: ocultamos
+  // su reproductor y mostramos el skin elegido por el usuario.
+  const remote =
+    embed && (embed.provider === "youtube" || embed.provider === "soundcloud")
+      ? embed.provider
+      : null;
   const title =
     theme.audio_title?.trim() ||
     music?.title ||
-    (theme.audio_url ? prettyTrackName(theme.audio_url) : "QSY Radio");
+    (theme.audio_url && !embed ? prettyTrackName(theme.audio_url) : "") ||
+    "QSY Radio";
   const artist = theme.audio_artist?.trim() || music?.artist || "";
 
+  /** Envía un comando al iframe embebido (YouTube o SoundCloud). */
+  const post = (payload: unknown) => {
+    frameRef.current?.contentWindow?.postMessage(JSON.stringify(payload), "*");
+  };
+  const ytCmd = (func: string, args: unknown[] = []) =>
+    post({ event: "command", func, args });
+  const scCmd = (method: string, value?: unknown) =>
+    post(value === undefined ? { method } : { method, value });
+
   useEffect(() => {
+    if (!remote) return;
+    const onMsg = (e: MessageEvent) => {
+      if (typeof e.data !== "string") return;
+      let d: any;
+      try {
+        d = JSON.parse(e.data);
+      } catch {
+        return;
+      }
+      if (remote === "youtube" && d?.info) {
+        if (typeof d.info.currentTime === "number") setTime(d.info.currentTime);
+        if (typeof d.info.duration === "number" && d.info.duration > 0) setDur(d.info.duration);
+        if (typeof d.info.playerState === "number") setPlaying(d.info.playerState === 1);
+      }
+      if (remote === "soundcloud" && d?.method === "playProgress" && d.value) {
+        if (typeof d.value.currentPosition === "number") setTime(d.value.currentPosition / 1000);
+        if (typeof d.value.loadedProgress === "number" && d.value.relativePosition > 0) {
+          setDur(d.value.currentPosition / 1000 / d.value.relativePosition);
+        }
+        setPlaying(true);
+      }
+    };
+    window.addEventListener("message", onMsg);
+    const hello = window.setInterval(() => {
+      if (remote === "youtube") {
+        post({ event: "listening", id: 1 });
+      } else {
+        scCmd("addEventListener", "playProgress");
+        scCmd("addEventListener", "play");
+      }
+    }, 1000);
+    return () => {
+      window.removeEventListener("message", onMsg);
+      window.clearInterval(hello);
+    };
+  }, [remote, theme.audio_url]);
+
+  useEffect(() => {
+    if (remote) return;
     const el = audioRef.current;
     if (!el) return;
     el.volume = (theme.audio_volume ?? 40) / 100;
@@ -56,9 +112,19 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     };
     window.addEventListener("pointerdown", resume, { once: true });
     return () => window.removeEventListener("pointerdown", resume);
-  }, [theme.audio_url]);
+  }, [theme.audio_url, remote]);
 
   const toggle = () => {
+    if (remote === "youtube") {
+      ytCmd(playing ? "pauseVideo" : "playVideo");
+      setPlaying(!playing);
+      return;
+    }
+    if (remote === "soundcloud") {
+      scCmd(playing ? "pause" : "play");
+      setPlaying(!playing);
+      return;
+    }
     const el = audioRef.current;
     if (!el) return;
     if (el.paused) {
@@ -70,6 +136,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   };
 
   const progress = dur > 0 ? (time / dur) * 100 : 0;
+
 
   const shell = useMemo(() => {
     const bg = theme.player_bg ?? "glass";
