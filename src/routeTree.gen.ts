@@ -59,6 +59,7 @@ import { Route as AuthenticatedDashboardProfileAdvancedRouteImport } from './rou
 import { Route as AuthenticatedDashboardProfileConnectionsRouteImport } from './routes/_authenticated/dashboard.profile.connections'
 import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from './routes/_authenticated/dashboard.profile.customization'
 import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
+import { Route as AuthenticatedDashboardProfileFontsRouteImport } from './routes/_authenticated/dashboard.profile.fonts'
 import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
 import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
 import { Route as ApiPublicHooksSecurityAlertsRouteImport } from './routes/api/public/hooks/security-alerts'
@@ -353,6 +354,12 @@ const AuthenticatedDashboardProfileEffectsRoute =
     path: '/effects',
     getParentRoute: () => AuthenticatedDashboardProfileRoute,
   } as any)
+const AuthenticatedDashboardProfileFontsRoute =
+  AuthenticatedDashboardProfileFontsRouteImport.update({
+    id: '/fonts',
+    path: '/fonts',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
 const AuthenticatedDashboardProfileModulesRoute =
   AuthenticatedDashboardProfileModulesRouteImport.update({
     id: '/modules',
@@ -441,6 +448,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -496,6 +504,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -556,6 +565,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/_authenticated/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/_authenticated/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -616,6 +626,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
+    | '/dashboard/profile/fonts'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -671,6 +682,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
+    | '/dashboard/profile/fonts'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -730,6 +742,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile/connections'
     | '/_authenticated/dashboard/profile/customization'
     | '/_authenticated/dashboard/profile/effects'
+    | '/_authenticated/dashboard/profile/fonts'
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -1112,6 +1125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileEffectsRouteImport
       parentRoute: typeof AuthenticatedDashboardProfileRoute
     }
+    '/_authenticated/dashboard/profile/fonts': {
+      id: '/_authenticated/dashboard/profile/fonts'
+      path: '/fonts'
+      fullPath: '/dashboard/profile/fonts'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileFontsRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
     '/_authenticated/dashboard/profile/modules': {
       id: '/_authenticated/dashboard/profile/modules'
       path: '/modules'
@@ -1227,6 +1247,7 @@ interface AuthenticatedDashboardProfileRouteChildren {
   AuthenticatedDashboardProfileConnectionsRoute: typeof AuthenticatedDashboardProfileConnectionsRoute
   AuthenticatedDashboardProfileCustomizationRoute: typeof AuthenticatedDashboardProfileCustomizationRoute
   AuthenticatedDashboardProfileEffectsRoute: typeof AuthenticatedDashboardProfileEffectsRoute
+  AuthenticatedDashboardProfileFontsRoute: typeof AuthenticatedDashboardProfileFontsRoute
   AuthenticatedDashboardProfileModulesRoute: typeof AuthenticatedDashboardProfileModulesRoute
   AuthenticatedDashboardProfileShareRoute: typeof AuthenticatedDashboardProfileShareRoute
   AuthenticatedDashboardProfileIndexRoute: typeof AuthenticatedDashboardProfileIndexRoute
@@ -1242,6 +1263,8 @@ const AuthenticatedDashboardProfileRouteChildren: AuthenticatedDashboardProfileR
       AuthenticatedDashboardProfileCustomizationRoute,
     AuthenticatedDashboardProfileEffectsRoute:
       AuthenticatedDashboardProfileEffectsRoute,
+    AuthenticatedDashboardProfileFontsRoute:
+      AuthenticatedDashboardProfileFontsRoute,
     AuthenticatedDashboardProfileModulesRoute:
       AuthenticatedDashboardProfileModulesRoute,
     AuthenticatedDashboardProfileShareRoute:
