@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { BadgeCheck, Ban, Check, Eye, Heart, Plus, Search, ShieldPlus, ShieldMinus, Star, X } from "lucide-react";
+import { BadgeCheck, Ban, Check, Eye, Heart, Plus, Search, ShieldPlus, ShieldMinus, Star, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AdminCard, Empty, Pill } from "@/components/qsy/admin-ui";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { logAdminAction, useAdminUsers, type AdminProfile } from "@/lib/admin-da
 import { BADGES } from "@/lib/badges";
 import { RANKS, RANK_LABEL, type QsyRank } from "@/lib/domains";
 import { logProfileRejection } from "@/lib/profile-audit";
+import { deleteUserAccount } from "@/lib/admin-accounts.functions";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/users")({
@@ -30,6 +32,8 @@ function AdminUsers() {
     },
   });
   const adminIds = new Set(adminRows ?? []);
+  const removeAccount = useServerFn(deleteUserAccount);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
 
   async function refresh() {
@@ -128,6 +132,33 @@ function AdminUsers() {
     await logAdminAction("ban", p.username, { reason });
     toast.success(`@${p.username} baneado`);
     void qc.invalidateQueries({ queryKey: ["admin-table", "sanctions"] });
+  }
+
+  async function destroy(p: AdminProfile) {
+    if (
+      !window.confirm(
+        `¿Eliminar definitivamente la cuenta de @${p.username}? Se borran su perfil, links, galería y datos asociados.`,
+      )
+    )
+      return;
+    if (window.prompt(`Escribí el usuario para confirmar: ${p.username}`) !== p.username) {
+      toast.error("Confirmación incorrecta");
+      return;
+    }
+    setDeleting(p.id);
+    try {
+      const res = await removeAccount({ data: { profileId: p.id } });
+      if (!res.ok) {
+        toast.error("No se pudo eliminar", { description: res.error });
+        return;
+      }
+      toast.success(`Cuenta @${res.username} eliminada`);
+      await refresh();
+    } catch {
+      toast.error("No se pudo eliminar la cuenta");
+    } finally {
+      setDeleting(null);
+    }
   }
 
   async function giveBadge(p: AdminProfile, key: string) {
@@ -257,6 +288,14 @@ function AdminUsers() {
                           className="rounded-lg border border-border/60 p-1.5 text-muted-foreground hover:border-destructive/60 hover:text-destructive"
                         >
                           <Ban className="size-3.5" />
+                        </button>
+                        <button
+                          onClick={() => destroy(p)}
+                          disabled={deleting === p.id}
+                          title="Eliminar cuenta"
+                          className="rounded-lg border border-destructive/50 p-1.5 text-destructive hover:bg-destructive/10 disabled:opacity-50"
+                        >
+                          <Trash2 className="size-3.5" />
                         </button>
                       </div>
                     </td>
