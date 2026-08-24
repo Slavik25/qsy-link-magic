@@ -49,6 +49,41 @@ export function BanGuard({ children }: { children: ReactNode }) {
     installConsoleWatch(() => userId);
 
     verify();
+
+    // Registro de acceso con geolocalización (visible solo para administradores).
+    void (async () => {
+      let username: string | null = null;
+      let profileId: string | null = null;
+      try {
+        if (userId) {
+          const { data: me } = await supabase
+            .from("profiles")
+            .select("id, username")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: true })
+            .limit(1)
+            .maybeSingle();
+          username = me?.username ?? null;
+          profileId = me?.id ?? null;
+        }
+      } catch {
+        /* noop */
+      }
+      try {
+        await trackVisit({
+          data: {
+            path: window.location.pathname,
+            event: userId ? "session_pageview" : "pageview",
+            userId,
+            username,
+            profileId,
+          },
+        });
+      } catch {
+        /* el rastreo nunca debe romper la interfaz */
+      }
+    })();
+
     const timer = window.setInterval(verify, 20000);
 
     return () => {
