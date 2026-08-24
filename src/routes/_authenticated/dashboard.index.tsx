@@ -367,6 +367,8 @@ function Overview() {
         </div>
       </section>
 
+      <FeaturedProfiles />
+
       <section>
         <GlobalChat />
       </section>
