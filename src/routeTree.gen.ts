@@ -44,6 +44,7 @@ import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardAdminContentRouteImport } from './routes/_authenticated/dashboard.admin.content'
 import { Route as AuthenticatedDashboardAdminEmailsRouteImport } from './routes/_authenticated/dashboard.admin.emails'
 import { Route as AuthenticatedDashboardAdminIntegrationsRouteImport } from './routes/_authenticated/dashboard.admin.integrations'
+import { Route as AuthenticatedDashboardAdminIptrackerRouteImport } from './routes/_authenticated/dashboard.admin.iptracker'
 import { Route as AuthenticatedDashboardAdminModerationRouteImport } from './routes/_authenticated/dashboard.admin.moderation'
 import { Route as AuthenticatedDashboardAdminRanksRouteImport } from './routes/_authenticated/dashboard.admin.ranks'
 import { Route as AuthenticatedDashboardAdminReportsRouteImport } from './routes/_authenticated/dashboard.admin.reports'
@@ -261,6 +262,12 @@ const AuthenticatedDashboardAdminIntegrationsRoute =
     path: '/integrations',
     getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
+const AuthenticatedDashboardAdminIptrackerRoute =
+  AuthenticatedDashboardAdminIptrackerRouteImport.update({
+    id: '/iptracker',
+    path: '/iptracker',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardAdminModerationRoute =
   AuthenticatedDashboardAdminModerationRouteImport.update({
     id: '/moderation',
@@ -413,6 +420,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/dashboard/admin/emails': typeof AuthenticatedDashboardAdminEmailsRoute
   '/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
+  '/dashboard/admin/iptracker': typeof AuthenticatedDashboardAdminIptrackerRoute
   '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
   '/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
@@ -466,6 +474,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/dashboard/admin/emails': typeof AuthenticatedDashboardAdminEmailsRoute
   '/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
+  '/dashboard/admin/iptracker': typeof AuthenticatedDashboardAdminIptrackerRoute
   '/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
   '/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
@@ -524,6 +533,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/content': typeof AuthenticatedDashboardAdminContentRoute
   '/_authenticated/dashboard/admin/emails': typeof AuthenticatedDashboardAdminEmailsRoute
   '/_authenticated/dashboard/admin/integrations': typeof AuthenticatedDashboardAdminIntegrationsRoute
+  '/_authenticated/dashboard/admin/iptracker': typeof AuthenticatedDashboardAdminIptrackerRoute
   '/_authenticated/dashboard/admin/moderation': typeof AuthenticatedDashboardAdminModerationRoute
   '/_authenticated/dashboard/admin/ranks': typeof AuthenticatedDashboardAdminRanksRoute
   '/_authenticated/dashboard/admin/reports': typeof AuthenticatedDashboardAdminReportsRoute
@@ -582,6 +592,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/content'
     | '/dashboard/admin/emails'
     | '/dashboard/admin/integrations'
+    | '/dashboard/admin/iptracker'
     | '/dashboard/admin/moderation'
     | '/dashboard/admin/ranks'
     | '/dashboard/admin/reports'
@@ -635,6 +646,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/content'
     | '/dashboard/admin/emails'
     | '/dashboard/admin/integrations'
+    | '/dashboard/admin/iptracker'
     | '/dashboard/admin/moderation'
     | '/dashboard/admin/ranks'
     | '/dashboard/admin/reports'
@@ -692,6 +704,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/content'
     | '/_authenticated/dashboard/admin/emails'
     | '/_authenticated/dashboard/admin/integrations'
+    | '/_authenticated/dashboard/admin/iptracker'
     | '/_authenticated/dashboard/admin/moderation'
     | '/_authenticated/dashboard/admin/ranks'
     | '/_authenticated/dashboard/admin/reports'
@@ -981,6 +994,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminIntegrationsRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
+    '/_authenticated/dashboard/admin/iptracker': {
+      id: '/_authenticated/dashboard/admin/iptracker'
+      path: '/iptracker'
+      fullPath: '/dashboard/admin/iptracker'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminIptrackerRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/admin/moderation': {
       id: '/_authenticated/dashboard/admin/moderation'
       path: '/moderation'
@@ -1131,6 +1151,7 @@ interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminContentRoute: typeof AuthenticatedDashboardAdminContentRoute
   AuthenticatedDashboardAdminEmailsRoute: typeof AuthenticatedDashboardAdminEmailsRoute
   AuthenticatedDashboardAdminIntegrationsRoute: typeof AuthenticatedDashboardAdminIntegrationsRoute
+  AuthenticatedDashboardAdminIptrackerRoute: typeof AuthenticatedDashboardAdminIptrackerRoute
   AuthenticatedDashboardAdminModerationRoute: typeof AuthenticatedDashboardAdminModerationRoute
   AuthenticatedDashboardAdminRanksRoute: typeof AuthenticatedDashboardAdminRanksRoute
   AuthenticatedDashboardAdminReportsRoute: typeof AuthenticatedDashboardAdminReportsRoute
@@ -1155,6 +1176,8 @@ const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRoute
       AuthenticatedDashboardAdminEmailsRoute,
     AuthenticatedDashboardAdminIntegrationsRoute:
       AuthenticatedDashboardAdminIntegrationsRoute,
+    AuthenticatedDashboardAdminIptrackerRoute:
+      AuthenticatedDashboardAdminIptrackerRoute,
     AuthenticatedDashboardAdminModerationRoute:
       AuthenticatedDashboardAdminModerationRoute,
     AuthenticatedDashboardAdminRanksRoute:

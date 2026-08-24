@@ -444,34 +444,61 @@ export type Database = {
       }
       ip_logs: {
         Row: {
+          city: string | null
           country: string | null
           created_at: string
+          event: string
           id: string
           ip: string
+          isp: string | null
+          lat: number | null
+          lon: number | null
           path: string | null
           profile_id: string | null
+          proxy: boolean
+          region: string | null
+          timezone: string | null
           user_agent: string | null
           user_id: string | null
+          username: string | null
         }
         Insert: {
+          city?: string | null
           country?: string | null
           created_at?: string
+          event?: string
           id?: string
           ip: string
+          isp?: string | null
+          lat?: number | null
+          lon?: number | null
           path?: string | null
           profile_id?: string | null
+          proxy?: boolean
+          region?: string | null
+          timezone?: string | null
           user_agent?: string | null
           user_id?: string | null
+          username?: string | null
         }
         Update: {
+          city?: string | null
           country?: string | null
           created_at?: string
+          event?: string
           id?: string
           ip?: string
+          isp?: string | null
+          lat?: number | null
+          lon?: number | null
           path?: string | null
           profile_id?: string | null
+          proxy?: boolean
+          region?: string | null
+          timezone?: string | null
           user_agent?: string | null
           user_id?: string | null
+          username?: string | null
         }
         Relationships: [
           {
