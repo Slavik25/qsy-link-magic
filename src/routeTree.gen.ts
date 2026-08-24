@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardTemplatesRouteImport } from './routes/_authenticated/dashboard.templates'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardAdminAuditRouteImport } from './routes/_authenticated/dashboard.admin.audit'
 import { Route as AuthenticatedDashboardAdminBoostsRouteImport } from './routes/_authenticated/dashboard.admin.boosts'
@@ -209,6 +210,12 @@ const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardTemplatesRoute =
+  AuthenticatedDashboardTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardAdminIndexRoute =
@@ -391,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -442,6 +450,7 @@ export interface FileRoutesByTo {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -498,6 +507,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/_authenticated/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -554,6 +564,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/templates'
     | '/dashboard/'
     | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
@@ -605,6 +616,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/templates'
     | '/dashboard'
     | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
@@ -660,6 +672,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profiles'
     | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/templates'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/audit'
     | '/_authenticated/dashboard/admin/boosts'
@@ -897,6 +910,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/templates': {
+      id: '/_authenticated/dashboard/templates'
+      path: '/templates'
+      fullPath: '/dashboard/templates'
+      preLoaderRoute: typeof AuthenticatedDashboardTemplatesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/admin/': {
@@ -1183,6 +1203,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardRankRoute: typeof AuthenticatedDashboardRankRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardTemplatesRoute: typeof AuthenticatedDashboardTemplatesRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -1203,6 +1224,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardRankRoute: AuthenticatedDashboardRankRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardTemplatesRoute: AuthenticatedDashboardTemplatesRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 

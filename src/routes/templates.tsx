@@ -95,7 +95,10 @@ function TemplatesPage() {
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {community.map((t) => (
                 <article key={t.id} className="overflow-hidden rounded-2xl glass p-4 lift">
-                  <TemplatePreview theme={t.theme} username={t.preview_username || undefined} />
+                  <TemplatePreview
+                    theme={t.theme}
+                    {...(t.preview_username ? { username: t.preview_username } : {})}
+                  />
                   <h3 className="mt-4 font-medium">{t.name}</h3>
                   <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                     {t.description || "Sin descripción."}
