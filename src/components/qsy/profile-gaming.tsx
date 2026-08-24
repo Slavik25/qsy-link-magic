@@ -4,6 +4,7 @@ import { ExternalLink } from "lucide-react";
 import { SiSteam, SiTwitch, SiRoblox } from "react-icons/si";
 import { lookupGaming, type GamingAccount } from "@/lib/gaming.functions";
 import type { ThemeConfig } from "@/lib/qsy";
+import { gamingSkin } from "./gaming-skins";
 
 const BRAND = {
   steam: { label: "Steam", color: "#66c0f4", Icon: SiSteam },
@@ -18,37 +19,52 @@ function Card({
   account,
   accent,
   transparent,
+  style: styleKey,
 }: {
   brand: Key;
   account: GamingAccount;
   accent: string;
   transparent: boolean;
+  style?: string | undefined;
 }) {
   const { label, color, Icon } = BRAND[brand];
+  const skin = gamingSkin(styleKey, color, transparent);
+  const textColor = styleKey === "chrome" ? "#0b0b12" : undefined;
+
   return (
     <a
       href={account.url}
       target="_blank"
       rel="noreferrer noopener"
-      className="group relative flex items-center gap-3 overflow-hidden p-3 transition-transform duration-300 hover:-translate-y-0.5"
-      style={{
-        borderRadius: "var(--p-radius)",
-        border: transparent ? "0" : `1px solid color-mix(in oklab, ${color} 35%, transparent)`,
-        background: transparent ? "transparent" : "var(--p-surface)",
-        backdropFilter: transparent ? "none" : "blur(var(--p-blur))",
-        boxShadow: transparent ? "none" : `0 12px 34px -20px ${color}`,
-      }}
+      className={`group relative flex items-center gap-3 overflow-hidden p-3 transition-transform duration-300 hover:-translate-y-0.5 ${
+        skin.mono ? "font-mono" : ""
+      } ${skin.className}`}
+      style={skin.style}
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-8 -top-10 size-24 rounded-full opacity-25 blur-2xl transition-opacity duration-300 group-hover:opacity-60"
-        style={{ background: `radial-gradient(circle, ${color}, transparent 70%)` }}
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
-        style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
-      />
+      {skin.glow && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-8 -top-10 size-24 rounded-full opacity-25 blur-2xl transition-opacity duration-300 group-hover:opacity-60"
+          style={{ background: `radial-gradient(circle, ${color}, transparent 70%)` }}
+        />
+      )}
+      {skin.topLine && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+          style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
+        />
+      )}
+      {skin.scanlines && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(180deg,rgba(255,255,255,.16) 0 1px,transparent 1px 3px)",
+          }}
+        />
+      )}
 
       <span className="relative shrink-0">
         {account.avatar ? (
@@ -56,13 +72,20 @@ function Card({
             src={account.avatar}
             alt={`${label} · ${account.name}`}
             loading="lazy"
-            className="size-11 rounded-xl object-cover ring-1"
-            style={{ boxShadow: `0 0 0 1px color-mix(in oklab, ${color} 45%, transparent)` }}
+            className="size-11 object-cover ring-1"
+            style={{
+              borderRadius: skin.avatar ?? "0.75rem",
+              boxShadow: `0 0 0 1px color-mix(in oklab, ${color} 45%, transparent)`,
+            }}
           />
         ) : (
           <span
-            className="grid size-11 place-items-center rounded-xl"
-            style={{ background: `color-mix(in oklab, ${color} 22%, transparent)`, color }}
+            className="grid size-11 place-items-center"
+            style={{
+              borderRadius: skin.avatar ?? "0.75rem",
+              background: `color-mix(in oklab, ${color} 22%, transparent)`,
+              color,
+            }}
           >
             <Icon className="size-5" />
           </span>
@@ -74,30 +97,38 @@ function Card({
         )}
       </span>
 
-      <span className="min-w-0 flex-1 text-left">
-        <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color }}>
+      <span className="relative min-w-0 flex-1 text-left">
+        <span
+          className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em]"
+          style={{ color: textColor ?? color }}
+        >
           <Icon className="size-3" /> {label}
         </span>
-        <span className="block truncate text-sm font-semibold" style={{ color: "var(--p-text, inherit)" }}>
+        <span
+          className="block truncate text-sm font-semibold"
+          style={{ color: textColor ?? "var(--p-text, inherit)" }}
+        >
           {account.name}
         </span>
         {account.status && (
-          <span className="block truncate text-[11px] opacity-70">{account.status}</span>
+          <span className="block truncate text-[11px] opacity-70" style={{ color: textColor }}>
+            {account.status}
+          </span>
         )}
       </span>
 
       {account.stat && (
-        <span className="hidden shrink-0 text-right sm:block">
-          <span className="block text-sm font-bold" style={{ color: accent }}>
+        <span className="relative hidden shrink-0 text-right sm:block">
+          <span className="block text-sm font-bold" style={{ color: textColor ?? accent }}>
             {account.stat.value}
           </span>
-          <span className="block text-[10px] uppercase tracking-wider opacity-60">
+          <span className="block text-[10px] uppercase tracking-wider opacity-60" style={{ color: textColor }}>
             {account.stat.label}
           </span>
         </span>
       )}
 
-      <ExternalLink className="size-3.5 shrink-0 opacity-40 transition-opacity group-hover:opacity-90" />
+      <ExternalLink className="relative size-3.5 shrink-0 opacity-40 transition-opacity group-hover:opacity-90" />
     </a>
   );
 }
@@ -138,6 +169,7 @@ export function ProfileGaming({ theme }: { theme: ThemeConfig }) {
           account={account}
           accent={theme.accent}
           transparent={theme.gaming_transparent === true}
+          style={theme.gaming_style ?? "classic"}
         />
       ))}
     </div>
