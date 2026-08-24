@@ -166,8 +166,8 @@ function SettingsPage() {
   async function saveInfo() {
     if (!profile) return;
     const clean = username.trim().toLowerCase().replace(/[^a-z0-9_.-]/g, "");
-    if (clean.length < 2) {
-      toast.error("El nombre de usuario debe tener al menos 2 caracteres");
+    if (clean.length < 3) {
+      toast.error("El nombre de usuario debe tener al menos 3 caracteres");
       return;
     }
     setSavingInfo(true);
@@ -294,6 +294,7 @@ function SettingsPage() {
                     id="username"
                     className="pl-9"
                     value={username}
+                    minLength={3}
                     maxLength={24}
                     onChange={(e) => setUsername(e.target.value)}
                   />
