@@ -5,7 +5,7 @@ import { readTheme, type Profile, type ProfileLink, type Social } from "./qsy";
 
 /** Columnas públicas de un perfil: nunca incluye identificadores internos de cuenta. */
 const PUBLIC_PROFILE_COLUMNS =
-  "id, user_id, username, display_name, bio, location, avatar_url, banner_url, verified, theme, music, featured, created_at, updated_at, view_count, like_count, uid, rank, domain, username_set";
+  "id, user_id, username, display_name, bio, location, avatar_url, banner_url, verified, theme, music, featured, featured_until, created_at, updated_at, view_count, like_count, uid, rank, domain, username_set";
 
 function shape(row: any): Profile {
   return { ...row, theme: readTheme(row.theme), music: row.music ?? {} } as Profile;
@@ -259,10 +259,13 @@ export function useFeaturedProfiles(limit = 6) {
   return useQuery({
     queryKey: ["featured-profiles", limit],
     queryFn: async () => {
+      void supabase.rpc("expire_featured");
+      const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, bio, avatar_url, banner_url, verified, rank, view_count, like_count")
+        .select("id, username, display_name, bio, avatar_url, banner_url, verified, rank, view_count, like_count, featured_until")
         .eq("featured", true)
+        .or(`featured_until.is.null,featured_until.gt.${nowIso}`)
         .order("view_count", { ascending: false })
         .limit(limit);
       if (error) throw error;
@@ -270,6 +273,7 @@ export function useFeaturedProfiles(limit = 6) {
     },
   });
 }
+
 
 export function useProfileBadges(profileId?: string) {
   return useQuery({

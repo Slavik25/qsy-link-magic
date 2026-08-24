@@ -880,6 +880,7 @@ export type Database = {
           display_name: string
           domain: string
           featured: boolean
+          featured_until: string | null
           id: string
           like_count: number
           location: string
@@ -902,6 +903,7 @@ export type Database = {
           display_name?: string
           domain?: string
           featured?: boolean
+          featured_until?: string | null
           id?: string
           like_count?: number
           location?: string
@@ -924,6 +926,7 @@ export type Database = {
           display_name?: string
           domain?: string
           featured?: boolean
+          featured_until?: string | null
           id?: string
           like_count?: number
           location?: string
@@ -1424,6 +1427,7 @@ export type Database = {
         Args: { _order_id: string; _payment_id: string }
         Returns: string
       }
+      expire_featured: { Args: never; Returns: undefined }
       gallery_is_public_owner: { Args: { _user_id: string }; Returns: boolean }
       gift_rank: {
         Args: { _message?: string; _rank: string; _username: string }
@@ -1463,6 +1467,7 @@ export type Database = {
         }
         Returns: string
       }
+      purchase_featured: { Args: { _profile_id: string }; Returns: string }
       purchase_item: { Args: { _key: string }; Returns: number }
       reconcile_shop: { Args: never; Returns: Json }
       resolve_rank_review: {
