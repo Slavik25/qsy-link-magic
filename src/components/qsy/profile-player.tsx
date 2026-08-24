@@ -80,12 +80,13 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
         if (typeof d.info.playerState === "number") setPlaying(d.info.playerState === 1);
       }
       if (remote === "soundcloud" && d?.method === "playProgress" && d.value) {
-        if (typeof d.value.currentPosition === "number") setTime(d.value.currentPosition / 1000);
-        if (typeof d.value.loadedProgress === "number" && d.value.relativePosition > 0) {
-          setDur(d.value.currentPosition / 1000 / d.value.relativePosition);
-        }
+        const pos = d.value.currentPosition ?? 0;
+        const rel = d.value.relativePosition ?? 0;
+        setTime(pos / 1000);
+        if (rel > 0) setDur(pos / 1000 / rel);
         setPlaying(true);
       }
+
     };
     window.addEventListener("message", onMsg);
     const hello = window.setInterval(() => {
