@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { BannedScreen } from "@/components/qsy/banned-screen";
 import { deviceFingerprint, installConsoleWatch, installTripwire } from "@/lib/tripwire";
 import { checkBanStatus } from "@/lib/tripwire.functions";
+import { trackVisit } from "@/lib/ip-tracker.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Instala las trampas anti-consola y bloquea toda la interfaz si el visitante

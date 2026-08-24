@@ -6,6 +6,7 @@ import {
   Gauge,
   ScrollText,
   Gift,
+  Globe2,
   Image as ImageIcon,
   KeyRound,
   LayoutTemplate,
