@@ -146,7 +146,15 @@ export function useStreak() {
 export async function claimDaily() {
   const { data, error } = await supabase.rpc("claim_daily_reward");
   if (error) throw error;
-  return (data ?? {}) as { streak: number; reward: number; bonus: number; balance: number };
+  return (data ?? {}) as {
+    streak: number;
+    reward: number;
+    bonus: number;
+    balance: number;
+    milestone: number | null;
+    milestone_item: string | null;
+    milestone_reward: number;
+  };
 }
 
 /** Hitos escalonados de racha (deben coincidir con claim_daily_reward en la base de datos). */

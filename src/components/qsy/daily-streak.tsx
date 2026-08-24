@@ -2,12 +2,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Coins, Flame, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { claimDaily, dailyReward, useStreak } from "@/lib/economy";
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { STREAK_MILESTONES, claimDaily, dailyReward, useStreak } from "@/lib/economy";
 
 /** Tarjeta de recompensa diaria: reclama QSY Coins una vez por día y mantiene la racha. */
 export function DailyStreakCard() {
   const qc = useQueryClient();
   const { data: streak, isLoading } = useStreak();
+  const [claiming, setClaiming] = useState(false);
 
   const current = streak?.current ?? 0;
   const claimedToday = streak?.claimedToday ?? false;
@@ -15,20 +18,37 @@ export function DailyStreakCard() {
   const reward = dailyReward(nextDay);
 
   async function claim() {
+    if (claiming) return;
+    setClaiming(true);
     try {
       const res = await claimDaily();
       toast.success(`+${res.reward} QSY Coins`, {
-        description:
-          res.bonus > 0
-            ? `Racha de ${res.streak} días · bonus semanal +${res.bonus}`
-            : `Racha de ${res.streak} días seguidos`,
+        description: [
+          `Racha de ${res.streak} días seguidos`,
+          res.bonus > 0 ? `bonus semanal +${res.bonus}` : null,
+          res.milestone ? `¡Hito de ${res.milestone} días! desbloqueaste ${res.milestone_item}` : null,
+        ]
+          .filter(Boolean)
+          .join(" · "),
       });
       await qc.invalidateQueries({ queryKey: ["wallet"] });
       await qc.invalidateQueries({ queryKey: ["streak"] });
+      await qc.invalidateQueries({ queryKey: ["streak-history"] });
+      await qc.invalidateQueries({ queryKey: ["unlocks"] });
     } catch (e) {
-      toast.error("No se pudo reclamar", { description: (e as Error).message });
+      const msg = (e as Error).message;
+      if (msg.includes("already claimed")) {
+        toast.info("Ya reclamaste tu recompensa de hoy");
+        await qc.invalidateQueries({ queryKey: ["streak"] });
+      } else {
+        toast.error("No se pudo reclamar", { description: msg });
+      }
+    } finally {
+      setClaiming(false);
     }
   }
+
+  const nextMilestone = STREAK_MILESTONES.find((m) => m.days > current);
 
   return (
     <section className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
@@ -51,12 +71,12 @@ export function DailyStreakCard() {
 
         <Button
           onClick={claim}
-          disabled={isLoading || claimedToday}
+          disabled={isLoading || claimedToday || claiming}
           className="rounded-xl"
           variant={claimedToday ? "outline" : "default"}
         >
           <Gift className="size-4" />
-          {claimedToday ? "Reclamado" : `Reclamar +${reward}`}
+          {claiming ? "Reclamando…" : claimedToday ? "Reclamado" : `Reclamar +${reward}`}
         </Button>
       </div>
 
@@ -87,6 +107,14 @@ export function DailyStreakCard() {
       <p className="mt-3 text-[11px] text-muted-foreground">
         Racha actual: <span className="font-semibold text-foreground">{current} días</span> · Mejor racha:{" "}
         {streak?.best ?? 0} · Cada 7 días seguidos ganas +200 coins extra.
+        {nextMilestone ? (
+          <>
+            {" "}Próximo hito: {nextMilestone.days} días → +{nextMilestone.reward} coins y {nextMilestone.itemName}.
+          </>
+        ) : null}{" "}
+        <Link to="/dashboard/streak" className="font-medium text-foreground underline-offset-2 hover:underline">
+          Ver historial
+        </Link>
       </p>
     </section>
   );
