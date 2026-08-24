@@ -605,7 +605,15 @@ export const SHOP_HOVER_EFFECTS: HoverEffectDef[] = [
   { key: "hover-flip", name: "Flip 3D", description: "Giro en perspectiva sobre el eje Y.", price: 400, premium: true, effect: "flip", preview: "linear-gradient(140deg,#1d3d5e,#0b0b12)" },
   { key: "hover-hologram", name: "Hologram", description: "Scanlines holográficas recorriendo la tarjeta.", price: 500, premium: true, effect: "hologram", preview: "linear-gradient(140deg,#0ea5e9,#7c3aed,#0b0b12)" },
   { key: "hover-neonpulse", name: "Neon Pulse", description: "Borde de neón latiendo sin parar.", price: 450, premium: true, effect: "neonpulse", preview: "linear-gradient(140deg,#7c1d6f,#0b0b12)" },
+  { key: "hover-pulse", name: "Pulse", description: "Latido suave y continuo al apuntar.", price: 0, effect: "pulse", preview: "linear-gradient(140deg,#1c1c28,#0b0b12)" },
+  { key: "hover-blurin", name: "Blur In", description: "El fondo se desenfoca y la tarjeta destaca.", price: 150, effect: "blurin", preview: "linear-gradient(140deg,#22303d,#0b0b12)" },
+  { key: "hover-slide", name: "Slide", description: "La tarjeta se desplaza levemente hacia arriba.", price: 200, effect: "slide", preview: "linear-gradient(140deg,#1d2b4d,#0b0b12)" },
+  { key: "hover-invert", name: "Invert", description: "Inversión de colores instantánea.", price: 250, effect: "invert", preview: "linear-gradient(140deg,#f4f4f5,#0b0b12)" },
+  { key: "hover-depth", name: "Depth", description: "Sombra sólida en capas con profundidad 3D.", price: 300, effect: "depth", preview: "linear-gradient(140deg,#3d3d1d,#0b0b12)" },
+  { key: "hover-ripple", name: "Ripple", description: "Onda expansiva desde el centro de la tarjeta.", price: 350, premium: true, effect: "ripple", preview: "linear-gradient(140deg,#0e4d5e,#0b0b12)" },
+  { key: "hover-neonborder", name: "Neon Border", description: "Trazo de neón recorriendo el contorno.", price: 400, premium: true, effect: "neonborder", preview: "linear-gradient(140deg,#a21caf,#0ea5e9,#0b0b12)" },
 ];
+
 
 /** Decoraciones de avatar estilo Discord (theme.avatar_decoration) */
 export type DecorationDef = ShopItem & { image: string | null };
