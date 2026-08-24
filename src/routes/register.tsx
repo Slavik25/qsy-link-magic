@@ -107,11 +107,18 @@ function RegisterPage() {
       return;
     }
     if (!data.session) {
-      setStep("sent");
-      toast.success("Te enviamos un enlace de verificación", {
-        description: "Abrí el correo y tocá el botón para activar tu cuenta.",
+      // Sin verificación por email: entramos directo con las credenciales recién creadas.
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email: parsed.data.email,
+        password: parsed.data.password,
       });
-      return;
+      if (signInErr) {
+        toast.error("Cuenta creada, pero no pudimos entrar automáticamente", {
+          description: "Iniciá sesión con tu email y contraseña.",
+        });
+        await navigate({ to: "/login" });
+        return;
+      }
     }
     toast.success("Cuenta creada. Bienvenido a QSY.");
     await navigate({ to: "/dashboard" });
