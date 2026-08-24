@@ -6,6 +6,7 @@ import {
   Bell,
   ChevronRight,
   Crown,
+  Flame,
   Gem,
   Gift,
   Image as ImageIcon,
