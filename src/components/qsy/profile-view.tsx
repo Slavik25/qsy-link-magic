@@ -8,6 +8,7 @@ import { iconFor, labelFor, textPaint, type Profile, type ProfileLink, type Soci
 import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
 import { decorationByKey } from "@/lib/shop";
+import { ProfileStreak } from "@/components/qsy/profile-streak";
 
 type Props = {
   profile: Pick<
@@ -20,6 +21,7 @@ type Props = {
   views?: number;
   likes?: number;
   profileId?: string;
+  userId?: string | null;
   music?: { title?: string; artist?: string } | null;
   compact?: boolean;
   onLinkClick?: (link: { id: string; title: string; url: string }) => void;
@@ -33,6 +35,7 @@ export function ProfileView({
   views = 0,
   likes = 0,
   profileId,
+  userId,
   music,
   compact = false,
   onLinkClick,
@@ -342,6 +345,7 @@ export function ProfileView({
                 {likes.toLocaleString()} likes
               </span>
             ))}
+          {t.show_streak && userId ? <ProfileStreak userId={userId} accent={t.accent} /> : null}
         </div>
       </div>
       </div>

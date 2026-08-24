@@ -185,6 +185,7 @@ function PublicProfile() {
 
         <ProfileView
           profileId={profile.id}
+          userId={(profile as { user_id?: string | null }).user_id ?? null}
           profile={profile}
           links={links}
           socials={socials}

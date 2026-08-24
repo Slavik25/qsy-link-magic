@@ -47,6 +47,12 @@ function ModulesSection() {
           checked={t.show_likes !== false}
           onChange={(v) => setTheme("show_likes", v)}
         />
+        <ToggleRow
+          title="Widget de racha (gratis)"
+          description="Muestra tus días seguidos entrando a QSY."
+          checked={Boolean(t.show_streak)}
+          onChange={(v) => setTheme("show_streak", v)}
+        />
       </div>
 
       <ToggleRow

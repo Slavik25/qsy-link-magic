@@ -18,6 +18,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Button } from "@/components/ui/button";
 import { DashBanner } from "@/components/qsy/dash-banner";
 import { GlobalChat } from "@/components/qsy/global-chat";
+import { DailyStreakCard } from "@/components/qsy/daily-streak";
 import dashBanner from "@/assets/dash-banner.png.asset.json";
 import cardProfile from "@/assets/card-32.png.asset.json";
 import cardTemplates from "@/assets/card-33.png.asset.json";
@@ -437,6 +438,8 @@ function Overview() {
           </Button>
         </div>
       </section>
+
+      <DailyStreakCard />
 
       <FeaturedProfiles />
 
