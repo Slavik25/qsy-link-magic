@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
