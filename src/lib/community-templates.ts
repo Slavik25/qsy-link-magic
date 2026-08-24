@@ -18,7 +18,7 @@ export type CommunityTemplate = {
 };
 
 function shape(row: Record<string, unknown>): CommunityTemplate {
-  return { ...(row as unknown as CommunityTemplate), theme: readTheme(row.theme) };
+  return { ...(row as unknown as CommunityTemplate), theme: readTheme(row["theme"]) };
 }
 
 /** Plantillas publicadas: visibles para todo el mundo. */
