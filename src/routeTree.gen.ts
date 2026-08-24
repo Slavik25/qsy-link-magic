@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardStreakRouteImport } from './routes/_authenticated/dashboard.streak'
 import { Route as AuthenticatedDashboardTemplatesRouteImport } from './routes/_authenticated/dashboard.templates'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardAdminAuditRouteImport } from './routes/_authenticated/dashboard.admin.audit'
@@ -212,6 +213,12 @@ const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardStreakRoute =
+  AuthenticatedDashboardStreakRouteImport.update({
+    id: '/streak',
+    path: '/streak',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardTemplatesRoute =
@@ -412,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -466,6 +474,7 @@ export interface FileRoutesByTo {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -525,6 +534,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/_authenticated/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -584,6 +594,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/streak'
     | '/dashboard/templates'
     | '/dashboard/'
     | '/dashboard/admin/audit'
@@ -638,6 +649,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/streak'
     | '/dashboard/templates'
     | '/dashboard'
     | '/dashboard/admin/audit'
@@ -696,6 +708,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profiles'
     | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/streak'
     | '/_authenticated/dashboard/templates'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/audit'
@@ -936,6 +949,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/streak': {
+      id: '/_authenticated/dashboard/streak'
+      path: '/streak'
+      fullPath: '/dashboard/streak'
+      preLoaderRoute: typeof AuthenticatedDashboardStreakRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/templates': {
@@ -1249,6 +1269,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardRankRoute: typeof AuthenticatedDashboardRankRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardStreakRoute: typeof AuthenticatedDashboardStreakRoute
   AuthenticatedDashboardTemplatesRoute: typeof AuthenticatedDashboardTemplatesRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -1270,6 +1291,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardRankRoute: AuthenticatedDashboardRankRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardStreakRoute: AuthenticatedDashboardStreakRoute,
     AuthenticatedDashboardTemplatesRoute: AuthenticatedDashboardTemplatesRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
