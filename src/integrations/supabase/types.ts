@@ -1386,6 +1386,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_streaks: {
+        Row: {
+          best_days: number
+          created_at: string
+          current_days: number
+          last_claim_date: string | null
+          total_claims: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          best_days?: number
+          created_at?: string
+          current_days?: number
+          last_claim_date?: string | null
+          total_claims?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          best_days?: number
+          created_at?: string
+          current_days?: number
+          last_claim_date?: string | null
+          total_claims?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_unlocks: {
         Row: {
           created_at: string
@@ -1482,6 +1512,7 @@ export type Database = {
         Args: { _amount: number; _user_id: string }
         Returns: number
       }
+      claim_daily_reward: { Args: never; Returns: Json }
       claim_mission: { Args: { _key: string }; Returns: number }
       complete_payment_order: {
         Args: { _order_id: string; _payment_id: string }
