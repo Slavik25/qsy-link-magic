@@ -85,3 +85,12 @@ export async function purchaseItem(key: string) {
   if (error) throw error;
   return Number(data ?? 0);
 }
+
+/** Compra 24 h de destacado para un perfil propio. Devuelve la fecha de expiración. */
+export async function purchaseFeatured(profileId: string) {
+  const { data, error } = await supabase.rpc("purchase_featured", { _profile_id: profileId });
+  if (error) throw error;
+  return String(data);
+}
+
+export const FEATURED_PRICE = 1500;
