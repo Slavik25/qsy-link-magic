@@ -254,6 +254,23 @@ export function useShowcaseProfiles(limit = 8) {
   });
 }
 
+/** Perfiles marcados como destacados por el equipo desde el panel de admin. */
+export function useFeaturedProfiles(limit = 6) {
+  return useQuery({
+    queryKey: ["featured-profiles", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, display_name, bio, avatar_url, banner_url, verified, rank, view_count, like_count")
+        .eq("featured", true)
+        .order("view_count", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
 export function useProfileBadges(profileId?: string) {
   return useQuery({
     queryKey: ["profile-badges", profileId],

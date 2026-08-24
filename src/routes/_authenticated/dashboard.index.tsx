@@ -25,6 +25,7 @@ import cardShop from "@/assets/card-34.png.asset.json";
 import { RankBadge, normalizeRank } from "@/components/qsy/rank-badge";
 import {
   useAnalytics,
+  useFeaturedProfiles,
   useLinks,
   useMyProfile,
   useMyProfiles,
@@ -82,6 +83,66 @@ function StatCard({
       <p className="relative mt-3 truncate text-2xl font-semibold">{value}</p>
       <p className="relative mt-1 text-xs text-muted-foreground">{hint}</p>
     </div>
+  );
+}
+
+function FeaturedProfiles() {
+  const { data: featured, isLoading } = useFeaturedProfiles(6);
+  if (isLoading || !featured?.length) return null;
+
+  return (
+    <section className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+        <div className="min-w-0">
+          <h2 className="truncate text-base font-medium">Perfiles destacados</h2>
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            Seleccionados por el equipo de QSY.
+          </p>
+        </div>
+        <Sparkles className="size-4 shrink-0 text-primary" />
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((p) => (
+          <Link
+            key={p.id}
+            to="/$username"
+            params={{ username: p.username }}
+            className="group overflow-hidden rounded-xl border border-border/60 bg-background/40 transition-colors hover:border-primary/40"
+          >
+            <div
+              className="h-14 w-full bg-surface-strong bg-cover bg-center"
+              style={p.banner_url ? { backgroundImage: `url(${p.banner_url})` } : undefined}
+            />
+            <div className="-mt-6 flex items-end gap-3 px-3 pb-3">
+              {p.avatar_url ? (
+                <img
+                  src={p.avatar_url}
+                  alt={`Avatar de @${p.username}`}
+                  loading="lazy"
+                  className="size-12 shrink-0 rounded-full border-2 border-card object-cover"
+                />
+              ) : (
+                <div className="grid size-12 shrink-0 place-items-center rounded-full border-2 border-card bg-surface-strong">
+                  <UserRound className="size-5 text-muted-foreground" />
+                </div>
+              )}
+              <div className="min-w-0 flex-1 pb-0.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="truncate text-sm font-medium">
+                    {p.display_name || p.username}
+                  </span>
+                  <RankBadge rank={normalizeRank(p.rank)} />
+                </div>
+                <span className="block truncate text-xs text-muted-foreground">
+                  @{p.username} · {(p.view_count ?? 0).toLocaleString()} visitas
+                </span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -366,6 +427,8 @@ function Overview() {
           </Button>
         </div>
       </section>
+
+      <FeaturedProfiles />
 
       <section>
         <GlobalChat />
