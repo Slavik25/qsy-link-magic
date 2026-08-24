@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, Images, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Type, Wand2 } from "lucide-react";
+import { Check, Coins, Gem, Images, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Star, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,7 +15,7 @@ import {
   SHOP_NAME_STYLES,
   SHOP_PLAYERS,
 } from "@/lib/shop";
-import { purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
+import { FEATURED_PRICE, purchaseFeatured, purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
 import { useImageHostAccess } from "@/lib/gallery";
 import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
@@ -71,6 +71,31 @@ function ShopPage() {
   const theme = profile?.theme;
   const owned = new Set(unlocks ?? []);
   const imageHost = useImageHostAccess();
+  const [buyingFeatured, setBuyingFeatured] = useState(false);
+  const featuredActive = Boolean(
+    profile?.featured && profile.featured_until && new Date(profile.featured_until) > new Date(),
+  );
+
+  async function buyFeatured() {
+    if (!profile) return;
+    setBuyingFeatured(true);
+    try {
+      const until = await purchaseFeatured(profile.id);
+      toast.success("Perfil destacado", {
+        description: `@${profile.username} estará destacado hasta ${new Date(until).toLocaleString("es-ES")}`,
+      });
+      await qc.invalidateQueries({ queryKey: ["wallet"] });
+      await qc.invalidateQueries({ queryKey: ["my-profile"] });
+      await qc.invalidateQueries({ queryKey: ["featured-profiles"] });
+    } catch (e) {
+      const msg = (e as Error).message;
+      toast.error(msg.includes("not enough") ? "No tienes suficientes QSY Coins" : "No se pudo destacar", {
+        description: msg.includes("not enough") ? `Necesitas ${FEATURED_PRICE} coins.` : msg,
+      });
+    } finally {
+      setBuyingFeatured(false);
+    }
+  }
 
   async function buy(key: string, price: number, name: string) {
     try {
