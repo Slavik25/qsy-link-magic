@@ -178,13 +178,22 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   );
 
   const setVol = (v: number) => {
-    const el = audioRef.current;
     setVolume(v);
+    setMuted(v === 0);
+    if (remote === "youtube") {
+      ytCmd("setVolume", [Math.round(v * 100)]);
+      ytCmd(v === 0 ? "mute" : "unMute");
+      return;
+    }
+    if (remote === "soundcloud") {
+      scCmd("setVolume", Math.round(v * 100));
+      return;
+    }
+    const el = audioRef.current;
     if (el) {
       el.volume = v;
       el.muted = v === 0;
     }
-    setMuted(v === 0);
   };
 
   const volCtl = (
@@ -216,10 +225,21 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
       type="button"
       aria-label="Avanzar canción"
       onClick={(e) => {
-        const el = audioRef.current;
-        if (!el || !dur) return;
+        if (!dur) return;
         const r = e.currentTarget.getBoundingClientRect();
-        el.currentTime = ((e.clientX - r.left) / r.width) * dur;
+        const target = ((e.clientX - r.left) / r.width) * dur;
+        if (remote === "youtube") {
+          ytCmd("seekTo", [target, true]);
+          setTime(target);
+          return;
+        }
+        if (remote === "soundcloud") {
+          scCmd("seekTo", Math.round(target * 1000));
+          setTime(target);
+          return;
+        }
+        const el = audioRef.current;
+        if (el) el.currentTime = target;
       }}
       className="block h-1 w-full overflow-hidden rounded-full bg-white/15"
     >
@@ -230,7 +250,8 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     </button>
   );
 
-  if (embed) {
+  // Spotify y Apple Music no permiten control externo: se muestra su embed.
+  if (embed && !remote) {
     return (
       <div className={posClass}>
         <div className={`overflow-hidden rounded-2xl border ${shell}`}>
@@ -243,6 +264,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             className="w-full border-0"
             style={{ height: embed.height }}
           />
+
         </div>
       </div>
     );
