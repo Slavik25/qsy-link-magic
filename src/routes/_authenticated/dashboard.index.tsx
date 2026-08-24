@@ -151,6 +151,7 @@ function FeaturedProfiles() {
           </Link>
         ))}
       </div>
+      )}
     </section>
   );
 }
