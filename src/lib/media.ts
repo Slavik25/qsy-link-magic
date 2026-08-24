@@ -14,7 +14,7 @@ export function detectEmbed(raw?: string | null): EmbedInfo | null {
   if (yt?.[1]) {
     return {
       provider: "youtube",
-      src: `https://www.youtube-nocookie.com/embed/${yt[1]}?autoplay=1&loop=1&playlist=${yt[1]}&rel=0`,
+      src: `https://www.youtube-nocookie.com/embed/${yt[1]}?autoplay=1&loop=1&playlist=${yt[1]}&rel=0&enablejsapi=1&playsinline=1`,
       height: 180,
     };
   }
