@@ -64,7 +64,11 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     if (!remote) return;
     const onMsg = (e: MessageEvent) => {
       if (typeof e.data !== "string") return;
-      let d: any;
+      let d: {
+        info?: { currentTime?: number; duration?: number; playerState?: number };
+        method?: string;
+        value?: { currentPosition?: number; relativePosition?: number };
+      };
       try {
         d = JSON.parse(e.data);
       } catch {
