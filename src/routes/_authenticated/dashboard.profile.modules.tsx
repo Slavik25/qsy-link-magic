@@ -6,6 +6,23 @@ import { Label } from "@/components/ui/label";
 import { detectEmbed } from "@/lib/media";
 import type { MediaItem } from "@/lib/qsy";
 import { Panel, SaveBar, ToggleRow, useProfileDraft } from "@/components/qsy/profile-editor-ui";
+import { ProfileStreak } from "@/components/qsy/profile-streak";
+
+const STREAK_POSITIONS = [
+  { value: "stats", label: "Junto a las estadísticas" },
+  { value: "under-name", label: "Debajo del nombre" },
+  { value: "top-left", label: "Esquina superior izq." },
+  { value: "top-right", label: "Esquina superior der." },
+  { value: "bottom", label: "Al final de la tarjeta" },
+] as const;
+
+const STREAK_STYLES = [
+  { value: "plain", label: "Simple" },
+  { value: "chip", label: "Chip" },
+  { value: "pill", label: "Píldora" },
+  { value: "glow", label: "Glow" },
+  { value: "badge", label: "Badge" },
+] as const;
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile/modules")({
   component: ModulesSection,
@@ -54,6 +71,63 @@ function ModulesSection() {
           onChange={(v) => setTheme("show_streak", v)}
         />
       </div>
+
+      {t.show_streak && (
+        <section className="space-y-4 rounded-2xl border border-border/50 bg-surface-strong/30 p-5">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em]">Widget de racha</h2>
+
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">Posición</Label>
+            <div className="flex flex-wrap gap-2">
+              {STREAK_POSITIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setTheme("streak_position", o.value)}
+                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    (t.streak_position ?? "stats") === o.value
+                      ? "border-primary/60 bg-primary/15 text-foreground"
+                      : "border-border/60 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[11px] uppercase tracking-wider text-muted-foreground">Estilo</Label>
+            <div className="flex flex-wrap gap-2">
+              {STREAK_STYLES.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setTheme("streak_style", o.value)}
+                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    (t.streak_style ?? "plain") === o.value
+                      ? "border-primary/60 bg-primary/15 text-foreground"
+                      : "border-border/60 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <ToggleRow
+            title="Mostrar el número de días"
+            description="Si lo desactivas solo se verá si tu racha está activa o apagada."
+            checked={t.streak_show_count !== false}
+            onChange={(v) => setTheme("streak_show_count", v)}
+          />
+
+          <div className="flex items-center justify-center rounded-xl border border-border/50 bg-background/40 p-4">
+            <ProfileStreak userId="preview" accent={t.accent} theme={t} previewDays={12} />
+          </div>
+        </section>
+      )}
 
       <ToggleRow
         title="Pantalla de Inicio (Start Screen)"
