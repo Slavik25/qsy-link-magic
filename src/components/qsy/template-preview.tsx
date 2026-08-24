@@ -1,6 +1,10 @@
+import { useEffect, useRef, useState } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
+
+const BASE_WIDTH = 420;
+
 
 const DEMO = {
   username: "qsy",
