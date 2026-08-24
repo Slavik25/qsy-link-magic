@@ -55,9 +55,9 @@ function FontsSection() {
           Vista previa
         </p>
         <p className="mt-2 text-3xl" style={{ fontSize: `${2 * (t.font_scale ?? 1)}rem` }}>
-          {draft.display_name || draft.username || "tu nombre"}
+          {draft.display_name || "tu nombre"}
         </p>
-        <p className="mt-1 text-sm text-muted-foreground">@{draft.username || "usuario"} · {active.name}</p>
+        <p className="mt-1 text-sm text-muted-foreground">Tipografía {active.name}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
