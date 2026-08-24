@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Coins, Gem, Images, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Star, Type, Wand2 } from "lucide-react";
+import { Check, Coins, Gamepad2, Gem, Images, LayoutTemplate, Lock, MousePointer2, Music4, Sparkles, Star, Type, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,10 +14,12 @@ import {
   SHOP_LAYOUTS,
   SHOP_NAME_STYLES,
   SHOP_PLAYERS,
+  SHOP_GAMING,
+  gamingRankOk,
 } from "@/lib/shop";
 import { FEATURED_PRICE, purchaseFeatured, purchaseItem, useUnlocks, useWallet } from "@/lib/economy";
 import { useImageHostAccess } from "@/lib/gallery";
-import { LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
+import { GamingPreview, LayoutPreview, PlayerPreview } from "@/components/qsy/shop-previews";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/dashboard/premium")({
@@ -38,10 +40,11 @@ export const Route = createFileRoute("/_authenticated/dashboard/premium")({
   }),
 });
 
-type Tab = "players" | "layouts" | "names" | "effects" | "hover" | "decorations" | "access";
+type Tab = "players" | "gaming" | "layouts" | "names" | "effects" | "hover" | "decorations" | "access";
 
 const TABS: { key: Tab; label: string; icon: typeof Music4 }[] = [
   { key: "players", label: "Reproductores", icon: Music4 },
+  { key: "gaming", label: "Gaming", icon: Gamepad2 },
   { key: "layouts", label: "Layouts", icon: LayoutTemplate },
   { key: "names", label: "Nombres", icon: Type },
   { key: "effects", label: "Fondos", icon: Wand2 },
@@ -294,6 +297,64 @@ function ShopPage() {
                     )}
                   </Button>
                 )}
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {tab === "gaming" && (
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOP_GAMING.map((g) => {
+            const active = (theme?.gaming_style ?? "classic") === g.style;
+            const rankOk = gamingRankOk(g, profile?.rank);
+            const needsBuy = g.price > 0 && !owned.has(g.key);
+            return (
+              <article
+                key={g.key}
+                className="qsy-pop overflow-hidden rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl transition-colors hover:border-primary/40"
+              >
+                <GamingPreview item={g} />
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-sm font-semibold">{g.name}</h2>
+                    {g.rank ? (
+                      <span className="rounded-full border border-primary/50 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
+                        {g.rank}
+                      </span>
+                    ) : (
+                      <Price price={g.price} premium={g.premium} />
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{g.description}</p>
+                  {g.rank && !rankOk ? (
+                    <Button className="mt-4 w-full rounded-xl" variant="secondary" disabled>
+                      <Lock className="size-4" /> Requiere {g.rank}
+                    </Button>
+                  ) : needsBuy ? (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant="secondary"
+                      onClick={() => buy(g.key, g.price, g.name)}
+                    >
+                      <Lock className="size-4" /> Comprar · {g.price} QSY
+                    </Button>
+                  ) : (
+                    <Button
+                      className="mt-4 w-full rounded-xl"
+                      variant={active ? "secondary" : "default"}
+                      onClick={() => apply({ gaming_style: g.style, gaming_key: g.key }, g.name)}
+                    >
+                      {active ? (
+                        <>
+                          <Check className="size-4" /> Equipado
+                        </>
+                      ) : (
+                        "Equipar"
+                      )}
+                    </Button>
+                  )}
+                </div>
               </article>
             );
           })}
