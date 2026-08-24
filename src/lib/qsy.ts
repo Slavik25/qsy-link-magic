@@ -100,6 +100,9 @@ export type ThemeConfig = {
   roblox_user?: string;
   gaming_enabled?: boolean;
   gaming_transparent?: boolean;
+  /** Diseño de las tarjetas de gaming (ver SHOP_GAMING). */
+  gaming_style?: string;
+  gaming_key?: string;
   video_overlay?: string;
   /* Modules */
   show_views?: boolean;
