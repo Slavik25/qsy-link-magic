@@ -259,7 +259,6 @@ export function useFeaturedProfiles(limit = 6) {
   return useQuery({
     queryKey: ["featured-profiles", limit],
     queryFn: async () => {
-      void supabase.rpc("expire_featured");
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("profiles")
