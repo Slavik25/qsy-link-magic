@@ -1288,3 +1288,157 @@
     background-position: 300% 0;
   }
 }
+
+/* ============ Nuevos efectos de nombre (tienda) ============ */
+.qsy-name-emboss {
+  color: #e7e7ee;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.25), 0 -1px 0 rgb(0 0 0 / 0.65);
+}
+@keyframes qsy-name-slide-bg { to { background-position: 300% 0; } }
+.qsy-name-lavender,
+.qsy-name-sunset,
+.qsy-name-plasma,
+.qsy-name-oil,
+.qsy-name-blood {
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: qsy-name-slide-bg 6s linear infinite;
+}
+.qsy-name-lavender { background-image: linear-gradient(90deg, #c4b5fd, #f5d0fe, #a78bfa, #c4b5fd); }
+.qsy-name-sunset { background-image: linear-gradient(90deg, #fb923c, #f43f5e, #a855f7, #fb923c); }
+.qsy-name-plasma { background-image: linear-gradient(90deg, #a855f7, #22d3ee, #f472b6, #a855f7); animation-duration: 4s; }
+.qsy-name-oil { background-image: linear-gradient(90deg, #22d3ee, #a78bfa, #f0abfc, #34d399, #22d3ee); animation-duration: 8s; }
+.qsy-name-blood {
+  background-image: linear-gradient(90deg, #7f1d1d, #ef4444, #991b1b, #7f1d1d);
+  filter: drop-shadow(0 0 10px rgb(239 68 68 / 0.55));
+}
+@keyframes qsy-name-bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
+.qsy-name-bounce { display: inline-block; animation: qsy-name-bounce 1.6s ease-in-out infinite; }
+.qsy-name-pixel {
+  color: #fde047;
+  text-shadow: 3px 3px 0 #7c2d12, 6px 6px 0 rgb(0 0 0 / 0.6);
+  letter-spacing: 0.04em;
+}
+@keyframes qsy-name-matrix { 0%, 100% { opacity: 1; } 47% { opacity: 0.7; } 48% { opacity: 0.35; } 49% { opacity: 1; } }
+.qsy-name-matrix {
+  color: #4ade80;
+  text-shadow: 0 0 12px rgb(74 222 128 / 0.75);
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  animation: qsy-name-matrix 3.4s infinite;
+}
+@keyframes qsy-name-static {
+  0%, 100% { text-shadow: 1px 0 0 rgb(255 255 255 / 0.35), -1px 0 0 rgb(0 0 0 / 0.6); }
+  50% { text-shadow: -2px 0 0 rgb(255 255 255 / 0.5), 2px 0 0 rgb(0 0 0 / 0.7); }
+}
+.qsy-name-static { animation: qsy-name-static 0.18s steps(2, end) infinite; }
+
+/* ============ Nuevos fondos animados (tienda) ============ */
+.qsy-bg-stardust {
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgb(255 255 255 / 0.7), transparent),
+    radial-gradient(1px 1px at 65% 55%, rgb(199 210 254 / 0.7), transparent),
+    radial-gradient(1px 1px at 85% 15%, rgb(255 255 255 / 0.5), transparent);
+  background-size: 220px 220px;
+  animation: qsy-bg-rise 60s linear infinite;
+}
+.qsy-bg-orbs {
+  background-image:
+    radial-gradient(120px 120px at 20% 30%, rgb(168 85 247 / 0.32), transparent 70%),
+    radial-gradient(160px 160px at 78% 65%, rgb(14 165 233 / 0.28), transparent 70%),
+    radial-gradient(90px 90px at 55% 85%, rgb(244 114 182 / 0.24), transparent 70%);
+  background-size: 200% 200%;
+  animation: qsy-bg-shift 22s ease-in-out infinite;
+}
+@keyframes qsy-bg-ripple { to { background-size: 180% 180%; opacity: 0.15; } }
+.qsy-bg-ripple {
+  background-image: repeating-radial-gradient(circle at 50% 55%, rgb(56 189 248 / 0.18) 0 2px, transparent 2px 40px);
+  background-size: 100% 100%;
+  background-position: center;
+  animation: qsy-bg-ripple 6s ease-out infinite;
+}
+.qsy-bg-waves {
+  background-image:
+    repeating-linear-gradient(0deg, rgb(45 212 191 / 0.12) 0 2px, transparent 2px 26px);
+  background-size: 200% 200%;
+  animation: qsy-bg-shift 14s ease-in-out infinite;
+}
+@keyframes qsy-bg-meteors { to { background-position: -1400px 1400px; } }
+.qsy-bg-meteors {
+  background-image:
+    linear-gradient(115deg, transparent 0 48%, rgb(255 255 255 / 0.55) 49% 50%, transparent 51%),
+    linear-gradient(115deg, transparent 0 78%, rgb(165 180 252 / 0.45) 79% 80%, transparent 81%);
+  background-size: 700px 700px, 900px 900px;
+  animation: qsy-bg-meteors 3.4s linear infinite;
+}
+@keyframes qsy-bg-circuit { to { background-position: 400px 400px; } }
+.qsy-bg-circuit {
+  background-image:
+    linear-gradient(90deg, rgb(45 212 191 / 0.16) 1px, transparent 1px),
+    linear-gradient(0deg, rgb(45 212 191 / 0.12) 1px, transparent 1px),
+    radial-gradient(2px 2px at 40px 40px, rgb(45 212 191 / 0.6), transparent);
+  background-size: 80px 80px, 80px 80px, 80px 80px;
+  animation: qsy-bg-circuit 24s linear infinite;
+}
+@keyframes qsy-bg-glitch {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.5; }
+  48% { transform: translate3d(-6px, 2px, 0); opacity: 0.75; }
+  52% { transform: translate3d(6px, -2px, 0); opacity: 0.3; }
+}
+.qsy-bg-glitch {
+  background-image:
+    repeating-linear-gradient(0deg, rgb(236 72 153 / 0.12) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(0deg, rgb(14 165 233 / 0.1) 0 3px, transparent 3px 9px);
+  animation: qsy-bg-glitch 2.6s steps(3, end) infinite;
+}
+.qsy-bg-caustics {
+  background-image:
+    repeating-radial-gradient(circle at 30% 20%, rgb(8 145 178 / 0.16) 0 6px, transparent 6px 22px),
+    repeating-radial-gradient(circle at 70% 80%, rgb(59 130 246 / 0.14) 0 8px, transparent 8px 26px);
+  background-size: 200% 200%;
+  animation: qsy-bg-shift 16s ease-in-out infinite;
+}
+
+/* ============ Nuevos hovers del biolink (tienda) ============ */
+@keyframes qsy-hover-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+.qsy-hover-pulse:hover { animation: qsy-hover-pulse 1.8s ease-in-out infinite; }
+.qsy-hover-blurin { filter: blur(0); }
+.qsy-hover-blurin:hover { filter: blur(0) saturate(1.25) brightness(1.08); box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.9); }
+.qsy-hover-slide:hover { transform: translateY(-14px); }
+.qsy-hover-invert:hover { filter: invert(1) hue-rotate(180deg); }
+.qsy-hover-depth:hover {
+  transform: translate(-6px, -6px);
+  box-shadow: 6px 6px 0 color-mix(in oklab, var(--p-accent) 60%, transparent), 12px 12px 0 rgb(0 0 0 / 0.45);
+}
+.qsy-hover-ripple { position: relative; overflow: hidden; }
+.qsy-hover-ripple::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, color-mix(in oklab, var(--p-accent) 45%, transparent), transparent 70%);
+  pointer-events: none;
+}
+@keyframes qsy-hover-ripple { to { transform: translate(-50%, -50%) scale(60); opacity: 0; } }
+.qsy-hover-ripple:hover::after { animation: qsy-hover-ripple 1.4s ease-out infinite; }
+.qsy-hover-neonborder { position: relative; }
+.qsy-hover-neonborder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from 0deg, transparent 0 70%, var(--p-accent) 85%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+@keyframes qsy-hover-neonborder { to { transform: rotate(360deg); } }
+.qsy-hover-neonborder:hover::before { opacity: 1; animation: qsy-hover-neonborder 2.4s linear infinite; }

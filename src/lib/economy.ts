@@ -94,3 +94,57 @@ export async function purchaseFeatured(profileId: string) {
 }
 
 export const FEATURED_PRICE = 1500;
+
+/* ============ Recompensa diaria / racha ============ */
+
+export type StreakState = {
+  current: number;
+  best: number;
+  total: number;
+  lastClaim: string | null;
+  claimedToday: boolean;
+};
+
+/** Recompensa que otorga reclamar el día `streak` de la racha. */
+export function dailyReward(streak: number) {
+  const base = Math.min(25 + (Math.max(1, streak) - 1) * 10, 150);
+  return base + (streak % 7 === 0 ? 200 : 0);
+}
+
+export function todayUTC() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function useStreak() {
+  return useQuery({
+    queryKey: ["streak"],
+    queryFn: async (): Promise<StreakState> => {
+      const empty: StreakState = { current: 0, best: 0, total: 0, lastClaim: null, claimedToday: false };
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) return empty;
+      const { data } = await supabase
+        .from("user_streaks")
+        .select("current_days, best_days, total_claims, last_claim_date")
+        .eq("user_id", auth.user.id)
+        .maybeSingle();
+      if (!data) return empty;
+      const today = todayUTC();
+      const last = data.last_claim_date as string | null;
+      // Si se saltó un día, la racha mostrada vuelve a cero.
+      const broken = !!last && last < new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      return {
+        current: broken ? 0 : (data.current_days ?? 0),
+        best: data.best_days ?? 0,
+        total: data.total_claims ?? 0,
+        lastClaim: last,
+        claimedToday: last === today,
+      };
+    },
+  });
+}
+
+export async function claimDaily() {
+  const { data, error } = await supabase.rpc("claim_daily_reward");
+  if (error) throw error;
+  return (data ?? {}) as { streak: number; reward: number; bonus: number; balance: number };
+}

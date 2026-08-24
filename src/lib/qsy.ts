@@ -107,6 +107,8 @@ export type ThemeConfig = {
   /* Modules */
   show_views?: boolean;
   show_likes?: boolean;
+  /** Widget gratuito de racha diaria en el biolink */
+  show_streak?: boolean;
   typewriter?: string[];
   /** Bloques de música/vídeo por enlace (YouTube, Spotify, SoundCloud, Apple Music) */
   media?: MediaItem[];
