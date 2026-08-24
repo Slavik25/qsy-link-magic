@@ -28,6 +28,7 @@ export function isFloatingPlayer(theme: ThemeConfig) {
  */
 export function ProfilePlayer({ theme, music, floating = false }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [time, setTime] = useState(0);
@@ -37,13 +38,73 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   const accent = theme.accent;
   const type = theme.player_type || "default";
   const embed = detectEmbed(theme.audio_url);
+  // YouTube y SoundCloud se pueden controlar desde fuera del iframe: ocultamos
+  // su reproductor y mostramos el skin elegido por el usuario.
+  const remote =
+    embed && (embed.provider === "youtube" || embed.provider === "soundcloud")
+      ? embed.provider
+      : null;
   const title =
     theme.audio_title?.trim() ||
     music?.title ||
-    (theme.audio_url ? prettyTrackName(theme.audio_url) : "QSY Radio");
+    (theme.audio_url && !embed ? prettyTrackName(theme.audio_url) : "") ||
+    "QSY Radio";
   const artist = theme.audio_artist?.trim() || music?.artist || "";
 
+  /** Envía un comando al iframe embebido (YouTube o SoundCloud). */
+  const post = (payload: unknown) => {
+    frameRef.current?.contentWindow?.postMessage(JSON.stringify(payload), "*");
+  };
+  const ytCmd = (func: string, args: unknown[] = []) =>
+    post({ event: "command", func, args });
+  const scCmd = (method: string, value?: unknown) =>
+    post(value === undefined ? { method } : { method, value });
+
   useEffect(() => {
+    if (!remote) return;
+    const onMsg = (e: MessageEvent) => {
+      if (typeof e.data !== "string") return;
+      let d: {
+        info?: { currentTime?: number; duration?: number; playerState?: number };
+        method?: string;
+        value?: { currentPosition?: number; relativePosition?: number };
+      };
+      try {
+        d = JSON.parse(e.data);
+      } catch {
+        return;
+      }
+      if (remote === "youtube" && d?.info) {
+        if (typeof d.info.currentTime === "number") setTime(d.info.currentTime);
+        if (typeof d.info.duration === "number" && d.info.duration > 0) setDur(d.info.duration);
+        if (typeof d.info.playerState === "number") setPlaying(d.info.playerState === 1);
+      }
+      if (remote === "soundcloud" && d?.method === "playProgress" && d.value) {
+        const pos = d.value.currentPosition ?? 0;
+        const rel = d.value.relativePosition ?? 0;
+        setTime(pos / 1000);
+        if (rel > 0) setDur(pos / 1000 / rel);
+        setPlaying(true);
+      }
+
+    };
+    window.addEventListener("message", onMsg);
+    const hello = window.setInterval(() => {
+      if (remote === "youtube") {
+        post({ event: "listening", id: 1 });
+      } else {
+        scCmd("addEventListener", "playProgress");
+        scCmd("addEventListener", "play");
+      }
+    }, 1000);
+    return () => {
+      window.removeEventListener("message", onMsg);
+      window.clearInterval(hello);
+    };
+  }, [remote, theme.audio_url]);
+
+  useEffect(() => {
+    if (remote) return;
     const el = audioRef.current;
     if (!el) return;
     el.volume = (theme.audio_volume ?? 40) / 100;
@@ -56,9 +117,19 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     };
     window.addEventListener("pointerdown", resume, { once: true });
     return () => window.removeEventListener("pointerdown", resume);
-  }, [theme.audio_url]);
+  }, [theme.audio_url, remote]);
 
   const toggle = () => {
+    if (remote === "youtube") {
+      ytCmd(playing ? "pauseVideo" : "playVideo");
+      setPlaying(!playing);
+      return;
+    }
+    if (remote === "soundcloud") {
+      scCmd(playing ? "pause" : "play");
+      setPlaying(!playing);
+      return;
+    }
     const el = audioRef.current;
     if (!el) return;
     if (el.paused) {
@@ -70,6 +141,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   };
 
   const progress = dur > 0 ? (time / dur) * 100 : 0;
+
 
   const shell = useMemo(() => {
     const bg = theme.player_bg ?? "glass";
@@ -111,13 +183,22 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
   );
 
   const setVol = (v: number) => {
-    const el = audioRef.current;
     setVolume(v);
+    setMuted(v === 0);
+    if (remote === "youtube") {
+      ytCmd("setVolume", [Math.round(v * 100)]);
+      ytCmd(v === 0 ? "mute" : "unMute");
+      return;
+    }
+    if (remote === "soundcloud") {
+      scCmd("setVolume", Math.round(v * 100));
+      return;
+    }
+    const el = audioRef.current;
     if (el) {
       el.volume = v;
       el.muted = v === 0;
     }
-    setMuted(v === 0);
   };
 
   const volCtl = (
@@ -149,10 +230,21 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
       type="button"
       aria-label="Avanzar canción"
       onClick={(e) => {
-        const el = audioRef.current;
-        if (!el || !dur) return;
+        if (!dur) return;
         const r = e.currentTarget.getBoundingClientRect();
-        el.currentTime = ((e.clientX - r.left) / r.width) * dur;
+        const target = ((e.clientX - r.left) / r.width) * dur;
+        if (remote === "youtube") {
+          ytCmd("seekTo", [target, true]);
+          setTime(target);
+          return;
+        }
+        if (remote === "soundcloud") {
+          scCmd("seekTo", Math.round(target * 1000));
+          setTime(target);
+          return;
+        }
+        const el = audioRef.current;
+        if (el) el.currentTime = target;
       }}
       className="block h-1 w-full overflow-hidden rounded-full bg-white/15"
     >
@@ -163,7 +255,8 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
     </button>
   );
 
-  if (embed) {
+  // Spotify y Apple Music no permiten control externo: se muestra su embed.
+  if (embed && !remote) {
     return (
       <div className={posClass}>
         <div className={`overflow-hidden rounded-2xl border ${shell}`}>
@@ -176,6 +269,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
             className="w-full border-0"
             style={{ height: embed.height }}
           />
+
         </div>
       </div>
     );
@@ -519,7 +613,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
 
   return (
     <div className={posClass}>
-      {theme.audio_url && (
+      {theme.audio_url && !embed && (
         <audio
           ref={audioRef}
           src={theme.audio_url}
@@ -532,7 +626,21 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
           <track kind="captions" />
         </audio>
       )}
+      {embed && remote && (
+        // Sólo audio: el vídeo queda oculto y se controla desde el skin elegido.
+        <iframe
+          ref={frameRef}
+          title={`Audio ${embed.provider}`}
+          src={embed.src}
+          allow="autoplay; encrypted-media"
+          tabIndex={-1}
+          aria-hidden="true"
+          className="pointer-events-none absolute size-px border-0 opacity-0"
+          style={{ left: -9999, top: -9999 }}
+        />
+      )}
       {body}
     </div>
   );
 }
+
