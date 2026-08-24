@@ -88,7 +88,8 @@ function StatCard({
 
 function FeaturedProfiles() {
   const { data: featured, isLoading } = useFeaturedProfiles(6);
-  if (isLoading || !featured?.length) return null;
+  const items = featured ?? [];
+
 
   return (
     <section className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
