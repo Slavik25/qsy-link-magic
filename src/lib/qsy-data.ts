@@ -5,7 +5,7 @@ import { readTheme, type Profile, type ProfileLink, type Social } from "./qsy";
 
 /** Columnas públicas de un perfil: nunca incluye identificadores internos de cuenta. */
 const PUBLIC_PROFILE_COLUMNS =
-  "id, user_id, username, display_name, bio, location, avatar_url, banner_url, verified, theme, music, featured, created_at, updated_at, view_count, like_count, uid, rank, domain, username_set";
+  "id, user_id, username, display_name, bio, location, avatar_url, banner_url, verified, theme, music, featured, featured_until, created_at, updated_at, view_count, like_count, uid, rank, domain, username_set";
 
 function shape(row: any): Profile {
   return { ...row, theme: readTheme(row.theme), music: row.music ?? {} } as Profile;
