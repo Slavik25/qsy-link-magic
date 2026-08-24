@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { ArrowRight, AtSign, Copy, KeyRound, Lock, Mail } from "lucide-react";
 import { registerWithLoginCode } from "@/lib/login-code.functions";
+import { checkSignupAllowed, recordSignupSuccess } from "@/lib/signup-guard.functions";
 import { AuthShell } from "@/components/qsy/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,6 +52,8 @@ function RegisterPage() {
   const [mode, setMode] = useState<"email" | "code">("email");
   const [issuedCode, setIssuedCode] = useState<string | null>(null);
   const codeRegister = useServerFn(registerWithLoginCode);
+  const guardSignup = useServerFn(checkSignupAllowed);
+  const markSignup = useServerFn(recordSignupSuccess);
 
   async function onCodeSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +64,12 @@ function RegisterPage() {
     }
     setLoading(true);
     try {
+      const guard = await guardSignup({ data: { kind: "code" } });
+      if (!guard.ok) {
+        setLoading(false);
+        toast.error("Registro bloqueado", { description: guard.error });
+        return;
+      }
       const res = await codeRegister({ data: { username: parsed.data } });
       if (!res.ok) {
         setLoading(false);
@@ -75,6 +84,7 @@ function RegisterPage() {
       if (error) {
         toast.error("Cuenta creada, pero no pudimos entrar", { description: error.message });
       }
+      void markSignup({ data: { kind: "code" } });
       setIssuedCode(res.code);
     } catch {
       setLoading(false);
@@ -93,6 +103,12 @@ function RegisterPage() {
       return;
     }
     setLoading(true);
+    const guard = await guardSignup({ data: { kind: "email" } });
+    if (!guard.ok) {
+      setLoading(false);
+      toast.error("Registro bloqueado", { description: guard.error });
+      return;
+    }
     const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
@@ -120,6 +136,7 @@ function RegisterPage() {
         return;
       }
     }
+    void markSignup({ data: { kind: "email" } });
     toast.success("Cuenta creada. Bienvenido a QSY.");
     await navigate({ to: "/dashboard" });
   }
