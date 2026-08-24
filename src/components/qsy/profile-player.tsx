@@ -608,7 +608,7 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
 
   return (
     <div className={posClass}>
-      {theme.audio_url && (
+      {theme.audio_url && !embed && (
         <audio
           ref={audioRef}
           src={theme.audio_url}
@@ -621,7 +621,21 @@ export function ProfilePlayer({ theme, music, floating = false }: Props) {
           <track kind="captions" />
         </audio>
       )}
+      {embed && remote && (
+        // Sólo audio: el vídeo queda oculto y se controla desde el skin elegido.
+        <iframe
+          ref={frameRef}
+          title={`Audio ${embed.provider}`}
+          src={embed.src}
+          allow="autoplay; encrypted-media"
+          tabIndex={-1}
+          aria-hidden="true"
+          className="pointer-events-none absolute size-px border-0 opacity-0"
+          style={{ left: -9999, top: -9999 }}
+        />
+      )}
       {body}
     </div>
   );
 }
+
