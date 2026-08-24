@@ -1195,6 +1195,36 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          ip: string | null
+          kind: string
+          ok: boolean
+          reason: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          kind?: string
+          ok?: boolean
+          reason?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          kind?: string
+          ok?: boolean
+          reason?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       site_bans: {
         Row: {
           active: boolean
