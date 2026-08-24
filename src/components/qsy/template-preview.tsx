@@ -1,6 +1,10 @@
+import { useEffect, useRef, useState } from "react";
 import { ProfileView } from "@/components/qsy/profile-view";
 import { useProfileByUsername } from "@/lib/qsy-data";
 import type { ThemeConfig } from "@/lib/qsy";
+
+const BASE_WIDTH = 420;
+
 
 const DEMO = {
   username: "qsy",
@@ -63,28 +67,55 @@ export function TemplatePreview({
     url: s.url,
   }));
 
+  const wrap = useRef<HTMLDivElement | null>(null);
+  const inner = useRef<HTMLDivElement | null>(null);
+  const [fit, setFit] = useState(scale);
+  const [innerH, setInnerH] = useState(0);
+
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.clientWidth;
+      if (w > 0) setFit(Math.min(1, w / BASE_WIDTH));
+      if (inner.current) setInnerH(inner.current.offsetHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    if (inner.current) ro.observe(inner.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const boxHeight = innerH > 0 ? Math.round(innerH * fit) : height;
+
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-border/60"
+      ref={wrap}
+      className="relative w-full overflow-hidden rounded-2xl border border-border/60"
       style={{
-        height,
+        height: boxHeight,
         background: `radial-gradient(90% 70% at 50% 0%, ${theme.accent}33, transparent 70%), #0a0a0a`,
       }}
     >
+
       <div
-        className="pointer-events-none absolute left-1/2 top-4 w-[420px] -translate-x-1/2 origin-top"
-        style={{ transform: `translateX(-50%) scale(${scale})` }}
+        className="pointer-events-none absolute left-0 top-0 origin-top-left"
+        style={{ width: BASE_WIDTH, transform: `scale(${fit})` }}
       >
-        <ProfileView
-          profile={profile}
-          links={links}
-          socials={socials}
-          badges={[]}
-          views={1280}
-          likes={64}
-          compact
-        />
+        <div ref={inner}>
+          <ProfileView
+            profile={profile}
+            links={links}
+            socials={socials}
+            badges={[]}
+            views={1280}
+            likes={64}
+            compact
+          />
+        </div>
       </div>
     </div>
   );
 }
+
