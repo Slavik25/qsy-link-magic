@@ -202,6 +202,7 @@ export type Profile = {
   banner_url: string | null;
   verified: boolean;
   featured: boolean;
+  featured_until?: string | null;
   theme: ThemeConfig;
   music: Record<string, unknown>;
   view_count: number;
