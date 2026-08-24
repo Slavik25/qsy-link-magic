@@ -179,8 +179,45 @@ function ShopPage() {
               </Button>
             )}
           </article>
+
+          <article className="qsy-pop rounded-3xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl transition-colors hover:border-primary/40">
+            <div className="flex items-start justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-sm font-semibold">
+                <Star className="size-4 text-primary" /> Destacado 24 h
+              </h2>
+              <Price price={FEATURED_PRICE} premium />
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Tu perfil aparece en la sección “Perfiles destacados” del dashboard durante 24 horas.
+              Si vuelves a comprarlo, el tiempo se acumula.
+            </p>
+            <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+              <li>· Visibilidad para toda la comunidad</li>
+              <li>· Se aplica al perfil activo{profile ? ` (@${profile.username})` : ""}</li>
+              <li>· Duración exacta: 24 horas desde la compra</li>
+            </ul>
+            {featuredActive ? (
+              <p className="mt-4 rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-xs text-primary">
+                Destacado activo hasta{" "}
+                {new Date(profile!.featured_until!).toLocaleString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            ) : null}
+            <Button
+              className="mt-4 w-full rounded-xl"
+              disabled={!profile || buyingFeatured}
+              onClick={buyFeatured}
+            >
+              <Star className="size-4" /> {featuredActive ? "Extender 24 h más" : "Destacar 24 h"}
+            </Button>
+          </article>
         </section>
       )}
+
 
       {tab === "players" && (
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
