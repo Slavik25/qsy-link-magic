@@ -781,20 +781,6 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
     image: "https://r2.zyo.lol/decoration/angel_headphones.png",
   },
   {
-    key: "angry",
-    name: "Angry",
-    description: "Decoración de avatar Angry.",
-    price: 350,
-    image: "https://r2.zyo.lol/decoration/angry.png",
-  },
-  {
-    key: "angry-pink",
-    name: "Angry Pink",
-    description: "Decoración de avatar Angry Pink.",
-    price: 450,
-    image: "https://r2.zyo.lol/decoration/angry_pink.png",
-  },
-  {
     key: "angry-yellow",
     name: "Angry Yellow",
     description: "Decoración de avatar Angry Yellow.",
@@ -987,13 +973,6 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
     description: "Decoración de avatar Blade Storm.",
     price: 0,
     image: "https://r2.zyo.lol/decoration/blade_storm.png",
-  },
-  {
-    key: "bloodthirsty",
-    name: "Bloodthirsty",
-    description: "Decoración de avatar Bloodthirsty.",
-    price: 250,
-    image: "https://r2.zyo.lol/decoration/bloodthirsty.png",
   },
   {
     key: "bloodthirsty-gold",
