@@ -259,10 +259,13 @@ export function useFeaturedProfiles(limit = 6) {
   return useQuery({
     queryKey: ["featured-profiles", limit],
     queryFn: async () => {
+      void supabase.rpc("expire_featured");
+      const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, bio, avatar_url, banner_url, verified, rank, view_count, like_count")
+        .select("id, username, display_name, bio, avatar_url, banner_url, verified, rank, view_count, like_count, featured_until")
         .eq("featured", true)
+        .or(`featured_until.is.null,featured_until.gt.${nowIso}`)
         .order("view_count", { ascending: false })
         .limit(limit);
       if (error) throw error;
@@ -270,6 +273,7 @@ export function useFeaturedProfiles(limit = 6) {
     },
   });
 }
+
 
 export function useProfileBadges(profileId?: string) {
   return useQuery({
