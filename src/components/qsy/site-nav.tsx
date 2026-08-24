@@ -20,6 +20,7 @@ import { useActiveProfileId } from "@/lib/qsy-data";
 const items = [
   { label: "Templates", to: "/templates" as const },
   { label: "Rank", to: "/rank" as const },
+  { label: "Status", to: "/status" as const },
 ];
 
 

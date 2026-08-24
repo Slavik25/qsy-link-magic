@@ -17,6 +17,9 @@ export function SiteFooter() {
             <Link to="/rank" className="block text-muted-foreground hover:text-foreground">
               Ranking
             </Link>
+            <Link to="/status" className="block text-muted-foreground hover:text-foreground">
+              Estado del servicio
+            </Link>
             <Link to="/templates" className="block text-muted-foreground hover:text-foreground">
               Templates
             </Link>

@@ -196,6 +196,68 @@ export type Database = {
         }
         Relationships: []
       }
+      community_templates: {
+        Row: {
+          author_name: string
+          created_at: string
+          description: string
+          id: string
+          name: string
+          preview_username: string
+          review_note: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_profile_id: string | null
+          status: string
+          theme: Json
+          updated_at: string
+          user_id: string
+          uses: number
+        }
+        Insert: {
+          author_name?: string
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          preview_username?: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_profile_id?: string | null
+          status?: string
+          theme?: Json
+          updated_at?: string
+          user_id: string
+          uses?: number
+        }
+        Update: {
+          author_name?: string
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          preview_username?: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_profile_id?: string | null
+          status?: string
+          theme?: Json
+          updated_at?: string
+          user_id?: string
+          uses?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_templates_source_profile_id_fkey"
+            columns: ["source_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       devblog_posts: {
         Row: {
           author_id: string | null
@@ -1408,6 +1470,7 @@ export type Database = {
         Returns: string
       }
       rotate_login_code: { Args: never; Returns: string }
+      use_community_template: { Args: { _id: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

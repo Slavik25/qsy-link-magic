@@ -18,6 +18,7 @@ import { Route as RankRouteImport } from './routes/rank'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as StatusRouteImport } from './routes/status'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
@@ -35,6 +36,7 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardTemplatesRouteImport } from './routes/_authenticated/dashboard.templates'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardAdminAuditRouteImport } from './routes/_authenticated/dashboard.admin.audit'
 import { Route as AuthenticatedDashboardAdminBoostsRouteImport } from './routes/_authenticated/dashboard.admin.boosts'
@@ -48,6 +50,7 @@ import { Route as AuthenticatedDashboardAdminReportsRouteImport } from './routes
 import { Route as AuthenticatedDashboardAdminSecurityRouteImport } from './routes/_authenticated/dashboard.admin.security'
 import { Route as AuthenticatedDashboardAdminShopRouteImport } from './routes/_authenticated/dashboard.admin.shop'
 import { Route as AuthenticatedDashboardAdminStatusRouteImport } from './routes/_authenticated/dashboard.admin.status'
+import { Route as AuthenticatedDashboardAdminTemplatesRouteImport } from './routes/_authenticated/dashboard.admin.templates'
 import { Route as AuthenticatedDashboardAdminUsersRouteImport } from './routes/_authenticated/dashboard.admin.users'
 import { Route as AuthenticatedDashboardProfileIndexRouteImport } from './routes/_authenticated/dashboard.profile.index'
 import { Route as AuthenticatedDashboardProfileAdvancedRouteImport } from './routes/_authenticated/dashboard.profile.advanced'
@@ -104,6 +107,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TemplatesRoute = TemplatesRouteImport.update({
@@ -205,6 +213,12 @@ const AuthenticatedDashboardSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardTemplatesRoute =
+  AuthenticatedDashboardTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAdminIndexRoute =
   AuthenticatedDashboardAdminIndexRouteImport.update({
     id: '/',
@@ -281,6 +295,12 @@ const AuthenticatedDashboardAdminStatusRoute =
   AuthenticatedDashboardAdminStatusRouteImport.update({
     id: '/status',
     path: '/status',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
+const AuthenticatedDashboardAdminTemplatesRoute =
+  AuthenticatedDashboardAdminTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
     getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
 const AuthenticatedDashboardAdminUsersRoute =
@@ -368,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/status': typeof StatusRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -384,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -397,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
   '/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/dashboard/admin/templates': typeof AuthenticatedDashboardAdminTemplatesRoute
   '/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
@@ -421,6 +444,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/status': typeof StatusRoute
   '/templates': typeof TemplatesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -434,6 +458,7 @@ export interface FileRoutesByTo {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -447,6 +472,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
   '/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/dashboard/admin/templates': typeof AuthenticatedDashboardAdminTemplatesRoute
   '/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
@@ -473,6 +499,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/status': typeof StatusRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -489,6 +516,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
   '/_authenticated/dashboard/admin/boosts': typeof AuthenticatedDashboardAdminBoostsRoute
@@ -502,6 +530,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/security': typeof AuthenticatedDashboardAdminSecurityRoute
   '/_authenticated/dashboard/admin/shop': typeof AuthenticatedDashboardAdminShopRoute
   '/_authenticated/dashboard/admin/status': typeof AuthenticatedDashboardAdminStatusRoute
+  '/_authenticated/dashboard/admin/templates': typeof AuthenticatedDashboardAdminTemplatesRoute
   '/_authenticated/dashboard/admin/users': typeof AuthenticatedDashboardAdminUsersRoute
   '/_authenticated/dashboard/profile/advanced': typeof AuthenticatedDashboardProfileAdvancedRoute
   '/_authenticated/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
@@ -528,6 +557,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/status'
     | '/templates'
     | '/dashboard'
     | '/onboarding'
@@ -544,6 +574,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/templates'
     | '/dashboard/'
     | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
@@ -557,6 +588,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/security'
     | '/dashboard/admin/shop'
     | '/dashboard/admin/status'
+    | '/dashboard/admin/templates'
     | '/dashboard/admin/users'
     | '/dashboard/profile/advanced'
     | '/dashboard/profile/connections'
@@ -581,6 +613,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/status'
     | '/templates'
     | '/onboarding'
     | '/dashboard/analytics'
@@ -594,6 +627,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/templates'
     | '/dashboard'
     | '/dashboard/admin/audit'
     | '/dashboard/admin/boosts'
@@ -607,6 +641,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/security'
     | '/dashboard/admin/shop'
     | '/dashboard/admin/status'
+    | '/dashboard/admin/templates'
     | '/dashboard/admin/users'
     | '/dashboard/profile/advanced'
     | '/dashboard/profile/connections'
@@ -632,6 +667,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/status'
     | '/templates'
     | '/_authenticated/dashboard'
     | '/_authenticated/onboarding'
@@ -648,6 +684,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profiles'
     | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/templates'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/audit'
     | '/_authenticated/dashboard/admin/boosts'
@@ -661,6 +698,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/security'
     | '/_authenticated/dashboard/admin/shop'
     | '/_authenticated/dashboard/admin/status'
+    | '/_authenticated/dashboard/admin/templates'
     | '/_authenticated/dashboard/admin/users'
     | '/_authenticated/dashboard/profile/advanced'
     | '/_authenticated/dashboard/profile/connections'
@@ -687,6 +725,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StatusRoute: typeof StatusRoute
   TemplatesRoute: typeof TemplatesRoute
   ApiPublicHooksSecurityAlertsRoute: typeof ApiPublicHooksSecurityAlertsRoute
   ApiPublicWebhooksDodoRoute: typeof ApiPublicWebhooksDodoRoute
@@ -758,6 +797,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/templates': {
@@ -879,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/templates': {
+      id: '/_authenticated/dashboard/templates'
+      path: '/templates'
+      fullPath: '/dashboard/templates'
+      preLoaderRoute: typeof AuthenticatedDashboardTemplatesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/admin/': {
       id: '/_authenticated/dashboard/admin/'
       path: '/'
@@ -968,6 +1021,13 @@ declare module '@tanstack/react-router' {
       path: '/status'
       fullPath: '/dashboard/admin/status'
       preLoaderRoute: typeof AuthenticatedDashboardAdminStatusRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
+    '/_authenticated/dashboard/admin/templates': {
+      id: '/_authenticated/dashboard/admin/templates'
+      path: '/templates'
+      fullPath: '/dashboard/admin/templates'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminTemplatesRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
     '/_authenticated/dashboard/admin/users': {
@@ -1077,6 +1137,7 @@ interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminSecurityRoute: typeof AuthenticatedDashboardAdminSecurityRoute
   AuthenticatedDashboardAdminShopRoute: typeof AuthenticatedDashboardAdminShopRoute
   AuthenticatedDashboardAdminStatusRoute: typeof AuthenticatedDashboardAdminStatusRoute
+  AuthenticatedDashboardAdminTemplatesRoute: typeof AuthenticatedDashboardAdminTemplatesRoute
   AuthenticatedDashboardAdminUsersRoute: typeof AuthenticatedDashboardAdminUsersRoute
   AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
 }
@@ -1105,6 +1166,8 @@ const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRoute
     AuthenticatedDashboardAdminShopRoute: AuthenticatedDashboardAdminShopRoute,
     AuthenticatedDashboardAdminStatusRoute:
       AuthenticatedDashboardAdminStatusRoute,
+    AuthenticatedDashboardAdminTemplatesRoute:
+      AuthenticatedDashboardAdminTemplatesRoute,
     AuthenticatedDashboardAdminUsersRoute:
       AuthenticatedDashboardAdminUsersRoute,
     AuthenticatedDashboardAdminIndexRoute:
@@ -1163,6 +1226,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardRankRoute: typeof AuthenticatedDashboardRankRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardTemplatesRoute: typeof AuthenticatedDashboardTemplatesRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -1183,6 +1247,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardRankRoute: AuthenticatedDashboardRankRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardTemplatesRoute: AuthenticatedDashboardTemplatesRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
@@ -1214,6 +1279,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StatusRoute: StatusRoute,
   TemplatesRoute: TemplatesRoute,
   ApiPublicHooksSecurityAlertsRoute: ApiPublicHooksSecurityAlertsRoute,
   ApiPublicWebhooksDodoRoute: ApiPublicWebhooksDodoRoute,
