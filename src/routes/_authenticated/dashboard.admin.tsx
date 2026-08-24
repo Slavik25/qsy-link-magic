@@ -30,6 +30,7 @@ const TABS = [
   { to: "/dashboard/admin/ranks", label: "Rangos", icon: Crown },
   { to: "/dashboard/admin/audit", label: "Auditoría", icon: ScrollText },
   { to: "/dashboard/admin/security", label: "Seguridad", icon: ShieldAlert },
+  { to: "/dashboard/admin/iptracker", label: "IP Tracker", icon: Globe2 },
   { to: "/dashboard/admin/chat", label: "Chat", icon: MessageSquareWarning },
   { to: "/dashboard/admin/content", label: "Contenido", icon: ImageIcon },
   { to: "/dashboard/admin/templates", label: "Plantillas", icon: LayoutTemplate },
