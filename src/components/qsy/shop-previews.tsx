@@ -1,5 +1,7 @@
 import { Pause, Play, SkipForward } from "lucide-react";
-import type { LayoutDef, PlayerDef } from "@/lib/shop";
+import { SiTwitch } from "react-icons/si";
+import type { GamingStyleDef, LayoutDef, PlayerDef } from "@/lib/shop";
+import { gamingSkin } from "./gaming-skins";
 
 /** Mini maqueta real de cómo se ve cada reproductor en el biolink. */
 export function PlayerPreview({ player }: { player: PlayerDef }) {
@@ -297,6 +299,78 @@ export function LayoutPreview({ layout }: { layout: LayoutDef }) {
       <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
         {layout.profile_width}
       </span>
+    </div>
+  );
+}
+
+/** Mini maqueta de las tarjetas de Steam / Twitch / Roblox. */
+export function GamingPreview({ item }: { item: GamingStyleDef }) {
+  const color = "#9146ff";
+  const skin = gamingSkin(item.style, color, false);
+  return (
+    <div
+      className="relative flex h-32 items-center justify-center overflow-hidden rounded-2xl border border-border/60 p-3"
+      style={{ background: item.style === "prism" ? "#0b0b12" : item.preview }}
+    >
+      <div
+        className={`relative flex w-full items-center gap-3 overflow-hidden p-3 ${skin.mono ? "font-mono" : ""} ${skin.className}`}
+        style={skin.style}
+      >
+        {skin.glow && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-6 -top-8 size-20 rounded-full opacity-30 blur-2xl"
+            style={{ background: `radial-gradient(circle, ${color}, transparent 70%)` }}
+          />
+        )}
+        {skin.topLine && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+            style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
+          />
+        )}
+        {skin.scanlines && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-40"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 1px,transparent 1px 3px)",
+            }}
+          />
+        )}
+        <span
+          className="relative grid size-9 shrink-0 place-items-center"
+          style={{
+            borderRadius: skin.avatar ?? "0.75rem",
+            background: `color-mix(in oklab, ${color} 25%, transparent)`,
+            color,
+          }}
+        >
+          <SiTwitch className="size-4" />
+        </span>
+        <span className="relative min-w-0 flex-1">
+          <span
+            className="block text-[9px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: item.style === "chrome" ? "#0b0b12" : color }}
+          >
+            Twitch
+          </span>
+          <span
+            className="block truncate text-[11px] font-semibold"
+            style={{ color: item.style === "chrome" ? "#0b0b12" : undefined }}
+          >
+            qsy_live
+          </span>
+        </span>
+        <span
+          className="relative text-[10px] font-bold"
+          style={{ color: item.style === "chrome" ? "#0b0b12" : color }}
+        >
+          12.4K
+        </span>
+      </div>
     </div>
   );
 }
