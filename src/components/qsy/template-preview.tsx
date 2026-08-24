@@ -63,28 +63,50 @@ export function TemplatePreview({
     url: s.url,
   }));
 
+  const wrap = useRef<HTMLDivElement | null>(null);
+  const inner = useRef<HTMLDivElement | null>(null);
+  const [fit, setFit] = useState(scale);
+
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.clientWidth;
+      if (w > 0) setFit(Math.min(1, w / BASE_WIDTH));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    if (inner.current) ro.observe(inner.current);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-border/60"
+      ref={wrap}
+      className="relative w-full overflow-hidden rounded-2xl border border-border/60"
       style={{
         height,
         background: `radial-gradient(90% 70% at 50% 0%, ${theme.accent}33, transparent 70%), #0a0a0a`,
       }}
     >
       <div
-        className="pointer-events-none absolute left-1/2 top-4 w-[420px] -translate-x-1/2 origin-top"
-        style={{ transform: `translateX(-50%) scale(${scale})` }}
+        className="pointer-events-none absolute left-0 top-0 origin-top-left"
+        style={{ width: BASE_WIDTH, transform: `scale(${fit})` }}
       >
-        <ProfileView
-          profile={profile}
-          links={links}
-          socials={socials}
-          badges={[]}
-          views={1280}
-          likes={64}
-          compact
-        />
+        <div ref={inner}>
+          <ProfileView
+            profile={profile}
+            links={links}
+            socials={socials}
+            badges={[]}
+            views={1280}
+            likes={64}
+            compact
+          />
+        </div>
       </div>
     </div>
   );
 }
+
