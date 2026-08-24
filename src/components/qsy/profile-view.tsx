@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BadgeCheck, Eye, Heart, MapPin, Play } from "lucide-react";
 import { ProfilePlayer, isFloatingPlayer } from "@/components/qsy/profile-player";
 import { ProfileDiscord } from "@/components/qsy/profile-discord";
@@ -9,6 +10,7 @@ import { platformById } from "@/lib/link-platforms";
 import { badgeByKey } from "@/lib/badges";
 import { decorationByKey } from "@/lib/shop";
 import { ProfileStreak } from "@/components/qsy/profile-streak";
+import { ensureFontLoaded, fontByKey } from "@/lib/fonts";
 
 type Props = {
   profile: Pick<
@@ -72,9 +74,26 @@ export function ProfileView({
   const alphaStyle =
     cardAlpha < 100 ? ({ "--p-card-alpha": `${cardAlpha / 100}` } as React.CSSProperties) : {};
 
+  const font = fontByKey(t.font);
+  useEffect(() => {
+    ensureFontLoaded(t.font);
+  }, [t.font]);
+  const fontStyle: React.CSSProperties = {
+    fontFamily: font.stack,
+    ...(t.font_weight ? { fontWeight: t.font_weight } : {}),
+    ...(t.font_spacing ? { letterSpacing: `${t.font_spacing}em` } : {}),
+    ...(t.font_scale && t.font_scale !== 1 ? { fontSize: `${t.font_scale}rem` } : {}),
+  };
+
+  const streakPos = t.streak_position ?? "stats";
+  const streakNode =
+    t.show_streak && userId ? (
+      <ProfileStreak userId={userId} accent={t.accent} theme={t} />
+    ) : null;
+
   return (
     <div
-      style={{ ...style, ...alphaStyle }}
+      style={{ ...style, ...alphaStyle, ...fontStyle }}
       className={`qsy-card relative w-full overflow-hidden ${hoverClass} ${
         showCard
           ? `qsy-tpl qsy-tpl-${template} ${cardAlpha < 100 ? "qsy-tpl-alpha" : ""}`
@@ -155,6 +174,17 @@ export function ProfileView({
 
 
 
+        {streakPos === "top-left" || streakPos === "top-right" ? (
+          <div
+            className={`pointer-events-none absolute top-3 z-20 text-[11px] ${
+              streakPos === "top-left" ? "left-3" : "right-3"
+            }`}
+            style={statsPaint}
+          >
+            {streakNode}
+          </div>
+        ) : null}
+
         <div className="qsy-name-row mt-4 flex items-center gap-1.5">
           <h1
             className={`qsy-name font-semibold tracking-tight ${compact ? "text-lg" : "text-2xl sm:text-3xl"} ${
@@ -173,6 +203,9 @@ export function ProfileView({
           )}
         </div>
         <p className="qsy-username text-sm" style={userPaint}>@{profile.username}</p>
+        {streakPos === "under-name" ? (
+          <div className="mt-2 text-xs" style={statsPaint}>{streakNode}</div>
+        ) : null}
 
         {badges.length > 0 && (
           <div className="qsy-badges mt-3 flex flex-wrap items-center justify-center gap-1.5">
@@ -345,8 +378,12 @@ export function ProfileView({
                 {likes.toLocaleString()} likes
               </span>
             ))}
-          {t.show_streak && userId ? <ProfileStreak userId={userId} accent={t.accent} /> : null}
+          {streakPos === "stats" ? streakNode : null}
         </div>
+
+        {streakPos === "bottom" ? (
+          <div className="mt-4 flex justify-center text-xs" style={statsPaint}>{streakNode}</div>
+        ) : null}
       </div>
       </div>
     </div>

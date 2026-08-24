@@ -109,6 +109,19 @@ export type ThemeConfig = {
   show_likes?: boolean;
   /** Widget gratuito de racha diaria en el biolink */
   show_streak?: boolean;
+  /** Dónde se coloca el widget de racha */
+  streak_position?: "stats" | "top-left" | "top-right" | "under-name" | "bottom";
+  /** Aspecto visual del widget de racha */
+  streak_style?: "plain" | "chip" | "pill" | "glow" | "badge";
+  /** true = muestra los días; false = solo el estado (activa / apagada) */
+  streak_show_count?: boolean;
+  /* Tipografía del biolink */
+  /** Grosor de la tipografía (300-800) */
+  font_weight?: number;
+  /** Espaciado entre letras en em (-0.05 a 0.2) */
+  font_spacing?: number;
+  /** Escala global del texto (0.85 a 1.3) */
+  font_scale?: number;
   typewriter?: string[];
   /** Bloques de música/vídeo por enlace (YouTube, Spotify, SoundCloud, Apple Music) */
   media?: MediaItem[];

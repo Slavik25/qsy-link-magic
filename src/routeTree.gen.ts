@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardProfilesRouteImport } from './routes/_authenticated/dashboard.profiles'
 import { Route as AuthenticatedDashboardRankRouteImport } from './routes/_authenticated/dashboard.rank'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardStreakRouteImport } from './routes/_authenticated/dashboard.streak'
 import { Route as AuthenticatedDashboardTemplatesRouteImport } from './routes/_authenticated/dashboard.templates'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardAdminAuditRouteImport } from './routes/_authenticated/dashboard.admin.audit'
@@ -58,6 +59,7 @@ import { Route as AuthenticatedDashboardProfileAdvancedRouteImport } from './rou
 import { Route as AuthenticatedDashboardProfileConnectionsRouteImport } from './routes/_authenticated/dashboard.profile.connections'
 import { Route as AuthenticatedDashboardProfileCustomizationRouteImport } from './routes/_authenticated/dashboard.profile.customization'
 import { Route as AuthenticatedDashboardProfileEffectsRouteImport } from './routes/_authenticated/dashboard.profile.effects'
+import { Route as AuthenticatedDashboardProfileFontsRouteImport } from './routes/_authenticated/dashboard.profile.fonts'
 import { Route as AuthenticatedDashboardProfileModulesRouteImport } from './routes/_authenticated/dashboard.profile.modules'
 import { Route as AuthenticatedDashboardProfileShareRouteImport } from './routes/_authenticated/dashboard.profile.share'
 import { Route as ApiPublicHooksSecurityAlertsRouteImport } from './routes/api/public/hooks/security-alerts'
@@ -214,6 +216,12 @@ const AuthenticatedDashboardSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardStreakRoute =
+  AuthenticatedDashboardStreakRouteImport.update({
+    id: '/streak',
+    path: '/streak',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardTemplatesRoute =
   AuthenticatedDashboardTemplatesRouteImport.update({
     id: '/templates',
@@ -346,6 +354,12 @@ const AuthenticatedDashboardProfileEffectsRoute =
     path: '/effects',
     getParentRoute: () => AuthenticatedDashboardProfileRoute,
   } as any)
+const AuthenticatedDashboardProfileFontsRoute =
+  AuthenticatedDashboardProfileFontsRouteImport.update({
+    id: '/fonts',
+    path: '/fonts',
+    getParentRoute: () => AuthenticatedDashboardProfileRoute,
+  } as any)
 const AuthenticatedDashboardProfileModulesRoute =
   AuthenticatedDashboardProfileModulesRouteImport.update({
     id: '/modules',
@@ -412,6 +426,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -433,6 +448,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -466,6 +482,7 @@ export interface FileRoutesByTo {
   '/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -487,6 +504,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -525,6 +543,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profiles': typeof AuthenticatedDashboardProfilesRoute
   '/_authenticated/dashboard/rank': typeof AuthenticatedDashboardRankRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/streak': typeof AuthenticatedDashboardStreakRoute
   '/_authenticated/dashboard/templates': typeof AuthenticatedDashboardTemplatesRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/audit': typeof AuthenticatedDashboardAdminAuditRoute
@@ -546,6 +565,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile/connections': typeof AuthenticatedDashboardProfileConnectionsRoute
   '/_authenticated/dashboard/profile/customization': typeof AuthenticatedDashboardProfileCustomizationRoute
   '/_authenticated/dashboard/profile/effects': typeof AuthenticatedDashboardProfileEffectsRoute
+  '/_authenticated/dashboard/profile/fonts': typeof AuthenticatedDashboardProfileFontsRoute
   '/_authenticated/dashboard/profile/modules': typeof AuthenticatedDashboardProfileModulesRoute
   '/_authenticated/dashboard/profile/share': typeof AuthenticatedDashboardProfileShareRoute
   '/api/public/hooks/security-alerts': typeof ApiPublicHooksSecurityAlertsRoute
@@ -584,6 +604,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/streak'
     | '/dashboard/templates'
     | '/dashboard/'
     | '/dashboard/admin/audit'
@@ -605,6 +626,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
+    | '/dashboard/profile/fonts'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -638,6 +660,7 @@ export interface FileRouteTypes {
     | '/dashboard/profiles'
     | '/dashboard/rank'
     | '/dashboard/settings'
+    | '/dashboard/streak'
     | '/dashboard/templates'
     | '/dashboard'
     | '/dashboard/admin/audit'
@@ -659,6 +682,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile/connections'
     | '/dashboard/profile/customization'
     | '/dashboard/profile/effects'
+    | '/dashboard/profile/fonts'
     | '/dashboard/profile/modules'
     | '/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -696,6 +720,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profiles'
     | '/_authenticated/dashboard/rank'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/streak'
     | '/_authenticated/dashboard/templates'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/audit'
@@ -717,6 +742,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile/connections'
     | '/_authenticated/dashboard/profile/customization'
     | '/_authenticated/dashboard/profile/effects'
+    | '/_authenticated/dashboard/profile/fonts'
     | '/_authenticated/dashboard/profile/modules'
     | '/_authenticated/dashboard/profile/share'
     | '/api/public/hooks/security-alerts'
@@ -938,6 +964,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/streak': {
+      id: '/_authenticated/dashboard/streak'
+      path: '/streak'
+      fullPath: '/dashboard/streak'
+      preLoaderRoute: typeof AuthenticatedDashboardStreakRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/templates': {
       id: '/_authenticated/dashboard/templates'
       path: '/templates'
@@ -1092,6 +1125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileEffectsRouteImport
       parentRoute: typeof AuthenticatedDashboardProfileRoute
     }
+    '/_authenticated/dashboard/profile/fonts': {
+      id: '/_authenticated/dashboard/profile/fonts'
+      path: '/fonts'
+      fullPath: '/dashboard/profile/fonts'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileFontsRouteImport
+      parentRoute: typeof AuthenticatedDashboardProfileRoute
+    }
     '/_authenticated/dashboard/profile/modules': {
       id: '/_authenticated/dashboard/profile/modules'
       path: '/modules'
@@ -1207,6 +1247,7 @@ interface AuthenticatedDashboardProfileRouteChildren {
   AuthenticatedDashboardProfileConnectionsRoute: typeof AuthenticatedDashboardProfileConnectionsRoute
   AuthenticatedDashboardProfileCustomizationRoute: typeof AuthenticatedDashboardProfileCustomizationRoute
   AuthenticatedDashboardProfileEffectsRoute: typeof AuthenticatedDashboardProfileEffectsRoute
+  AuthenticatedDashboardProfileFontsRoute: typeof AuthenticatedDashboardProfileFontsRoute
   AuthenticatedDashboardProfileModulesRoute: typeof AuthenticatedDashboardProfileModulesRoute
   AuthenticatedDashboardProfileShareRoute: typeof AuthenticatedDashboardProfileShareRoute
   AuthenticatedDashboardProfileIndexRoute: typeof AuthenticatedDashboardProfileIndexRoute
@@ -1222,6 +1263,8 @@ const AuthenticatedDashboardProfileRouteChildren: AuthenticatedDashboardProfileR
       AuthenticatedDashboardProfileCustomizationRoute,
     AuthenticatedDashboardProfileEffectsRoute:
       AuthenticatedDashboardProfileEffectsRoute,
+    AuthenticatedDashboardProfileFontsRoute:
+      AuthenticatedDashboardProfileFontsRoute,
     AuthenticatedDashboardProfileModulesRoute:
       AuthenticatedDashboardProfileModulesRoute,
     AuthenticatedDashboardProfileShareRoute:
@@ -1249,6 +1292,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardProfilesRoute: typeof AuthenticatedDashboardProfilesRoute
   AuthenticatedDashboardRankRoute: typeof AuthenticatedDashboardRankRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardStreakRoute: typeof AuthenticatedDashboardStreakRoute
   AuthenticatedDashboardTemplatesRoute: typeof AuthenticatedDashboardTemplatesRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
@@ -1270,6 +1314,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProfilesRoute: AuthenticatedDashboardProfilesRoute,
     AuthenticatedDashboardRankRoute: AuthenticatedDashboardRankRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardStreakRoute: AuthenticatedDashboardStreakRoute,
     AuthenticatedDashboardTemplatesRoute: AuthenticatedDashboardTemplatesRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }

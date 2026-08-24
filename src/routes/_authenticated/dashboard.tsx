@@ -6,6 +6,7 @@ import {
   Bell,
   ChevronRight,
   Crown,
+  Flame,
   Gem,
   Gift,
   Image as ImageIcon,
@@ -49,6 +50,7 @@ const NAV: NavItem[] = [
   
   { to: "/dashboard/analytics", label: "Analíticas", icon: TrendingUp },
   { to: "/dashboard/missions", label: "Misiones", icon: Target },
+  { to: "/dashboard/streak", label: "Racha diaria", icon: Flame, tag: "Nuevo" },
   { to: "/dashboard/premium", label: "Tienda", icon: Gem },
   { to: "/dashboard/rank", label: "Subir de rango", icon: Crown },
   { to: "/dashboard/og", label: "Nombres OG", icon: Target, tag: "Nuevo" },

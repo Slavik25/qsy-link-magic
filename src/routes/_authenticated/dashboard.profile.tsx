@@ -7,6 +7,7 @@ import {
   Palette,
   Share2,
   Sparkles,
+  Type,
   Upload,
 } from "lucide-react";
 import { useMyProfile } from "@/lib/qsy-data";
@@ -19,6 +20,7 @@ const SECTIONS = [
   { to: "/dashboard/profile", label: "Assets", icon: Upload, exact: true },
   { to: "/dashboard/profile/customization", label: "Customization", icon: Palette },
   { to: "/dashboard/profile/effects", label: "Effects", icon: Sparkles },
+  { to: "/dashboard/profile/fonts", label: "Tipografías", icon: Type },
   { to: "/dashboard/profile/connections", label: "Connections", icon: Link2 },
   { to: "/dashboard/profile/modules", label: "Modules", icon: LayoutGrid },
   { to: "/dashboard/profile/share", label: "Compartir", icon: Share2 },

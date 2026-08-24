@@ -1335,6 +1335,75 @@ export type Database = {
           },
         ]
       }
+      streak_claims: {
+        Row: {
+          balance_after: number
+          bonus: number
+          claim_date: string
+          created_at: string
+          id: string
+          milestone_days: number | null
+          milestone_item: string | null
+          milestone_reward: number
+          reward: number
+          streak: number
+          user_id: string
+        }
+        Insert: {
+          balance_after?: number
+          bonus?: number
+          claim_date: string
+          created_at?: string
+          id?: string
+          milestone_days?: number | null
+          milestone_item?: string | null
+          milestone_reward?: number
+          reward: number
+          streak: number
+          user_id: string
+        }
+        Update: {
+          balance_after?: number
+          bonus?: number
+          claim_date?: string
+          created_at?: string
+          id?: string
+          milestone_days?: number | null
+          milestone_item?: string | null
+          milestone_reward?: number
+          reward?: number
+          streak?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      streak_milestones: {
+        Row: {
+          created_at: string
+          days: number
+          id: string
+          item_key: string | null
+          reward: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days: number
+          id?: string
+          item_key?: string | null
+          reward?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days?: number
+          id?: string
+          item_key?: string | null
+          reward?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       threats: {
         Row: {
           created_at: string

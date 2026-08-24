@@ -146,5 +146,54 @@ export function useStreak() {
 export async function claimDaily() {
   const { data, error } = await supabase.rpc("claim_daily_reward");
   if (error) throw error;
-  return (data ?? {}) as { streak: number; reward: number; bonus: number; balance: number };
+  return (data ?? {}) as {
+    streak: number;
+    reward: number;
+    bonus: number;
+    balance: number;
+    milestone: number | null;
+    milestone_item: string | null;
+    milestone_reward: number;
+  };
+}
+
+/** Hitos escalonados de racha (deben coincidir con claim_daily_reward en la base de datos). */
+export const STREAK_MILESTONES = [
+  { days: 7, reward: 250, item: "name-lavender", itemName: "Nombre Lavender" },
+  { days: 30, reward: 750, item: "bg-glitch", itemName: "Fondo Glitch" },
+  { days: 90, reward: 2000, item: "layout-solar", itemName: "Layout Solaris" },
+] as const;
+
+export type StreakClaim = {
+  claim_date: string;
+  streak: number;
+  reward: number;
+  bonus: number;
+  milestone_days: number | null;
+  milestone_reward: number;
+  milestone_item: string | null;
+  balance_after: number;
+};
+
+export function useStreakHistory() {
+  return useQuery({
+    queryKey: ["streak-history"],
+    queryFn: async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) return { claims: [] as StreakClaim[], milestones: [] as number[] };
+      const [claims, milestones] = await Promise.all([
+        supabase
+          .from("streak_claims")
+          .select("claim_date, streak, reward, bonus, milestone_days, milestone_reward, milestone_item, balance_after")
+          .eq("user_id", auth.user.id)
+          .order("claim_date", { ascending: false })
+          .limit(180),
+        supabase.from("streak_milestones").select("days").eq("user_id", auth.user.id),
+      ]);
+      return {
+        claims: (claims.data ?? []) as StreakClaim[],
+        milestones: (milestones.data ?? []).map((m) => m.days as number),
+      };
+    },
+  });
 }
