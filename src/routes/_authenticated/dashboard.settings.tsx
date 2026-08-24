@@ -163,11 +163,24 @@ function SettingsPage() {
     setCountry((profile.location ?? "").toLowerCase());
   }, [profile]);
 
+  const lastUsernameChange = (profile as { username_changed_at?: string | null } | undefined)
+    ?.username_changed_at;
+  const nextUsernameChange = lastUsernameChange
+    ? new Date(new Date(lastUsernameChange).getTime() + 24 * 60 * 60 * 1000)
+    : null;
+  const usernameLocked = !!nextUsernameChange && nextUsernameChange > new Date();
+
   async function saveInfo() {
     if (!profile) return;
     const clean = username.trim().toLowerCase().replace(/[^a-z0-9_.-]/g, "");
     if (clean.length < 3) {
       toast.error("El nombre de usuario debe tener al menos 3 caracteres");
+      return;
+    }
+    if (clean !== profile.username && nextUsernameChange && nextUsernameChange > new Date()) {
+      toast.error(
+        `Solo puedes cambiar tu nombre de usuario una vez cada 24 h. Próximo cambio: ${nextUsernameChange.toLocaleString()}`,
+      );
       return;
     }
     setSavingInfo(true);
@@ -191,7 +204,11 @@ function SettingsPage() {
         payload: { username: clean, display_name: displayName.trim(), location: country },
       });
       toast.error(
-        error.message.includes("duplicate") ? "Ese nombre de usuario ya está en uso" : "No se pudo guardar",
+        error.message.includes("duplicate")
+          ? "Ese nombre de usuario ya está en uso"
+          : error.message.includes("24 horas")
+            ? "Solo puedes cambiar tu nombre de usuario una vez cada 24 horas"
+            : "No se pudo guardar",
       );
       return;
     }
@@ -299,6 +316,11 @@ function SettingsPage() {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {usernameLocked
+                    ? `Podrás cambiarlo de nuevo el ${nextUsernameChange?.toLocaleString()}`
+                    : "Solo se puede cambiar una vez cada 24 horas."}
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="display">Nombre visible</Label>

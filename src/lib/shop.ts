@@ -781,20 +781,6 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
     image: "https://r2.zyo.lol/decoration/angel_headphones.png",
   },
   {
-    key: "angry",
-    name: "Angry",
-    description: "Decoración de avatar Angry.",
-    price: 350,
-    image: "https://r2.zyo.lol/decoration/angry.png",
-  },
-  {
-    key: "angry-pink",
-    name: "Angry Pink",
-    description: "Decoración de avatar Angry Pink.",
-    price: 450,
-    image: "https://r2.zyo.lol/decoration/angry_pink.png",
-  },
-  {
     key: "angry-yellow",
     name: "Angry Yellow",
     description: "Decoración de avatar Angry Yellow.",
@@ -989,13 +975,6 @@ export const SHOP_DECORATIONS: DecorationDef[] = [
     image: "https://r2.zyo.lol/decoration/blade_storm.png",
   },
   {
-    key: "bloodthirsty",
-    name: "Bloodthirsty",
-    description: "Decoración de avatar Bloodthirsty.",
-    price: 250,
-    image: "https://r2.zyo.lol/decoration/bloodthirsty.png",
-  },
-  {
     key: "bloodthirsty-gold",
     name: "Bloodthirsty Gold",
     description: "Decoración de avatar Bloodthirsty Gold.",
@@ -1048,4 +1027,147 @@ export function isOwned(item: ShopItem, unlocks: Iterable<string>) {
   if (item.price === 0) return true;
   for (const k of unlocks) if (k === item.key) return true;
   return false;
+}
+
+/** Diseños para los módulos de Steam / Twitch / Roblox (theme.gaming_style) */
+export type GamingStyleDef = ShopItem & {
+  style: string;
+  preview: string;
+  /** Rango mínimo requerido para equiparlo (no se compra con coins). */
+  rank?: "obsidian" | "seraph";
+};
+
+export const SHOP_GAMING: GamingStyleDef[] = [
+  {
+    key: "gaming-classic",
+    name: "Classic",
+    description: "Tarjeta de cristal con el color de cada plataforma.",
+    price: 0,
+    style: "classic",
+    preview: "linear-gradient(140deg,#1d2b4d,#0b0b12)",
+  },
+  {
+    key: "gaming-ghost",
+    name: "Ghost",
+    description: "Sin fondo ni borde, solo el contenido.",
+    price: 0,
+    style: "ghost",
+    preview: "linear-gradient(140deg,#141420,#0b0b12)",
+  },
+  {
+    key: "gaming-outline",
+    name: "Outline",
+    description: "Contorno limpio del color de la plataforma.",
+    price: 0,
+    style: "outline",
+    preview: "linear-gradient(140deg,#12232b,#0b0b12)",
+  },
+  {
+    key: "gaming-compact",
+    name: "Compact Pill",
+    description: "Píldora baja y redondeada, ideal para varias cuentas.",
+    price: 0,
+    style: "compact",
+    preview: "linear-gradient(140deg,#1d3a2b,#0b0b12)",
+  },
+  {
+    key: "gaming-neon",
+    name: "Neon",
+    description: "Borde luminoso con glow del color de la plataforma.",
+    price: 250,
+    style: "neon",
+    preview: "linear-gradient(140deg,#3b0d5e,#0b0b12)",
+  },
+  {
+    key: "gaming-gradient",
+    name: "Gradient",
+    description: "Degradado diagonal teñido con el color de la marca.",
+    price: 250,
+    style: "gradient",
+    preview: "linear-gradient(140deg,#4d1d3a,#0b0b12)",
+  },
+  {
+    key: "gaming-glassdeep",
+    name: "Deep Glass",
+    description: "Cristal esmerilado intenso con borde claro.",
+    price: 200,
+    style: "glassdeep",
+    preview: "linear-gradient(140deg,#2b2b3d,#0b0b12)",
+  },
+  {
+    key: "gaming-lcd",
+    name: "LCD",
+    description: "Pantalla retro con tipografía monoespaciada.",
+    price: 300,
+    style: "lcd",
+    preview: "linear-gradient(140deg,#123d24,#0b0b12)",
+  },
+  {
+    key: "gaming-terminal",
+    name: "Terminal",
+    description: "Consola negra con borde fósforo y texto mono.",
+    price: 300,
+    style: "terminal",
+    preview: "linear-gradient(140deg,#0d2b0d,#0b0b12)",
+  },
+  {
+    key: "gaming-brutal",
+    name: "Brutal",
+    description: "Bordes duros y sombra sólida estilo brutalista.",
+    price: 350,
+    style: "brutal",
+    preview: "linear-gradient(140deg,#3a3a1d,#0b0b12)",
+  },
+  {
+    key: "gaming-holo",
+    name: "Hologram",
+    description: "Panel holográfico con scanlines y glow cian.",
+    price: 0,
+    premium: true,
+    rank: "obsidian",
+    style: "holo",
+    preview: "linear-gradient(140deg,#0ea5e9,#7c3aed,#0b0b12)",
+  },
+  {
+    key: "gaming-chrome",
+    name: "Chrome",
+    description: "Metal líquido con reflejos cromados.",
+    price: 0,
+    premium: true,
+    rank: "obsidian",
+    style: "chrome",
+    preview: "linear-gradient(140deg,#e8e8ee,#2a2a33,#0b0b12)",
+  },
+  {
+    key: "gaming-aurora",
+    name: "Aurora",
+    description: "Borde animado con cortinas de luz en movimiento.",
+    price: 0,
+    premium: true,
+    rank: "seraph",
+    style: "aurora",
+    preview: "linear-gradient(140deg,#4338ca,#a21caf,#0b0b12)",
+  },
+  {
+    key: "gaming-prism",
+    name: "Prism",
+    description: "Halo cónico arcoíris girando alrededor de la tarjeta.",
+    price: 0,
+    premium: true,
+    rank: "seraph",
+    style: "prism",
+    preview: "conic-gradient(from 0deg,#f43f5e,#f59e0b,#22d3ee,#a855f7,#f43f5e)",
+  },
+];
+
+export function gamingStyleByKey(key?: string) {
+  return SHOP_GAMING.find((g) => g.key === key);
+}
+
+/** ¿El rango del usuario alcanza para este diseño de gaming? */
+export function gamingRankOk(item: GamingStyleDef, rank?: string | null) {
+  if (!item.rank) return true;
+  const r = (rank ?? "").toLowerCase();
+  if (item.rank === "obsidian") return r === "obsidian" || r === "seraph";
+  return r === "seraph";
 }
