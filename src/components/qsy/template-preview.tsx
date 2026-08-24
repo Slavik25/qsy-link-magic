@@ -70,6 +70,7 @@ export function TemplatePreview({
   const wrap = useRef<HTMLDivElement | null>(null);
   const inner = useRef<HTMLDivElement | null>(null);
   const [fit, setFit] = useState(scale);
+  const [innerH, setInnerH] = useState(0);
 
   useEffect(() => {
     const el = wrap.current;
@@ -77,6 +78,7 @@ export function TemplatePreview({
     const measure = () => {
       const w = el.clientWidth;
       if (w > 0) setFit(Math.min(1, w / BASE_WIDTH));
+      if (inner.current) setInnerH(inner.current.offsetHeight);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -85,15 +87,18 @@ export function TemplatePreview({
     return () => ro.disconnect();
   }, []);
 
+  const boxHeight = innerH > 0 ? Math.round(innerH * fit) : height;
+
   return (
     <div
       ref={wrap}
       className="relative w-full overflow-hidden rounded-2xl border border-border/60"
       style={{
-        height,
+        height: boxHeight,
         background: `radial-gradient(90% 70% at 50% 0%, ${theme.accent}33, transparent 70%), #0a0a0a`,
       }}
     >
+
       <div
         className="pointer-events-none absolute left-0 top-0 origin-top-left"
         style={{ width: BASE_WIDTH, transform: `scale(${fit})` }}
