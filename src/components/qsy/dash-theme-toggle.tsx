@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 const KEY = "qsy-dash-theme";
@@ -10,30 +10,28 @@ export function readDashTheme(): DashTheme {
 }
 
 export function useDashTheme() {
-  const [theme, setTheme] = useState<DashTheme>("light");
-  const hydrated = useRef(false);
+  const [theme, setThemeState] = useState<DashTheme>("light");
 
   // Lee la preferencia guardada tras hidratar (evita mismatch de SSR).
   useEffect(() => {
-    const stored = readDashTheme();
-    hydrated.current = true;
-    setTheme(stored);
+    setThemeState(readDashTheme());
   }, []);
 
-  // Solo persiste cuando ya se leyó lo guardado, para no pisarlo con el default.
-  useEffect(() => {
-    if (typeof window === "undefined" || !hydrated.current) return;
-    window.localStorage.setItem(KEY, theme);
-    window.dispatchEvent(new CustomEvent("qsy-dash-theme", { detail: theme }));
-  }, [theme]);
+  // Solo se persiste ante una acción explícita del usuario, nunca al montar.
+  const setTheme = useCallback((next: DashTheme) => {
+    setThemeState(next);
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(KEY, next);
+    window.dispatchEvent(new CustomEvent("qsy-dash-theme", { detail: next }));
+  }, []);
 
   useEffect(() => {
     function onChange(e: Event) {
       const next = (e as CustomEvent<DashTheme>).detail;
-      if (next === "light" || next === "dark") setTheme(next);
+      if (next === "light" || next === "dark") setThemeState(next);
     }
     function onStorage(e: StorageEvent) {
-      if (e.key === KEY && (e.newValue === "light" || e.newValue === "dark")) setTheme(e.newValue);
+      if (e.key === KEY && (e.newValue === "light" || e.newValue === "dark")) setThemeState(e.newValue);
     }
     window.addEventListener("qsy-dash-theme", onChange);
     window.addEventListener("storage", onStorage);
@@ -42,6 +40,8 @@ export function useDashTheme() {
       window.removeEventListener("storage", onStorage);
     };
   }, []);
+
+
 
   return { theme, setTheme } as const;
 }
