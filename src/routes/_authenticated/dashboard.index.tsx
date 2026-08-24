@@ -88,7 +88,8 @@ function StatCard({
 
 function FeaturedProfiles() {
   const { data: featured, isLoading } = useFeaturedProfiles(6);
-  if (isLoading || !featured?.length) return null;
+  const items = featured ?? [];
+
 
   return (
     <section className="pop-in rounded-2xl border border-border/60 bg-card/40 p-5 backdrop-blur-xl">
@@ -102,8 +103,16 @@ function FeaturedProfiles() {
         <Sparkles className="size-4 shrink-0 text-primary" />
       </div>
 
+      {isLoading ? (
+        <p className="mt-4 text-xs text-muted-foreground">Cargando destacados…</p>
+      ) : items.length === 0 ? (
+        <p className="mt-4 rounded-xl border border-dashed border-border/60 bg-background/30 p-4 text-xs text-muted-foreground">
+          Todavía no hay perfiles destacados. El equipo de QSY los marca desde el panel de
+          administración (Usuarios → Destacar).
+        </p>
+      ) : (
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {featured.map((p) => (
+        {items.map((p) => (
           <Link
             key={p.id}
             to="/$username"
@@ -142,6 +151,7 @@ function FeaturedProfiles() {
           </Link>
         ))}
       </div>
+      )}
     </section>
   );
 }
