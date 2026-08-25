@@ -35,7 +35,7 @@ type Listing = {
   username: string;
   price: number;
   currency: string;
-  contact: string | null;
+  
   note: string | null;
   status: string;
   profile_id: string;
@@ -72,7 +72,7 @@ function useOgData() {
       }
       const { data: listingRows } = await supabase
         .from("og_listings")
-        .select("id,username,price,currency,contact,note,status,profile_id")
+        .select("id,username,price,currency,note,status,profile_id")
         .neq("status", "sold")
         .limit(2000);
       const listings = new Map<string, Listing>();
@@ -96,6 +96,32 @@ function useMyOgProfiles() {
       return (data ?? []).filter((p) => p.username.length === 3 || p.username.length === 4);
     },
   });
+}
+
+/** El contacto se revela bajo demanda: no viaja en el listado masivo. */
+function ListingContact({ id }: { id: string }) {
+  const [value, setValue] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  if (value !== null) {
+    return <p className="truncate text-[11px] text-muted-foreground">Contacto: {value || "sin contacto"}</p>;
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={loading}
+      onClick={async () => {
+        setLoading(true);
+        const { data } = await supabase.rpc("og_listing_contact", { _id: id });
+        setValue((data as string | null) ?? "");
+        setLoading(false);
+      }}
+      className="text-[11px] text-amber-300/80 underline underline-offset-2 hover:text-amber-200 disabled:opacity-60"
+    >
+      {loading ? "Cargando…" : "Ver contacto"}
+    </button>
+  );
 }
 
 function OgNamesPage() {
@@ -320,9 +346,7 @@ function OgNamesPage() {
                   <Tag className="size-3.5" /> {money(Number(r.listing.price), r.listing.currency)}
                 </p>
                 {r.listing.note && <p className="text-[11px] text-muted-foreground">{r.listing.note}</p>}
-                {r.listing.contact && (
-                  <p className="truncate text-[11px] text-muted-foreground">Contacto: {r.listing.contact}</p>
-                )}
+                <ListingContact id={r.listing.id} />
               </div>
             )}
           </div>

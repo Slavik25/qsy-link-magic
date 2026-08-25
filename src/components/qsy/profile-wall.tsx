@@ -45,17 +45,23 @@ export function ProfileWall({ profileId, accent }: Props) {
     },
   });
 
+  const signedIn = !!me?.userId;
+
   const { data: posts = [] } = useQuery({
-    queryKey: ["wall", profileId],
+    queryKey: ["wall", profileId, signedIn],
     queryFn: async () => {
+      // La identidad del autor solo es visible para usuarios autenticados.
+      const columns = signedIn
+        ? "id, author_id, author_name, author_avatar, message, created_at"
+        : "id, author_name, author_avatar, message, created_at";
       const { data, error } = await supabase
         .from("wall_posts")
-        .select("id, author_id, author_name, author_avatar, message, created_at")
+        .select(columns)
         .eq("profile_id", profileId)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
-      return (data ?? []) as WallPost[];
+      return ((data ?? []) as unknown as WallPost[]).map((p) => ({ ...p, author_id: p.author_id ?? null }));
     },
   });
 

@@ -52,10 +52,12 @@ export function ProfileStreak({ userId, accent, theme, previewDays }: StreakWidg
     }
     let cancelled = false;
     void (async () => {
+      // Espejo público de la racha en profiles: user_streaks es privado del dueño.
       const { data } = await supabase
-        .from("user_streaks")
-        .select("current_days, last_claim_date")
+        .from("profiles")
+        .select("streak_days, streak_last_claim")
         .eq("user_id", userId)
+        .limit(1)
         .maybeSingle();
       if (cancelled) return;
       if (!data) {
@@ -63,9 +65,9 @@ export function ProfileStreak({ userId, accent, theme, previewDays }: StreakWidg
         return;
       }
       const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-      const last = data.last_claim_date as string | null;
+      const last = data.streak_last_claim as string | null;
       const alive = !!last && last >= yesterday;
-      setDays(alive ? (data.current_days ?? 0) : 0);
+      setDays(alive ? (data.streak_days ?? 0) : 0);
     })();
     return () => {
       cancelled = true;
