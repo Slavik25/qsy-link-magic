@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles DISABLE TRIGGER trg_early_supporter;
