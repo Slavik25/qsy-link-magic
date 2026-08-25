@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.gallery_is_public_owner(uuid) FROM PUBLIC, anon, authenticated;
