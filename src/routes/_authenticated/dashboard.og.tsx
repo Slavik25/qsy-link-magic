@@ -72,7 +72,7 @@ function useOgData() {
       }
       const { data: listingRows } = await supabase
         .from("og_listings")
-        .select("id,username,price,currency,contact,note,status,profile_id")
+        .select("id,username,price,currency,note,status,profile_id")
         .neq("status", "sold")
         .limit(2000);
       const listings = new Map<string, Listing>();
@@ -320,9 +320,7 @@ function OgNamesPage() {
                   <Tag className="size-3.5" /> {money(Number(r.listing.price), r.listing.currency)}
                 </p>
                 {r.listing.note && <p className="text-[11px] text-muted-foreground">{r.listing.note}</p>}
-                {r.listing.contact && (
-                  <p className="truncate text-[11px] text-muted-foreground">Contacto: {r.listing.contact}</p>
-                )}
+                <ListingContact id={r.listing.id} />
               </div>
             )}
           </div>
