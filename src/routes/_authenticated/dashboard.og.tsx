@@ -98,6 +98,32 @@ function useMyOgProfiles() {
   });
 }
 
+/** El contacto se revela bajo demanda: no viaja en el listado masivo. */
+function ListingContact({ id }: { id: string }) {
+  const [value, setValue] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  if (value !== null) {
+    return <p className="truncate text-[11px] text-muted-foreground">Contacto: {value || "sin contacto"}</p>;
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={loading}
+      onClick={async () => {
+        setLoading(true);
+        const { data } = await supabase.rpc("og_listing_contact", { _id: id });
+        setValue((data as string | null) ?? "");
+        setLoading(false);
+      }}
+      className="text-[11px] text-amber-300/80 underline underline-offset-2 hover:text-amber-200 disabled:opacity-60"
+    >
+      {loading ? "Cargando…" : "Ver contacto"}
+    </button>
+  );
+}
+
 function OgNamesPage() {
   const qc = useQueryClient();
   const { data, isLoading, isError } = useOgData();
