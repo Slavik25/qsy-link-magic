@@ -35,7 +35,7 @@ type Listing = {
   username: string;
   price: number;
   currency: string;
-  contact: string | null;
+  
   note: string | null;
   status: string;
   profile_id: string;
