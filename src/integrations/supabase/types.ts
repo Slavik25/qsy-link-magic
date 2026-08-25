@@ -909,10 +909,13 @@ export type Database = {
           featured: boolean
           featured_until: string | null
           id: string
+          image_host: boolean
           like_count: number
           location: string
           music: Json
           rank: string
+          streak_days: number
+          streak_last_claim: string | null
           theme: Json
           uid: number
           updated_at: string
@@ -933,10 +936,13 @@ export type Database = {
           featured?: boolean
           featured_until?: string | null
           id?: string
+          image_host?: boolean
           like_count?: number
           location?: string
           music?: Json
           rank?: string
+          streak_days?: number
+          streak_last_claim?: string | null
           theme?: Json
           uid?: number
           updated_at?: string
@@ -957,10 +963,13 @@ export type Database = {
           featured?: boolean
           featured_until?: string | null
           id?: string
+          image_host?: boolean
           like_count?: number
           location?: string
           music?: Json
           rank?: string
+          streak_days?: number
+          streak_last_claim?: string | null
           theme?: Json
           uid?: number
           updated_at?: string
@@ -1615,6 +1624,7 @@ export type Database = {
       is_site_owner: { Args: { _user_id: string }; Returns: boolean }
       mission_progress: { Args: { _key: string }; Returns: number }
       new_login_code: { Args: never; Returns: string }
+      og_listing_contact: { Args: { _id: string }; Returns: string }
       post_chat_message: {
         Args: {
           _author_avatar: string
